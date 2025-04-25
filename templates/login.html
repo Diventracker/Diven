@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión - DivenTraker</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/static/css/login.css">
+</head>
+<body>
+  <div class="min-vh-100 d-flex">
+    <!-- lado izquierdo - Login form -->
+    <div class="flex-grow-1 d-flex align-items-center justify-content-center p-4 bg-white">
+      <div class="w-100" style="max-width: 450px;">
+        <div class="d-flex align-items-center mb-4">
+          <div class="d-flex align-items-center justify-content-center mx-2 " style="width: 40px; height: 40px;">
+            <img src="/static/img/LogoVerde.png" width="50px" alt="Logo Diventracker">
+          </div>
+          <h1 class="fs-3 fw-bold mb-0 text-dark">DivenTraker</h1>
+        </div>
+        
+        <div class="card border-0 shadow-lg">
+          <div class="card-body p-4">
+            <h2 class="fs-3 fw-bold mb-1 text-dark">Iniciar Sesión</h2>
+            <p class="mb-4 text-teal-dark">
+              Ingresa tus credenciales para acceder al sistema
+            </p>
+            
+            <form action="login" method="POST">
+              <div class="mb-3">
+                <label for="email" class="form-label fw-medium text-dark">
+                  Correo Electrónico
+                </label>
+                <input 
+                  name="correo"
+                  type="email" 
+                  class="form-control border-sage-light" 
+                  id="email" 
+                  placeholder="correo@ejemplo.com"
+                >
+              </div>
+              
+              <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <label for="password" class="form-label fw-medium mb-0 text-dark">
+                    Contraseña
+                  </label>
+                  <a href="#" class="text-decoration-none small text-primary">
+                    ¿Olvidaste tu contraseña?
+                  </a>
+                </div>
+                <input 
+                  type="password"
+                  name="clave" 
+                  class="form-control border-sage-light" 
+                  id="password"
+                >
+              </div>
+              <input type="submit" class="btn btn-primary w-100 py-3 text-white fw-semibold" value="Inciar Sesion">
+              
+              <p class="text-center mt-4 mb-0 small text-teal-dark">
+                ¿No tienes una cuenta?
+                <a href="#" class="text-decoration-none text-primary">
+                  Contacta al administrador
+                </a>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- lado derecho - Imagen y info -->
+    <div class="d-none d-lg-block flex-grow-1 position-relative">
+      <div class="position-absolute top-0 start-0 end-0 bottom-0 bg-gradient-overlay">
+        
+      </div>      
+      <div class="position-absolute top-0 start-0 end-0 bottom-0 d-flex flex-column justify-content-center p-5" style="z-index: 20;">
+        <div class="p-4 rounded-3 product-card" style="max-width: 450px;">
+          <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mb-4" style="width: 48px; height: 48px;">
+            <i class="bi bi-shield-lock fs-4 text-primary"></i>
+          </div>
+          <h2 class="fs-3 fw-bold text-white mb-3">Acceso Seguro</h2>
+          <p class="mb-4 text-sage-light">
+            DivenTraker proporciona un entorno seguro para gestionar tu inventario de productos tecnológicos. 
+            Todos los datos están protegidos con encriptación avanzada.
+          </p>
+          <ul class="list-unstyled">
+            <li class="d-flex mb-2">
+              <div class="rounded-circle bg-white d-flex align-items-center justify-content-center mt-1 me-3" style="width: 20px; height: 20px;">
+                <i class="bi bi-check-lg text-primary" style="font-size: 12px;"></i>
+              </div>
+              <span class="text-white">Control de acceso basado en roles</span>
+            </li>
+            <li class="d-flex mb-2">
+              <div class="rounded-circle bg-white d-flex align-items-center justify-content-center mt-1 me-3" style="width: 20px; height: 20px;">
+                <i class="bi bi-check-lg text-primary" style="font-size: 12px;"></i>
+              </div>
+              <span class="text-white">Autenticación de dos factores</span>
+            </li>
+            <li class="d-flex">
+              <div class="rounded-circle bg-white d-flex align-items-center justify-content-center mt-1 me-3" style="width: 20px; height: 20px;">
+                <i class="bi bi-check-lg text-primary" style="font-size: 12px;"></i>
+              </div>
+              <span class="text-white">Registro detallado de actividades</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

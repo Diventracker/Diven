@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Servicios</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/css/modulos.css">
+</head>
+<body>
+<main>
+    <div class="container-fluid">
+        <!-- Alerta que solo aparece con las opciones del crud -->
+        {% if request.query_params.get("success") == "1" %}
+        <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
+            <i class="bi bi-check-circle-fill me-2"></i> ¡Servicio actualizado correctamente!
+        </div>
+        {% elif request.query_params.get("create") == "1" %}
+        <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
+            <i class="bi bi-check-circle-fill me-2"></i> ¡Servicio creado correctamente!
+        </div>
+        {% elif request.query_params.get("deleted") == "1" %}
+        <div class="alert alert-danger d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
+            <i class="bi bi-trash-fill me-2"></i> ¡Servicio eliminado correctamente!
+        </div>
+        {% endif %}
+        
+        
+        <div class="mt-4 text-center">
+            <h2 class="mt-4">Servicio Técnico</h2>
+        </div>
+
+        <!-- Contenedor para centrar el buscador y el botón -->
+        <div class="d-flex justify-content-center align-items-center gap-2 my-3">
+            <form class="d-flex align-items-center gap-2" method="get" action="/servicios">
+                <input class="form-control" name="search" value="" type="search" placeholder="Buscar servicios" aria-label="Search">
+                <button class="btn btn-outline-enviar" type="submit">Buscar</button>
+            </form>
+            <button class="btn" data-bs-toggle="modal" data-bs-target="#modalRegistro">
+                <i class="bi bi-plus-circle"></i> Registrar
+            </button>
+        </div>
+
+        <!-- Tabla de Servicios -->
+        <div class="d-flex justify-content-center">
+            <div class="table-responsive p-4">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID servicio</th>
+                            <th>Tipo de equipo</th>
+                            <th>Marca</th>
+                            <th>Modelo</th>
+                            <th>Descripción</th>
+                            <th>Fecha recepción</th>
+                            <th>Fecha entrega</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-servicios">
+                        {% for s in servicios %}
+                        <tr>
+                            <td>{{ s.id_servicio }}</td>
+                            <td>{{ s.tipo_equipo }}</td>
+                            <td>{{ s.marca_equipo }}</td>
+                            <td>{{ s.modelo_equipo }}</td>
+                            <td>{{ s.descripcion_problema }}</td>
+                            <td>{{ s.fecha_recepcion }}</td>
+                            <td>{{ s.fecha_entrega_estimada }}</td>
+                            <td>{{ s.estado_servicio }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-secondary me-1 edit-button" data-bs-toggle="modal" data-bs-target="#modalEditar"
+                                data-id="{{ s.id_servicio }}"
+                                data-tipo="{{ s.tipo_equipo }}" data-marca="{{ s.marca_equipo }}"
+                                data-modelo="{{ s.modelo_equipo }}" data-descripcion="{{ s.descripcion_problema }}"
+                                data-fechaRecepcion="{{ s.fecha_recepcion }}" data-fechaEntrega="{{ s.fecha_entrega_estimada }}"
+                                data-estado="{{ s.estado_servicio }}"
+                                > 
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button data-id="{{ s.id_servicio }}" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Modal Editar -->
+<div class="modal fade" id="modalEditar" aria-labelledby="modalEditarLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditarLabel">Actualizar Servicio</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editServicioForm">
+                    <input type="hidden" id="serviceId" name="serviceId">
+                    <!-- campos a editar --> 
+                    <div class="mb-3">
+                        <label for="tipo_servicio" class="form-label">Tipo de equipo:</label>
+                        <input type="text" id="editTipoEquipo" class="form-control" name="tipo_equipo" required pattern="[A-Za-z\s]+" maxlength="50">
+                    </div>
+                    <div class="mb-3">
+                        <label for="marca" class="form-label">Marca del equipo:</label>
+                        <input type="text" id="editMarca" class="form-control" name="marca" required pattern="[A-Za-z\s]+" maxlength="20">
+                    </div>
+                    <div class="mb-3">
+                        <label for="modelo_equipo" class="form-label">Modelo del equipo:</label>
+                        <input type="text" id="editModeloEquipo" class="form-control" name="modelo_equipo" required maxlength="20">
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción del problema:</label>
+                        <input type="text" id="editDescripcion" class="form-control" name="descripcion" required maxlength="100">
+                    </div>
+                    <div class="mb-3">
+                        <label for="fecha_recepcion"  class="form-label">Fecha de recepción:</label>
+                        <input type="date" id="editFechaRecepcion" class="form-control" name="fecha_recepcion" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fecha_entrega" class="form-label">Fecha de entrega:</label>
+                        <input type="date" id="editFechaEntrega" class="form-control" name="fecha_entrega" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEstado" class="form-label">Estado del Servicio</label>
+                        <select class="form-control" id="editEstado" name="estado" required>
+                            <option value="En Progreso">En Progreso</option>
+                            <option value="Finalizado">Finalizado</option>
+                            <option value="Pendiente">Pendiente</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-enviar w-100" id="saveChanges">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar -->
+<div class="modal fade" id="modalEliminar" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEliminarLabel">Eliminar Servicio</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Seguro que desea eliminar este servicio?</p>
+                <input type="hidden" id="serviceIdToDelete"/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+  
+<!-- Modal Registro -->
+<div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalRegistroLabel">Registrar Nuevo servicio</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/servicio/crear" method="post">
+                    
+                    <div class="mb-3 position-relative">
+                        <label class="form-label">Cliente</label>
+                        <input type="text" id="buscar_cliente" class="form-control" placeholder="Buscar cliente..." autocomplete="off">
+                        <select id="cliente_select" class="form-control position-absolute" style="width: 94%;">
+                        </select>
+                        <input type="hidden" id="cliente_id" name="cliente_id">
+                    </div>
+                    <div class="mb-3">
+                        <label for="tipo_servicio" class="form-label">Tipo de equipo:</label>
+                        <input type="text" class="form-control" name="tipo_equipo" required pattern="[A-Za-z\s]+" maxlength="50">
+                    </div>
+                    <div class="mb-3">
+                        <label for="marca" class="form-label">Marca del equipo:</label>
+                        <input type="text" class="form-control" name="marca" required pattern="[A-Za-z\s]+" maxlength="20">
+                    </div>
+                    <div class="mb-3">
+                        <label for="modelo_equipo" class="form-label">Modelo del equipo:</label>
+                        <input type="text" class="form-control" name="modelo_equipo" required maxlength="20">
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción del problema:</label>
+                        <input type="text" class="form-control" name="descripcion" required maxlength="100">
+                    </div>
+                    <div class="mb-3">
+                        <label for="fecha_recepcion" class="form-label">Fecha de recepción:</label>
+                        <input type="date" class="form-control" name="fecha_recepcion" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fecha_entrega" class="form-label">Fecha de entrega:</label>
+                        <input type="date" class="form-control" name="fecha_entrega" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Estado" class="form-label">Estado del Servicio</label>
+                        <select class="form-control" id="Estado" name="estado" required>
+                            <option value="En Progreso">En Progreso</option>
+                            <option value="Finalizado">Finalizado</option>
+                            <option value="Pendiente">Pendiente</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-enviar w-100">Guardar servicio</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Primero importar el js con las funciones -->
+<script src="/static/js/funciones.js"></script>
+<script src="/static/js/modulo_servicios.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DivenTraker - Sistema de Inventario Tecnológico</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Iconos -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  
+  <!-- CSS personalizado -->
+  <link rel="stylesheet" href="/static/css/home.css">
+  
+</head>
+<body class="bg-white">
+
+  <div class="d-flex flex-column">
+    
+    <!-- Seccion superior -->
+    <header class="position-relative">
+      <div class="position-absolute top-0 start-0 end-0 bottom-0 bg-overlay"></div>
+      <div class="position-relative hero-image">
+        <img src="https://img.freepik.com/vector-gratis/robot-almacen-caja-carton_107791-1167.jpg?t=st=1742346468~exp=1742350068~hmac=6c779c9a8cf31577aa703b2e4dbe398020afabc8c1efe652a687bba60e91960d&w=1380" alt="Tecnología de inventario" class="w-100 h-100 object-fit-cover">
+        <div class="position-absolute top-0 start-0 end-0 bottom-0 d-flex flex-column align-items-center justify-content-center px-4 text-center" style="z-index: 20;">
+          <div class="d-flex align-items-center mb-4">
+            <div class="d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+              <img src="/static/img/LogoBlanco.png" width="50px" alt="Logo Diventracker">
+            </div>
+            <h1 class="fs-2 fw-bold mb-0 text-white">DivenTraker</h1>
+          </div>
+          <h2 class="display-5 fw-bold text-white mb-4 mx-auto" style="max-width: 800px;">
+            Control total de tu inventario tecnológico
+          </h2>
+          <p class="fs-5 mb-4 text-white opacity-75 mx-auto" style="max-width: 700px;">
+            Optimiza la gestión de productos electrónicos con seguimiento en tiempo real, 
+            análisis de ventas y mantenimiento programado.
+          </p>
+          <div class="d-flex flex-column flex-sm-row gap-3">
+            <a href="/login" class="btn btn-primary btn-lg px-4 fw-semibold text-white">
+              Iniciar Sesión
+            </a>
+            <a href="#features" class="btn btn-outline-light btn-lg px-4 fw-semibold">
+              Conocer más <i class="bi bi-chevron-right ms-2"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Caracteristicas  -->
+    <section id="features" class="py-5 bg-white">
+      <div class="container py-5">
+        <div class="text-center mb-5">
+          <h2 class="fs-1 fw-bold mb-3 text-dark">Características Principales</h2>
+          <p class="mx-auto text-teal-dark" style="max-width: 700px;">
+            DivenTraker ofrece todas las herramientas que necesitas para gestionar 
+            eficientemente tu inventario de productos tecnológicos.
+          </p>
+        </div>
+        
+        <div class="row g-4">
+          <!-- 1 -->
+          <div class="col-md-4">
+            <div class="p-4 rounded-3 h-100 feature-card">
+              <div class="rounded d-flex align-items-center justify-content-center mb-4 feature-icon">
+                <i class="bi bi-database text-white fs-4"></i>
+              </div>
+              <h3 class="fs-4 fw-bold mb-3 text-dark">Gestión de Inventario</h3>
+              <p class="text-teal-dark">
+                Controla tu stock en tiempo real, configura alertas de bajo inventario 
+                y gestiona múltiples ubicaciones desde una sola plataforma.
+              </p>
+            </div>
+          </div>
+          
+          <!-- 2 -->
+          <div class="col-md-4">
+            <div class="p-4 rounded-3 h-100 feature-card">
+              <div class="rounded d-flex align-items-center justify-content-center mb-4 feature-icon">
+                <i class="bi bi-bar-chart text-white fs-4"></i>
+              </div>
+              <h3 class="fs-4 fw-bold mb-3 text-dark">Análisis Avanzado</h3>
+              <p class="text-teal-dark">
+                Visualiza tendencias de ventas, analiza el rendimiento de productos 
+                y genera informes personalizados para tomar mejores decisiones.
+              </p>
+            </div>
+          </div>
+          
+          <!-- 3 -->
+          <div class="col-md-4">
+            <div class="p-4 rounded-3 h-100 feature-card">
+              <div class="rounded d-flex align-items-center justify-content-center mb-4 feature-icon">
+                <i class="bi bi-shield-check text-white fs-4"></i>
+              </div>
+              <h3 class="fs-4 fw-bold mb-3 text-dark">Seguridad Garantizada</h3>
+              <p class="text-teal-dark">
+                Protege tus datos con encriptación avanzada, control de acceso 
+                por roles y registro detallado de todas las operaciones.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Productos -->
+    <section class="py-5 bg-dark">
+      <div class="container py-5">
+        <div class="text-center mb-5">
+          <h2 class="fs-1 fw-bold text-white mb-3">Gestiona Todo Tipo de Productos</h2>
+          <p class="mx-auto text-white opacity-75" style="max-width: 700px;">
+            DivenTraker está diseñado para manejar cualquier tipo de producto tecnológico 
+            en tu inventario, desde componentes hasta dispositivos completos.
+          </p>
+        </div>
+        
+        <div class="row g-4">
+          <!-- 1 Categoria -->
+          <div class="col-md-6 col-lg-4">
+            <div class="p-4 rounded-3 h-100 product-card">
+              <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-laptop text-white fs-3 me-3"></i>
+                <h3 class="fs-4 fw-bold text-white mb-0">Computadoras</h3>
+              </div>
+              <p class="text-white opacity-75 mb-3">
+                Laptops, desktops y accesorios relacionados.
+              </p>
+              
+            </div>
+          </div>
+          
+          <!-- 2 Categoria -->
+          <div class="col-md-6 col-lg-4">
+            <div class="p-4 rounded-3 h-100 product-card">
+              <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-phone text-white fs-3 me-3"></i>
+                <h3 class="fs-4 fw-bold text-white mb-0">Dispositivos Móviles</h3>
+              </div>
+              <p class="text-white opacity-75 mb-3">
+                Smartphones, tablets, smartwatches y accesorios.
+              </p>              
+            </div>
+          </div>
+          
+          <!-- 3 Categoria -->
+          <div class="col-md-6 col-lg-4">
+            <div class="p-4 rounded-3 h-100 product-card">
+              <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-cpu text-white fs-3 me-3"></i>
+                <h3 class="fs-4 fw-bold text-white mb-0">Componentes</h3>
+              </div>
+              <p class="text-white opacity-75 mb-3">
+                Procesadores, tarjetas gráficas, memoria, almacenamiento.
+              </p>              
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Promover su uso jaja -->
+    <section class="py-5 bg-sage-light">
+      <div class="container py-5">
+        <div class="bg-white rounded-4 shadow p-4 p-md-5 mx-auto" style="max-width: 1000px;">
+          <div class="row align-items-center">
+            <div class="col-md-8 mb-4 mb-md-0">
+              <h2 class="fs-1 fw-bold mb-3 text-dark">
+                ¿Listo para optimizar tu inventario?
+              </h2>
+              <p class="mb-4 text-teal-dark">
+                Comienza hoy mismo a gestionar tu inventario tecnológico de manera eficiente. 
+                DivenTraker te ofrece todas las herramientas que necesitas para tener el control total.
+              </p>
+              <a href="/login" class="btn btn-lg px-4 fw-semibold text-white btn-primary">
+                Iniciar Sesión
+              </a>
+            </div>
+            <div class="col-md-4 text-center">
+              <img src="https://media.istockphoto.com/id/1372111384/es/vector/ilustraci%C3%B3n-conceptual-de-vector-plano-isom%C3%A9trico-3d-de-adquisiciones.jpg?s=612x612&w=0&k=20&c=jcvZrjf80ZWJ326lGjs1uJ6UOqBs6pCf-k5J-qNPVvY=" alt="Gestión de inventario" class="rounded-3 img-fluid">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-5 text-white bg-dark">
+      <div class="container py-4">
+        <div class="row g-4">
+          <div class="col-md-6 col-lg-4">
+            <div class="d-flex align-items-center mb-3">
+              <div class="d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                <img src="/static/img/LogoBlanco.png" width="40px" alt="Logo Diventracker">
+              </div>
+              <span class="fs-4 fw-bold">DivenTraker</span>
+            </div>
+            <p class="text-white opacity-75">
+              Tu solución integral para la gestión de tu negocio tecnológico.
+            </p>
+          </div>
+          
+          <div class="col-md-6 col-lg-4">
+            <h3 class="fs-5 fw-semibold mb-3 text-white">Contacto</h3>
+            <ul class="list-unstyled text-white opacity-75">
+              <li class="mb-2"><a href="mailto:info@diventraker.com" class="text-decoration-none text-sage">info@diventraker.com</a></li>
+              <li class="mb-2">322 456 7489</li>
+              <li class="mb-2">Avenida Siempre Viva, Bogota D.C</li>
+            </ul>
+          </div>
+          
+          
+          <div class="col-md-6 col-lg-4">
+            <h3 class="fs-5 fw-semibold mb-3 text-white">Legal</h3>
+            <ul class="list-unstyled">
+              <li class="mb-2"><a href="#" class="text-decoration-none text-sage">Términos de Servicio</a></li>
+              <li class="mb-2"><a href="#" class="text-decoration-none text-sage">Política de Privacidad</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="border-top mt-4 pt-4 text-center border-sage-30 text-white opacity-75">
+          <p class="mb-0">© 2025 DivenTraker. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

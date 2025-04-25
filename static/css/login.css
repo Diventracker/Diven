@@ -1,0 +1,84 @@
+:root {
+--color1: #ffffff; /* fondo */
+--color2: #5e9188; /* formulario */
+--color3: #3e5954; /* acento oscuro */
+--color4: #253342; /* nav */
+--color5: #232226; /* texto contraste */
+}
+
+
+.text-dark {
+color: var(--color5) !important;
+}
+
+.text-teal-dark {
+color: var(--color3) !important;
+}
+
+.text-primary {
+color: var(--color2) !important;
+}
+
+.text-sage {
+color: var(--color2) !important;
+}
+
+.text-sage-light {
+color: rgba(255, 255, 255, 0.8) !important;
+}
+
+
+.bg-primary {
+background-color: var(--color2) !important;
+}
+
+.bg-dark {
+background-color: var(--color4) !important;
+}
+
+.bg-gradient-overlay {
+background: linear-gradient(135deg, var(--color4), var(--color5));
+opacity: 0.9;
+z-index: 10;
+}
+
+
+.border-sage-light {
+border-color: var(--color2) !important;
+}
+
+
+.form-control {
+border-width: 2px;
+padding: 0.75rem 1rem;
+}
+
+.form-control:focus {
+border-color: var(--color2);
+box-shadow: 0 0 0 0.25rem rgba(94, 145, 136, 0.25);
+}
+
+
+.btn-primary {
+background-color: var(--color2) !important;
+border-color: var(--color2) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+background-color: var(--color3) !important;
+border-color: var(--color3) !important;
+}
+
+
+.product-card {
+background: linear-gradient(135deg, rgba(35, 34, 38, 0.9), rgba(94, 145, 136, 0.8));
+border: none;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+a.text-primary:hover {
+color: var(--color3) !important;
+text-decoration: underline !important;
+}

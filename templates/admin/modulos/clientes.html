@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Clientes</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/css/modulos.css">
+    
+</head>
+<body>
+
+<main>
+    <div class="container-fluid px-4">
+        {% if request.query_params.get("success") == "1" %}
+            <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
+                <i class="bi bi-check-circle-fill me-2"></i> ¡Cliente actualizado correctamente!
+            </div>
+            {% elif request.query_params.get("create") == "1" %}
+            <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
+                <i class="bi bi-check-circle-fill me-2"></i> ¡Cliente creado correctamente!
+            </div>
+            {% elif request.query_params.get("deleted") == "1" %}
+            <div class="alert alert-danger d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
+                <i class="bi bi-trash-fill me-2"></i> ¡Cliente eliminado correctamente!
+            </div>
+            {% elif request.query_params.get("error") == "1" %}
+            <div class="alert alert-warning d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> ¡Ya existe un cliente con este Correo o Cedula!
+            </div>
+            {% endif %}
+        <div class="mt-4 text-center">
+            <h2 class="mt-4">Gestión de Clientes</h2>
+        </div>
+
+        <!-- Barra de búsqueda y botón registrar -->
+        <div class="d-flex align-items-center gap-2 flex-wrap justify-content-center my-3">
+            <form class="d-flex align-items-center gap-2" method="get" action="/clientes">
+                <input class="form-control" name="search" value="{{ search | default('') }}" type="search" placeholder="Buscar Cliente" aria-label="Search">
+                <button class="btn btn-outline-enviar" type="submit">Buscar</button>
+            </form>
+            <button class="btn" data-bs-toggle="modal" data-bs-target="#modalRegistro">
+                <i class="bi bi-plus-circle"></i> Registrar Cliente
+            </button>
+        </div>
+
+        <!-- Tabla centrada y más grande -->
+        <div class="table-container d-flex justify-content-center">
+            <div class="table-responsive p-4">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Cédula</th>
+                            <th scope="col">Dirección</th>
+                            <th scope="col">Teléfono</th>
+                            <th scope="col">Correo</th>
+                            <th scope="col">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-clientes">
+                        {% for cliente in clientes %}
+                        <tr>                                
+                            <td>{{ cliente.nombre_cliente }}</td>
+                            <td>{{ cliente.cedula }}</td>
+                            <td>{{ cliente.direccion_cliente }}</td>
+                            <td>{{ cliente.telefono_cliente }}</td>
+                            <td>{{ cliente.email_cliente }}</td>
+                            <td>
+                                <!-- Por si queremos ver detalles del cliente
+                                    <button class="btn btn-sm btn-outline-secondary me-1">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    -->
+                                <button class="btn btn-sm btn-outline-secondary me-1 edit-button" data-bs-toggle="modal" data-bs-target="#modalEditar"
+                                    data-id="{{ cliente.id_cliente }}"
+                                    data-nombre="{{ cliente.nombre_cliente }}"
+                                    data-cedula="{{ cliente.cedula }}"
+                                    data-telefono="{{ cliente.telefono_cliente }}"
+                                    data-direccion="{{ cliente.direccion_cliente }}"
+                                    data-email="{{ cliente.email_cliente }}">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar"
+                                        data-id="{{ cliente.id_cliente }}"
+                                        data-nombre="{{ cliente.nombre_cliente }}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                </td>
+                        </tr>
+                        {% endfor %}                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Modal Editar -->
+<div class="modal fade" id="modalEditar" aria-labelledby="modalEditarLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditarLabel">Actualizar Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Pasar el id del cliente mediante el link del form -->
+                <form id="editClienteForm"> 
+                    <input type="hidden" id="editClienteId">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre:</label>
+                        <input type="text" class="form-control" id="editNombre" name="nombre" required pattern="[A-Za-z\s]+" maxlength="50">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cedula" class="form-label">Cédula:</label>
+                        <input type="text" class="form-control" id="editCedula" name="cedula" required pattern="\d+" maxlength="10">
+                    </div>
+                    <div class="mb-3">
+                        <label for="direccion" class="form-label">Dirección:</label>
+                        <input type="text" class="form-control" id="editDireccion"  name="direccion" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Teléfono:</label>
+                        <input type="tel" class="form-control" id="editTelefono" name="telefono" required pattern="\d{10}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="correo" class="form-label">Correo:</label>
+                        <input type="email" class="form-control" id="editEmail" name="email" required>
+                    </div>
+                    <button type="submit" id="saveChanges" class="btn btn-enviar w-100">Actualizar Cliente</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar -->
+<div class="modal fade" id="modalEliminar" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEliminarLabel">Eliminar Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p >¿Seguro que desea eliminar al cliente?</p>
+                <input type="hidden" id="clienteIdToDelete"/>
+                <!-- Span que muestra el nombre del cliente -->
+                <span id="nombreCliente" class="fw-bold d-block fs-4"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+    
+
+<!-- Modal Registro -->
+<div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalRegistroLabel">Registrar Nuevo Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/clientes/crear" method="post">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre:</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre_cliente" required pattern="[A-Za-z\s]+" maxlength="50">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cedula" class="form-label">Cédula:</label>
+                        <input type="text" class="form-control" id="cedula" name="cedula" required pattern="\d+" maxlength="10">
+                    </div>
+                    <div class="mb-3">
+                        <label for="direccion" class="form-label">Dirección:</label>
+                        <input type="text" class="form-control" name="direccion_cliente" id="direccion" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Teléfono:</label>
+                        <input type="tel" class="form-control" id="telefono" name="telefono_cliente" required pattern="\d{10}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="correo" class="form-label">Correo:</label>
+                        <input type="email" class="form-control" id="correo" name="email_cliente" required>
+                    </div>
+                    <button type="submit" class="btn btn-enviar w-100">Guardar Cliente</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Primero importar el js con las funciones -->
+<script src="/static/js/funciones.js"></script>
+<script src="/static/js/modulo_clientes.js"></script>
+    
+</body>
+</html>

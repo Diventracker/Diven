@@ -1,0 +1,17 @@
+#Este archivo sirve para que no se suban los siguientes archivos al repo de git
+
+# Ignorar entorno virtual
+venv/
+
+# Ignorar archivos compilados de Python
+__pycache__/
+*.py[cod]
+
+# Archivos de entorno
+.env
+
+# Archivos del sistema (macOS, etc.)
+.DS_Store
+
+# Configuración de VS Code (opcional)
+.vscode/

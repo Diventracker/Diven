@@ -1,0 +1,100 @@
+:root {
+  --color1: #ffffff; /* fondo */
+  --color2: #5e9188; /* formulario */
+  --color3: #3e5954; /* acento oscuro */
+  --color4: #253342; /* nav */
+  --color5: #232226; /* texto contraste */
+}
+
+/* Colores en los textos */
+.text-dark {
+  color: var(--color5) !important;
+}
+
+.text-teal-dark {
+  color: var(--color3) !important;
+}
+
+.text-primary,
+.btn-primary {
+  color: #fff !important;
+  background-color: var(--color2) !important;
+  border-color: var(--color2) !important;
+}
+
+.text-sage {
+  color: var(--color2) !important;
+}
+
+.text-sage-light {
+  color: rgba(94, 145, 136, 0.8) !important;
+}
+
+/* Colores de los fondos */
+.bg-dark {
+  background-color: var(--color4) !important;
+}
+
+.bg-primary {
+  background-color: var(--color2) !important;
+}
+
+.bg-sage-light {
+  background-color: rgba(94, 145, 136, 0.2) !important;
+}
+
+.bg-teal {
+  background-color: var(--color2) !important;
+}
+
+.bg-overlay {
+  background-color: var(--color4) !important;
+  opacity: 0.9;
+  z-index: 10;
+}
+
+/* Colores Bordes */
+.border-sage-light {
+  border-color: var(--color2) !important;
+}
+
+.border-sage-30 {
+  border-color: rgba(94, 145, 136, 0.3) !important;
+}
+
+/* Componentes */
+.hero-image {
+  height: 600px;
+}
+
+.feature-card {
+  background-color: rgba(94, 145, 136, 0.1);
+  border: 1px solid rgba(94, 145, 136, 0.2);
+}
+
+.feature-icon {
+  width: 56px;
+  height: 56px;
+  background-color: var(--color2);
+}
+
+.product-card {
+  background-color: #232226;
+  border: 1px solid var(--color1);
+}
+
+/* Hover Efectos */
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--color3) !important;
+  border-color: var(--color3) !important;
+}
+
+.btn-outline-light:hover {
+  color: var(--color5) !important;
+}
+
+a.text-sage:hover {
+  color: #fff !important;
+  text-decoration: underline !important;
+}
