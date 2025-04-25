@@ -15,3 +15,4 @@ uvicorn main:app --reload     //Para ejecutar el archivo main en el puerto 8000
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Unrestricted   //Si pide permisos ejecutar este comando antes del uvicorn *Opcional
 
 # Es diferente para linux nahh mmmm ya
+#Ni modo ya nada q hacer
