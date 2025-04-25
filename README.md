@@ -14,4 +14,4 @@ pip install pydantic[email]     //Sirve para validar correos con pydantic
 uvicorn main:app --reload     //Para ejecutar el archivo main en el puerto 8000
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Unrestricted   //Si pide permisos ejecutar este comando antes del uvicorn *Opcional
 
-# Es diferente para linux
+# Es diferente para linux nahh 
