@@ -2,7 +2,7 @@
 
 ## 📋 Requisitos Previos
 
-Antes de comenzar, asegúrate de tener instalado en tu máquina:
+Antes de comenzar, asegúrate de tener instalado:
 
 - 🐍 [Python 3.10+](https://www.python.org/downloads/)
 - 🐬 [MySQL Server](https://dev.mysql.com/downloads/mysql/)
