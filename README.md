@@ -17,7 +17,7 @@ Antes de comenzar, asegúrate de tener instalado:
 #### 1. Clona el proyecto
 
 ```bash
-  git clone hhttps://github.com/AndwSX/Diven.git
+  git clone https://github.com/AndwSX/Diven.git
 ```
 
 #### 2. Entra en el directorio del proyecto
@@ -43,7 +43,7 @@ Antes de comenzar, asegúrate de tener instalado:
 #### 5. Instala las dependencias necesarias
 
 ```bash
-  pip install fastapi uvicorn sqlalchemy pymysql jinja2 python-multipart pydantic[email]
+  pip install -r requirements.txt
 
 ```
 
@@ -51,6 +51,20 @@ Antes de comenzar, asegúrate de tener instalado:
 
 ```bash
   uvicorn main:app --reload
+```
+
+## 🗂️ Estructura del Proyecto
+
+```bash
+/Diven/
+├── 📄 main.py                # Punto de entrada de la app FastAPI
+├── 🛣️ controllers/           # Rutas o endpoints (routers) de la API
+├── 🗄️ models/                # Modelos de SQLAlchemy (estructuras de la base de datos)
+├── 📝 schemas/               # Schemas de Pydantic (validación y serialización de datos)
+├── 🖥️ templates/             # Archivos HTML usando Jinja2 para el renderizado
+├── 🔧 utils/                 # Funciones auxiliares o reutilizables
+├── 🗃️ database/              # Configuración y conexión a la base de datos
+└── 📋 requirements.txt       # Lista de dependencias del proyecto
 ```
 
 ## Tecnologías

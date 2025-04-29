@@ -11,7 +11,7 @@ router = APIRouter()
 templates = Jinja2Templates(directory="templates/admin/modulos")  # Ruta donde están las vistas
 
 #Ruta principal para mostrar tabla clientes
-@router.get("/clientes", response_class=HTMLResponse, tags=["Clientes"])
+@router.get("/clientes", tags=["Clientes"])
 def listar_clientes(request: Request, search: str = "", db: Session = Depends(get_db)):
     if search:
         clientes = db.query(Cliente).filter(

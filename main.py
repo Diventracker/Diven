@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from controllers import home_ctr, login_ctr, admin_ctr
-from controllers.Madmin import clientes_ctr, servicios_ctr, producto_ctr, proveedores_ctr
+from controllers.Madmin import clientes_ctr, servicios_ctr, producto_ctr, proveedores_ctr, usuarios_ctr
 
 app = FastAPI()
 
@@ -16,3 +16,4 @@ app.include_router(clientes_ctr.router)
 app.include_router(servicios_ctr.router)
 app.include_router(producto_ctr.router)
 app.include_router(proveedores_ctr.router)
+app.include_router(usuarios_ctr.router)

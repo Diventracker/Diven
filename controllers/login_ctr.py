@@ -2,8 +2,7 @@ from fastapi import APIRouter, Request, Form, Depends, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from database.database import SessionLocal
-from schemas.usuario import UsuarioLogin
+from database.database import get_db
 from models.usuario import Usuario
 
 router = APIRouter()
@@ -16,14 +15,6 @@ def login_get(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
 
-# Función para obtener una sesión de BD
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
 
 @router.post("/login", tags=['Login'])
 async def login_post(
@@ -35,7 +26,7 @@ async def login_post(
     usuario = db.query(Usuario).filter(Usuario.correo == correo).first()
 
     if not usuario or usuario.clave != clave: #compara los parametros 
-        return HTMLResponse(content="Correo o clave inválidos", status_code=401)
+        return RedirectResponse(url="/login?error=1", status_code=303)
 
     # Verificar el rol del usuario
     if usuario.rol == "Administrador":

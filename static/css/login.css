@@ -7,6 +7,14 @@
 }
 
 
+.msg{
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    max-width: 400px;
+    z-index: 1050;
+}
+
 .text-dark {
 color: var(--color5) !important;
 }
