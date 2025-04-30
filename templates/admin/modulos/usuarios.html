@@ -25,6 +25,10 @@
             <div class="alert alert-danger d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
                 <i class="bi bi-trash-fill me-2"></i> ¡Usuario eliminado correctamente!
             </div>
+            {% elif request.query_params.get("error") == "1" %}
+            <div class="alert alert-warning d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> ¡Este usuario no puede ser eliminado!
+            </div>
             {% endif %}
 
             <div class="mt-4 text-center">

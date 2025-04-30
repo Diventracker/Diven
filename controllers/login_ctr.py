@@ -4,6 +4,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from database.database import get_db
 from models.usuario import Usuario
+from passlib.context import CryptContext
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -15,7 +16,10 @@ def login_get(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
 
+#Contexto para verificar la cntraseña
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+#Ruta para validar el login
 @router.post("/login", tags=['Login'])
 async def login_post(
     response: Response,
@@ -25,7 +29,11 @@ async def login_post(
 ):
     usuario = db.query(Usuario).filter(Usuario.correo == correo).first()
 
-    if not usuario or usuario.clave != clave: #compara los parametros 
+    def verificar_contraseña(contraseña_plana: str, contraseña_hash: str) -> bool: #booleano
+        return pwd_context.verify(contraseña_plana, contraseña_hash) #Verfiica la contra almacena y devuelva true o false
+    
+
+    if not usuario or not verificar_contraseña(clave, usuario.clave):
         return RedirectResponse(url="/login?error=1", status_code=303)
 
     # Verificar el rol del usuario
