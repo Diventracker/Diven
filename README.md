@@ -57,16 +57,25 @@ Antes de comenzar, asegúrate de tener instalado:
 
 ```bash
 /Diven/
-├── 📄 main.py                # Punto de entrada de la app FastAPI
-├── 🛣️ controllers/           # Rutas o endpoints (routers) de la API
-├── 🗄️ models/                # Modelos de SQLAlchemy (estructuras de la base de datos)
-├── 📝 schemas/               # Schemas de Pydantic (validación y serialización de datos)
-├── 🖥️ templates/             # Archivos HTML usando Jinja2 para el renderizado
-├── 🎨 static/                # Archivos estáticos (CSS, JS, imágenes, etc.)
-├── 🔧 utils/                 # Funciones auxiliares o reutilizables
-├── 🗃️ database/              # Configuración y conexión a la base de datos
-└── 📋 requirements.txt       # Lista de dependencias del proyecto
+├── 📄 main.py                 # Punto de entrada de la app FastAPI
+├── 📁 modulos/                # Módulos independientes organizados por funcionalidad
+│   └── 🔁 routes.py              # Define las rutas (endpoints) y conecta con controllers
+│   └── 🧠 controllers.py         # Lógica del negocio (servicios, reglas)
+│   └── 🧱 models.py              # Modelos de SQLAlchemy (estructuras de la base de datos)
+│   └── 🧾 schemas.py             # Schemas de Pydantic (validación y serialización de datos)
+│   └── 🖥️templates/              # Archivos HTML usando Jinja2 para el renderizado
+├── 🎨 static/                 # Archivos estáticos (CSS, JS, imágenes, etc.)
+├── 🧰 utils/                  # Funciones auxiliares o reutilizables
+├── 🗃️ database/               # Configuración y conexión a la base de datos
+└── 📋 requirements.txt        # Lista de dependencias del proyecto
 ```
+
+## 👥 Usuarios de Ejemplo
+
+| 📧 Correo                  | 🔒 Contraseña     |
+|---------------------------|-------------------|
+| admin@tienda.com      | clave123     |
+
 
 ## Tecnologías
 
@@ -91,5 +100,3 @@ Antes de comenzar, asegúrate de tener instalado:
 
 ---
 
-¿Te gustaría contribuir?  
-¡Siéntete libre de enviar un Pull Request o abrir un Issue!

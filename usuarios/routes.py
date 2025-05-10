@@ -7,13 +7,13 @@ import secrets
 from fastapi.templating import Jinja2Templates
 from database.database import get_db
 from utils.crud import crear_recurso
-from models.usuario import Usuario
-from schemas.usuario import UsuarioCreateSchema, UsuarioUpdateSchema
-from controllers.email import enviar_correo
+from usuarios.model import Usuario
+from usuarios.schema import UsuarioCreateSchema, UsuarioUpdateSchema
+from utils.email import enviar_correo
 
 router = APIRouter()
 
-templates = Jinja2Templates(directory="templates/admin/modulos")  # Ruta donde están las vistas
+templates = Jinja2Templates(directory="usuarios/templates")  # Ruta donde están las vistas
 
 #Ruta principal para mostrar tabla usuarios
 @router.get("/usuarios", tags=["Usuarios"])

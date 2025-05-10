@@ -3,12 +3,12 @@ from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from database.database import get_db
-from models.servicio import ServicioTecnico
-from models.cliente import Cliente  
+from servicios.model import ServicioTecnico
+from clientes.model import Cliente  
 #from schemas import servicioSchema
 
 router = APIRouter()
-templates = Jinja2Templates(directory="templates/admin/modulos")  # Ruta donde están las vistas
+templates = Jinja2Templates(directory="servicios/templates")  # Ruta donde están las vistas
 
 
 @router.get("/servicios", response_class=HTMLResponse, tags=["servicio_tecnico"])

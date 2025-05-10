@@ -3,16 +3,16 @@ from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.exc import IntegrityError
 from database.database import get_db
-from schemas.producto import ProductoCreate
-from models.proveedor import Proveedor
-from models.producto import Producto
+from inventario.schema import ProductoCreate
+from proveedores.model import Proveedor
+from inventario.model import Producto
 
 from fastapi.templating import Jinja2Templates
 from datetime import datetime
 
 
 router = APIRouter()
-templates = Jinja2Templates(directory="templates/admin/modulos")
+templates = Jinja2Templates(directory="inventario/templates")
 
 # Vista principal del inventario
 @router.get("/inventario", response_class=HTMLResponse, tags=["Productos"])

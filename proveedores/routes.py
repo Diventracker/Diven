@@ -3,13 +3,13 @@ from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError #para manejo de errores
 from database.database import get_db
-from models.proveedor import Proveedor
-from schemas.proveedor import ProveedorSchema
+from proveedores.model import Proveedor
+from proveedores.schema import ProveedorSchema
 from fastapi.templating import Jinja2Templates
 
 router = APIRouter()
 
-templates = Jinja2Templates(directory="templates/admin/modulos")  # Ruta donde están las vistas
+templates = Jinja2Templates(directory="proveedores/templates")  # Ruta donde están las vistas
 
 #Ruta principal para mostrar tabla Proveedores
 @router.get("/proveedores", response_class=HTMLResponse, tags=["Proveedores"])

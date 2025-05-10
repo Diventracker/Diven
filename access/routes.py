@@ -4,7 +4,7 @@ from fastapi.responses import RedirectResponse
 
 router = APIRouter()
 
-templates = Jinja2Templates(directory="templates/admin")  # Ruta donde están las vistas
+templates = Jinja2Templates(directory="access/templates")  # Ruta donde están las vistas
 
 @router.get("/admin", tags=["admin"])
 def home(request: Request):

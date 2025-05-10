@@ -1,7 +1,8 @@
 from sqlalchemy import Column, Integer, String, Date, DECIMAL, Text, ForeignKey
 from database.database import Base
 from sqlalchemy.orm import relationship
-from models import cliente, usuario  # Asegúrate de importar los modelos Cliente y Usuario
+from usuarios import model
+from clientes import model  # Asegúrate de importar los modelos Cliente y Usuario
 
 
 

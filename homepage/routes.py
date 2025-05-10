@@ -4,7 +4,7 @@ from fastapi.responses import HTMLResponse
 
 router = APIRouter()
 
-templates = Jinja2Templates(directory="templates")  # Ruta donde están las vistas
+templates = Jinja2Templates(directory="homepage/templates")  # Ruta donde están las vistas
 
 @router.get("/", response_class=HTMLResponse, tags=["Homepage"])
 def homepage(request: Request):

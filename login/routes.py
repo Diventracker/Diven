@@ -3,11 +3,11 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from database.database import get_db
-from models.usuario import Usuario
+from usuarios.model import Usuario
 from passlib.context import CryptContext
 
 router = APIRouter()
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="login/templates")
 
 
 #Ruta para la ventana del login
