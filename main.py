@@ -11,6 +11,8 @@ from proveedores import routes as proveedores_router
 from ventas import routes as ventas_router
 app = FastAPI()
 
+# Cargar configuraciones
+
 # Montamos la carpeta 'static'
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
