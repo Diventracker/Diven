@@ -9,6 +9,8 @@ from servicios import routes as servicios_router
 from inventario import routes as inventario_router
 from proveedores import routes as proveedores_router
 from ventas import routes as ventas_router
+from garantias import routes as garantias_router
+
 app = FastAPI()
 
 # Cargar configuraciones
@@ -29,4 +31,5 @@ app.include_router(clientes_router.router)
 app.include_router(servicios_router.router)
 app.include_router(inventario_router.router)
 app.include_router(proveedores_router.router)
-app.include_router(ventas_router.router) 
+app.include_router(ventas_router.router)
+app.include_router(garantias_router.router)

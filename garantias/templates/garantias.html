@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Garantías</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/css/modulos.css">   
+</head>
+
+<body>
+
+    <main>
+        <div class="container-fluid mt-4">
+
+            <h2 class="text-center">Gestión de Garantías</h2>
+
+            <!-- Contenedor para centrar buscador y botón -->
+            <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap my-3">
+                <form class="d-flex align-items-center gap-2">
+                    <input class="form-control" type="search" placeholder="Buscar ID garantía" aria-label="Search">
+                    <button class="btn btn-outline-enviar" type="submit">Buscar</button>
+                </form>
+
+                
+            </div>
+
+            <!-- Tabla -->
+            <div class="d-flex justify-content-center">
+                <!-- Importante esta clase responsive NO LA BORREN xd -->
+                <div class="table-responsive p-4">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID Garantía</th>
+                                <th>Cliente</th>
+                                <th>Equipo</th>
+                                <th>Fecha de Inicio</th>
+                                <th>Fecha de Fiscalización</th>
+                                <th>Descripción</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-garantias">
+                            <tr>
+                                <td>1</td>
+                                <td>Sergio Mora</td>
+                                <td>Tarjeta Gráfica</td>
+                                <td>01/12</td>
+                                <td>02/12</td>
+                                <td>Se actualizó los drivers</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalEditar">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+ <!-- Modal Editar -->
+    <div class="modal fade" id="modalEditar" aria-labelledby="modalEditarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditarLabel">Actualizar Garantía </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Pasar el id del cliente mediante el link del form -->
+                    <form id="formCliente" action="" method="post">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Equipo:</label>
+                            <input type="text" class="form-control" value="" name="nombre_cliente" required
+                                pattern="[A-Za-z\s]+" maxlength="50">
+                        </div>
+                        <div class="mb-3">
+                            <label for="cedula" class="form-label">Fecha de Inicio:</label>
+                            <input type="text" class="form-control" value="" name="cedula" required pattern="\d+"
+                                maxlength="10">
+                        </div>
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Descripción:</label>
+                            <input type="text" class="form-control" name="direccion_cliente" value="" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-enviar w-100">Actualizar Garantía</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Eliminar -->
+    <div class="modal fade" id="modalEliminar" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEliminarLabel">Eliminar Garantía</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p >¿Seguro que desea eliminar esta garantía?</p>
+                    <input type="hidden" id="garantiaIdToDelete"/>
+                    <!-- Span que muestra el nombre de la garantia -->
+                    <span id="nombreGarantia" class="fw-bold d-block fs-4">Tarjeta Grafica</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+
+</body>
+
+</html>
