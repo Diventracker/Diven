@@ -46,6 +46,7 @@ def crear_servicio(
     fecha_recepcion: str = Form(...),
     fecha_entrega: str = Form(...),
     estado: str = Form(...),
+    mes_garantia: str = Form(...),
     db: Session = Depends(get_db)
 ):
     # Obtener el usuario_id desde la cookie
@@ -65,6 +66,7 @@ def crear_servicio(
         fecha_recepcion=fecha_recepcion,
         fecha_entrega_estimada=fecha_entrega,
         estado_servicio=estado,
+        mes_garantia=mes_garantia,
     )
 
     db.add(nuevo)

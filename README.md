@@ -40,11 +40,17 @@ Antes de comenzar, asegúrate de tener instalado:
   source venv/bin/activate (Linux/Mac)
 ```
 
+#### 4.1 *Opcional - Si pide permirsos (Ejecutar antes del uvircorn)
+
+
+```bash
+  Set-ExecutionPolicy -Scope Process -ExecutionPolicy Unrestricted
+```
+
 #### 5. Instala las dependencias necesarias
 
 ```bash
   pip install -r requirements.txt
-
 ```
 
 #### 6. Inicia el servidor de desarrollo
@@ -52,6 +58,15 @@ Antes de comenzar, asegúrate de tener instalado:
 ```bash
   uvicorn main:app --reload
 ```
+
+## 👥 Usuarios de Ejemplo
+
+| 📧 Correo                  | 🔒 Contraseña     |
+|---------------------------|-------------------|
+| admin@tienda.com      | clave123     |
+
+
+---
 
 ## 🗂️ Estructura del Proyecto
 
@@ -69,13 +84,6 @@ Antes de comenzar, asegúrate de tener instalado:
 ├── 🗃️ database/               # Configuración y conexión a la base de datos
 └── 📋 requirements.txt        # Lista de dependencias del proyecto
 ```
-
-## 👥 Usuarios de Ejemplo
-
-| 📧 Correo                  | 🔒 Contraseña     |
-|---------------------------|-------------------|
-| admin@tienda.com      | clave123     |
-
 
 ## Tecnologías
 

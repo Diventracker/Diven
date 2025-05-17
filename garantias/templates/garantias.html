@@ -19,8 +19,8 @@
 
             <!-- Contenedor para centrar buscador y botón -->
             <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap my-3">
-                <form class="d-flex align-items-center gap-2">
-                    <input class="form-control" type="search" placeholder="Buscar ID garantía" aria-label="Search">
+                <form class="d-flex align-items-center gap-2" method="get" action="/garantias">
+                    <input class="form-control" name="search" value="" type="search" placeholder="Buscar garantía" aria-label="Search">
                     <button class="btn btn-outline-enviar" type="submit">Buscar</button>
                 </form>
 
@@ -38,28 +38,30 @@
                                 <th>Cliente</th>
                                 <th>Equipo</th>
                                 <th>Fecha de Inicio</th>
-                                <th>Fecha de Fiscalización</th>
+                                <th>Fecha de Finalización</th>
                                 <th>Descripción</th>
-                                <th>Acción</th>
+                                {#<th>Acción</th>#}
                             </tr>
                         </thead>
                         <tbody id="tabla-garantias">
+                            {% for g in garantias %}
                             <tr>
-                                <td>1</td>
-                                <td>Sergio Mora</td>
-                                <td>Tarjeta Gráfica</td>
-                                <td>01/12</td>
-                                <td>02/12</td>
-                                <td>Se actualizó los drivers</td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalEditar">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </td>
+                                <td>{{ g.id_garantia }}</td>
+                                <td>{{ g.servicio.cliente.nombre_cliente }}</td>  {# Asegúrate de que esto exista #}
+                                <td>{{ g.servicio.tipo_equipo }} - {{ g.servicio.marca_equipo }}</td>
+                                <td>{{ g.fecha_inicio }}</td>
+                                <td>{{ g.fecha_fin }}</td>
+                                <td>{{ g.servicio.descripcion_problema }}</td>
+                                {#<td>#}
+                                    {#<button class="btn btn-sm btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalEditar">#}
+                            {#<i class="bi bi-pencil"></i>#}
+                                    {#</button>#}
+                                    {#<button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar">#}
+                                        {#<i class="bi bi-trash"></i>#}
+                                    {#</button>#}
+                                {#</td>#}
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
