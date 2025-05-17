@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost
--- Tiempo de generación: 10-05-2025 a las 21:12:58
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.0.30
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 16-05-2025 a las 21:28:10
+-- Versión del servidor: 10.4.28-MariaDB
+-- Versión de PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `Cliente`
+-- Estructura de tabla para la tabla `cliente`
 --
 
 CREATE TABLE `Cliente` (
@@ -37,7 +37,7 @@ CREATE TABLE `Cliente` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `Cliente`
+-- Volcado de datos para la tabla `cliente`
 --
 
 INSERT INTO `Cliente` (`id_cliente`, `nombre_cliente`, `cedula`, `direccion_cliente`, `telefono_cliente`, `email_cliente`) VALUES
@@ -66,12 +66,13 @@ INSERT INTO `Cliente` (`id_cliente`, `nombre_cliente`, `cedula`, `direccion_clie
 (27, 'Fernando Pérez', '1256789012', 'Avenida 14 #35-45', '5205678901', 'fernando.perez@email.com'),
 (28, 'Patricia Rodríguez', '1267890123', 'Calle 13 #25-35', '5306789012', 'patricia.rodriguez@email.com'),
 (29, 'Roberto Torres', '1278901234', 'Avenida 18 #45-55', '5407890123', 'roberto.torres@email.com'),
-(45, 'Zoeeee Guadalupe', '129012345', 'Diagonal 78', '3222323232', 'andw@gmail.com');
+(45, 'Zoeeee Guadalupe', '129012345', 'Diagonal 78', '3222323232', 'andw@gmail.com'),
+(52, 'Harol', '123222323', 'diagonal 56', '3224354565', 'harol@gmail.com');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `Detalle_Venta`
+-- Estructura de tabla para la tabla `detalle_venta`
 --
 
 CREATE TABLE `Detalle_Venta` (
@@ -85,7 +86,7 @@ CREATE TABLE `Detalle_Venta` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `Garantia_Producto`
+-- Estructura de tabla para la tabla `garantia_producto`
 --
 
 CREATE TABLE `Garantia_Producto` (
@@ -99,7 +100,7 @@ CREATE TABLE `Garantia_Producto` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `Garantia_Servicio`
+-- Estructura de tabla para la tabla `garantia_servicio`
 --
 
 CREATE TABLE `Garantia_Servicio` (
@@ -109,10 +110,20 @@ CREATE TABLE `Garantia_Servicio` (
   `fecha_fin` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `garantia_servicio`
+--
+
+INSERT INTO `Garantia_Servicio` (`id_garantia`, `id_servicio`, `fecha_inicio`, `fecha_fin`) VALUES
+(3, 22, '2025-05-17', '2025-07-17'),
+(4, 23, '2025-05-19', '2025-08-19'),
+(5, 24, '2025-05-18', '2025-07-18'),
+(6, 25, '2025-05-17', '2025-10-17');
+
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `Producto`
+-- Estructura de tabla para la tabla `producto`
 --
 
 CREATE TABLE `Producto` (
@@ -131,7 +142,7 @@ CREATE TABLE `Producto` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `Producto`
+-- Volcado de datos para la tabla `producto`
 --
 
 INSERT INTO `Producto` (`id_producto`, `nombre_producto`, `marca`, `modelo`, `descripcion`, `precio`, `stock`, `id_proveedor`, `fecha_inicio_garantia`, `fecha_expiracion_garantia`, `fecha_compra`, `precio_venta`) VALUES
@@ -144,7 +155,7 @@ INSERT INTO `Producto` (`id_producto`, `nombre_producto`, `marca`, `modelo`, `de
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `Proveedor`
+-- Estructura de tabla para la tabla `proveedor`
 --
 
 CREATE TABLE `Proveedor` (
@@ -157,7 +168,7 @@ CREATE TABLE `Proveedor` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `Proveedor`
+-- Volcado de datos para la tabla `proveedor`
 --
 
 INSERT INTO `Proveedor` (`id_proveedor`, `nit`, `nombre_proveedor`, `representante_ventas`, `telefono_representante_ventas`, `direccion_proveedor`) VALUES
@@ -169,7 +180,7 @@ INSERT INTO `Proveedor` (`id_proveedor`, `nit`, `nombre_proveedor`, `representan
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `Servicio_Tecnico`
+-- Estructura de tabla para la tabla `servicio_tecnico`
 --
 
 CREATE TABLE `Servicio_Tecnico` (
@@ -182,23 +193,43 @@ CREATE TABLE `Servicio_Tecnico` (
   `descripcion_problema` text NOT NULL,
   `fecha_recepcion` date NOT NULL,
   `fecha_entrega_estimada` date NOT NULL,
-  `estado_servicio` varchar(50) NOT NULL
+  `estado_servicio` varchar(50) NOT NULL,
+  `mes_garantia` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `Servicio_Tecnico`
+-- Volcado de datos para la tabla `servicio_tecnico`
 --
 
-INSERT INTO `Servicio_Tecnico` (`id_servicio`, `id_cliente`, `id_usuario`, `tipo_equipo`, `marca_equipo`, `modelo_equipo`, `descripcion_problema`, `fecha_recepcion`, `fecha_entrega_estimada`, `estado_servicio`) VALUES
-(10, 18, 1, 'sdasda', 'dasdas', 'dasdas', 'dsadasd', '2025-04-01', '2025-04-17', 'Finalizado'),
-(11, 45, 1, 'Portatil', 'Asus', 'rog76', 'No prende', '2025-04-01', '2025-04-17', 'En Progreso'),
-(13, 45, 1, 'sdsads', 'dsadsa', 'dsadsa', 'dsadas', '2025-04-01', '2025-04-17', 'En Progreso'),
-(14, 16, 1, 'Computador', 'asus', 'rog89', 'le falla la ram', '2025-04-07', '2025-04-10', 'Finalizado');
+INSERT INTO `Servicio_Tecnico` (`id_servicio`, `id_cliente`, `id_usuario`, `tipo_equipo`, `marca_equipo`, `modelo_equipo`, `descripcion_problema`, `fecha_recepcion`, `fecha_entrega_estimada`, `estado_servicio`, `mes_garantia`) VALUES
+(10, 18, 1, 'sdasda', 'dasdas', 'dasdas', 'dsadasd', '2025-04-01', '2025-04-17', 'Finalizado', 0),
+(13, 45, 1, 'sdsads', 'dsadsa', 'dsadsa', 'dsadas', '2025-04-01', '2025-04-17', 'En Progreso', 0),
+(22, 45, 1, 'HP', 'Asus', 'Samsung', 'No prende', '2025-05-16', '2025-05-17', 'Finalizado', 2),
+(23, 15, 1, 'Celular', 'Samsung', 'S24', 'No tiene volumen', '2025-05-16', '2025-05-19', 'Finalizado', 3),
+(24, 8, 1, 'Reloj de mano', 'xiami', 'reloj rojo', 'sin manilla', '2025-05-16', '2025-05-18', 'En Progreso', 2),
+(25, 45, 1, 'PC', 'Hp', '2093', 'No prende', '2025-05-16', '2025-05-17', 'En Progreso', 5);
+
+--
+-- Disparadores `servicio_tecnico`
+--
+DELIMITER $$
+CREATE TRIGGER `crear_garantia_servicio` AFTER INSERT ON `Servicio_Tecnico` FOR EACH ROW BEGIN
+    DECLARE fecha_inicio DATE;
+    DECLARE fecha_fin DATE;
+
+    SET fecha_inicio = NEW.fecha_entrega_estimada;
+    SET fecha_fin = DATE_ADD(fecha_inicio, INTERVAL NEW.mes_garantia MONTH);
+
+    INSERT INTO Garantia_Servicio (id_servicio, fecha_inicio, fecha_fin)
+    VALUES (NEW.id_servicio, fecha_inicio, fecha_fin);
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `Usuario`
+-- Estructura de tabla para la tabla `usuario`
 --
 
 CREATE TABLE `Usuario` (
@@ -210,17 +241,18 @@ CREATE TABLE `Usuario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `Usuario`
+-- Volcado de datos para la tabla `usuario`
 --
 
 INSERT INTO `Usuario` (`id_usuario`, `nombre_usuario`, `correo`, `clave`, `rol`) VALUES
 (1, 'Administrador', 'admin@tienda.com', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Administrador'),
-(6, 'Test', 'test-hh08p33yo@srv1.mail-tester.com', '$2b$12$r6Jl3YLSy2Y09Zb6O9c0jehbVrzcNnh170hzktc4NNs5EbrFgl066', 'Administrador');
+(6, 'Test', 'test-hh08p33yo@srv1.mail-tester.com', '$2b$12$r6Jl3YLSy2Y09Zb6O9c0jehbVrzcNnh170hzktc4NNs5EbrFgl066', 'Administrador'),
+(7, 'Camilo', 'camilo@gmail.com', '$2b$12$yro3DZDDrGXH84lNobflwebTK8Ywirw6KcAQNPOgmel7oY8tq7SSq', 'Tecnico');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `Venta`
+-- Estructura de tabla para la tabla `venta`
 --
 
 CREATE TABLE `Venta` (
@@ -236,7 +268,7 @@ CREATE TABLE `Venta` (
 --
 
 --
--- Indices de la tabla `Cliente`
+-- Indices de la tabla `cliente`
 --
 ALTER TABLE `Cliente`
   ADD PRIMARY KEY (`id_cliente`),
@@ -244,7 +276,7 @@ ALTER TABLE `Cliente`
   ADD UNIQUE KEY `email_cliente` (`email_cliente`);
 
 --
--- Indices de la tabla `Detalle_Venta`
+-- Indices de la tabla `detalle_venta`
 --
 ALTER TABLE `Detalle_Venta`
   ADD PRIMARY KEY (`id_detalle`),
@@ -252,35 +284,35 @@ ALTER TABLE `Detalle_Venta`
   ADD KEY `id_producto` (`id_producto`);
 
 --
--- Indices de la tabla `Garantia_Producto`
+-- Indices de la tabla `garantia_producto`
 --
 ALTER TABLE `Garantia_Producto`
   ADD PRIMARY KEY (`id_garantia`),
   ADD KEY `id_producto` (`id_producto`);
 
 --
--- Indices de la tabla `Garantia_Servicio`
+-- Indices de la tabla `garantia_servicio`
 --
 ALTER TABLE `Garantia_Servicio`
   ADD PRIMARY KEY (`id_garantia`),
   ADD KEY `id_servicio` (`id_servicio`);
 
 --
--- Indices de la tabla `Producto`
+-- Indices de la tabla `producto`
 --
 ALTER TABLE `Producto`
   ADD PRIMARY KEY (`id_producto`),
   ADD KEY `id_proveedor` (`id_proveedor`);
 
 --
--- Indices de la tabla `Proveedor`
+-- Indices de la tabla `proveedor`
 --
 ALTER TABLE `Proveedor`
   ADD PRIMARY KEY (`id_proveedor`),
   ADD UNIQUE KEY `nit` (`nit`);
 
 --
--- Indices de la tabla `Servicio_Tecnico`
+-- Indices de la tabla `servicio_tecnico`
 --
 ALTER TABLE `Servicio_Tecnico`
   ADD PRIMARY KEY (`id_servicio`),
@@ -288,14 +320,14 @@ ALTER TABLE `Servicio_Tecnico`
   ADD KEY `id_usuario` (`id_usuario`);
 
 --
--- Indices de la tabla `Usuario`
+-- Indices de la tabla `usuario`
 --
 ALTER TABLE `Usuario`
   ADD PRIMARY KEY (`id_usuario`),
   ADD UNIQUE KEY `correo` (`correo`);
 
 --
--- Indices de la tabla `Venta`
+-- Indices de la tabla `venta`
 --
 ALTER TABLE `Venta`
   ADD PRIMARY KEY (`id_venta`),
@@ -307,55 +339,55 @@ ALTER TABLE `Venta`
 --
 
 --
--- AUTO_INCREMENT de la tabla `Cliente`
+-- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `Cliente`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
--- AUTO_INCREMENT de la tabla `Detalle_Venta`
+-- AUTO_INCREMENT de la tabla `detalle_venta`
 --
 ALTER TABLE `Detalle_Venta`
   MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `Garantia_Producto`
+-- AUTO_INCREMENT de la tabla `garantia_producto`
 --
 ALTER TABLE `Garantia_Producto`
   MODIFY `id_garantia` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `Garantia_Servicio`
+-- AUTO_INCREMENT de la tabla `garantia_servicio`
 --
 ALTER TABLE `Garantia_Servicio`
-  MODIFY `id_garantia` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_garantia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT de la tabla `Producto`
+-- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `Producto`
   MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT de la tabla `Proveedor`
+-- AUTO_INCREMENT de la tabla `proveedor`
 --
 ALTER TABLE `Proveedor`
   MODIFY `id_proveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
--- AUTO_INCREMENT de la tabla `Servicio_Tecnico`
+-- AUTO_INCREMENT de la tabla `servicio_tecnico`
 --
 ALTER TABLE `Servicio_Tecnico`
-  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
--- AUTO_INCREMENT de la tabla `Usuario`
+-- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `Usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT de la tabla `Venta`
+-- AUTO_INCREMENT de la tabla `venta`
 --
 ALTER TABLE `Venta`
   MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT;
@@ -365,39 +397,39 @@ ALTER TABLE `Venta`
 --
 
 --
--- Filtros para la tabla `Detalle_Venta`
+-- Filtros para la tabla `detalle_venta`
 --
 ALTER TABLE `Detalle_Venta`
   ADD CONSTRAINT `Detalle_Venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `Venta` (`id_venta`),
   ADD CONSTRAINT `Detalle_Venta_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `Producto` (`id_producto`);
 
 --
--- Filtros para la tabla `Garantia_Producto`
+-- Filtros para la tabla `garantia_producto`
 --
 ALTER TABLE `Garantia_Producto`
   ADD CONSTRAINT `Garantia_Producto_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `Producto` (`id_producto`);
 
 --
--- Filtros para la tabla `Garantia_Servicio`
+-- Filtros para la tabla `garantia_servicio`
 --
 ALTER TABLE `Garantia_Servicio`
   ADD CONSTRAINT `Garantia_Servicio_ibfk_1` FOREIGN KEY (`id_servicio`) REFERENCES `Servicio_Tecnico` (`id_servicio`);
 
 --
--- Filtros para la tabla `Producto`
+-- Filtros para la tabla `producto`
 --
 ALTER TABLE `Producto`
   ADD CONSTRAINT `Producto_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `Proveedor` (`id_proveedor`);
 
 --
--- Filtros para la tabla `Servicio_Tecnico`
+-- Filtros para la tabla `servicio_tecnico`
 --
 ALTER TABLE `Servicio_Tecnico`
   ADD CONSTRAINT `Servicio_Tecnico_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `Cliente` (`id_cliente`),
   ADD CONSTRAINT `Servicio_Tecnico_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `Usuario` (`id_usuario`);
 
 --
--- Filtros para la tabla `Venta`
+-- Filtros para la tabla `venta`
 --
 ALTER TABLE `Venta`
   ADD CONSTRAINT `Venta_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `Cliente` (`id_cliente`),

@@ -6,6 +6,7 @@ from clientes import model  # Asegúrate de importar los modelos Cliente y Usuar
 
 
 
+
 class ServicioTecnico(Base):
     __tablename__= "Servicio_Tecnico"
 
@@ -19,7 +20,9 @@ class ServicioTecnico(Base):
     fecha_recepcion = Column(Date, nullable=False)
     fecha_entrega_estimada = Column(Date, nullable=False)
     estado_servicio = Column(String(50), nullable=False)
+    mes_garantia = Column(Integer, nullable=False)
 
     # Relaciones opcionales si las necesitas
     cliente = relationship("Cliente")
     usuario = relationship("Usuario")
+    garantias = relationship("Garantia", back_populates="servicio", cascade="all, delete-orphan")
