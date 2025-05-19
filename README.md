@@ -36,6 +36,7 @@ Antes de comenzar, asegúrate de tener instalado:
 
 
 ```bash
+  Set-ExecutionPolicy -Scope Process -ExecutionPolicy Unrestricted
   venv\Scripts\activate (Windows)
   source venv/bin/activate (Linux/Mac)
 ```
