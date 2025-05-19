@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DivenTraker</title>
+    <title>DivenTracker</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-   <link rel="stylesheet" href="/static/css/layout.css">
+   <link rel="stylesheet" href="/static/css/layoutv2.css">
    <link rel="icon" href="/static/img/faviconW.png" type="image/png">
 </head>
 <body>
@@ -14,8 +14,8 @@
     <!-- Barra de Navegación Superior -->
     <nav class="navbar navbar-top bg-dark text-white px-3">
         <div class="container-fluid justify-content-start">
-            <!-- Botón para colapsar/expandir el menú lateral -->
-            <button class="btn btn-light me-3" type="button" id="sidebarToggle">
+            <!-- Toggle sidebar button (mobile) -->
+            <button class="btn me-3 toggle-sidebar" type="button" id="menu-toggle">
                 <i class="bi bi-list"></i>
             </button>
 
@@ -38,30 +38,60 @@
         </div>
     </nav>
 
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <!-- <div class="sidebar-heading">
+        <i class="bi bi-shop"></i>
+        <span class="menu-text ms-2">Diventracker</span>
+        </div> -->
+        <div class="list-group">
+        <a href="/dashboard" target="modulos" class="list-group-item">
+            <i class="bi bi-speedometer2"></i>
+            <span class="menu-text">Dashboard</span>
+        </a>
+        <a href="/inventario" target="modulos" class="list-group-item active">
+            <i class="bi bi-box-seam"></i>
+            <span class="menu-text">Inventario</span>
+        </a>
+        <a href="/clientes" target="modulos" class="list-group-item">
+            <i class="bi bi-people"></i>
+            <span class="menu-text">Gestión Clientes</span>
+        </a>
+        <a href="/garantias" target="modulos" class="list-group-item">
+            <i class="bi bi-shield-check"></i>
+            <span class="menu-text">Garantías</span>
+        </a>
+        <a href="/proveedores" target="modulos" class="list-group-item">
+            <i class="bi bi-truck"></i>
+            <span class="menu-text">Gestión Proveedores</span>
+        </a>
+        <a href="/servicios" target="modulos" target="modulos" class="list-group-item">
+            <i class="bi bi-tools"></i>
+            <span class="menu-text">Servicio Técnico</span>
+        </a>
+        <a href="/usuarios" target="modulos" class="list-group-item">
+            <i class="bi bi-person-gear"></i>
+            <span class="menu-text">Usuarios</span>
+        </a>
+        <a href="/ventas" target="modulos" class="list-group-item">
+            <i class="bi bi-cash-coin"></i>
+            <span class="menu-text">Ventas</span>
+        </a>
+        </div>
+    </div>
+    
+    
     <!-- Contenedor principal con flexbox -->
-    <div class="content-wrapper alto-row">
-        <!-- Menú lateral -->
-        <nav id="sidebar">                
-            <ul class="nav flex-column">
-                <li class="nav-item"><a class="nav-link" href="Modulo_Dashboard.html" target="modulos"><i class="bi bi-clock-history"></i> Dashboard </a></li>
-                <li class="nav-item"><a class="nav-link" href="/inventario" target="modulos"><i class="bi bi-box-seam"></i> Inventario</a></li>
-                <li class="nav-item"><a class="nav-link" href="/clientes" target="modulos"><i class="bi bi-people"></i> Gestión Clientes</a></li>
-                <li class="nav-item"><a class="nav-link" href="/garantias" target="modulos"><i class="bi bi-shield-check"></i> Garantías</a></li>
-                <li class="nav-item"><a class="nav-link" href="/proveedores" target="modulos"><i class="bi bi-truck"></i> Gestión Proveedores</a></li>
-                <li class="nav-item"><a class="nav-link" href="/servicios" target="modulos"><i class="bi bi-tools"></i> Servicio Técnico</a></li>
-                <li class="nav-item"><a class="nav-link" href="/usuarios" target="modulos"><i class="bi bi-person-check"></i> Usuarios</a></li>
-                <li class="nav-item"><a class="nav-link" href="/ventas" target="modulos"><i class="bi bi-currency-dollar"></i> Ventas</a></li>
-            </ul>                
-        </nav>
+    <div class="content-wrapper">
         
         <!-- Contenido principal -->
         <main id="mainContent"> 
-            <iframe name="modulos" src="/clientes"></iframe>
+            <iframe name="modulos" src="/inventario"></iframe>
         </main>
     </div>
 
     <!-- Scripts de Bootstrap y JavaScript personalizado -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/static/js/eventos.js"> </script>
+    <script src="/static/js/navbarv2.js"> </script>
 </body>
 </html>
