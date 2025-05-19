@@ -118,7 +118,7 @@
 
                         <div class="mb-3">
                             <label for="representante" class="form-label">Representante de Ventas:</label>
-                            <input type="text" class="form-control" name="representante_ventas" required>
+                            <input type="text" class="form-control" name="representante_ventas" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" required>
                         </div>
 
                         <div class="mb-3">
@@ -155,11 +155,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="nombre" class="form-label">Nombre del Proveedor:</label>
-                        <input type="text" class="form-control" id="editNombreP" name="nombre_proveedor" required pattern="[A-Za-z\s]+" maxlength="50">
+                        <input type="text" class="form-control" id="editNombreP" name="nombre_proveedor" required maxlength="50">
                     </div>
                     <div class="mb-3">
                         <label for="reventas" class="form-label">Representante de Ventas:</label>
-                        <input type="text" class="form-control" id="editRepresentante" name="representante_ventas" required pattern="\d+" maxlength="50">
+                        <input type="text" class="form-control" id="editRepresentante" name="representante_ventas" required pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" maxlength="50">
                     </div>
                     <div class="mb-3">
                         <label for="telefono" class="form-label">Telefono:</label>

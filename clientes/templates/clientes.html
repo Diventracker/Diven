@@ -111,7 +111,7 @@
                     <input type="hidden" id="editClienteId">
                     <div class="mb-3">
                         <label for="nombre" class="form-label">Nombre:</label>
-                        <input type="text" class="form-control" id="editNombre" name="nombre" required pattern="[A-Za-z\s]+" maxlength="50">
+                        <input type="text" class="form-control" id="editNombre" name="nombre" required pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" maxlength="50">
                     </div>
                     <div class="mb-3">
                         <label for="cedula" class="form-label">Cédula:</label>
@@ -171,7 +171,7 @@
                 <form action="/clientes/crear" method="post">
                     <div class="mb-3">
                         <label for="nombre" class="form-label">Nombre:</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre_cliente" required pattern="[A-Za-z\s]+" maxlength="50">
+                        <input type="text" class="form-control" id="nombre" name="nombre_cliente" required pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" maxlength="50">
                     </div>
                     <div class="mb-3">
                         <label for="cedula" class="form-label">Cédula:</label>
