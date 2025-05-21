@@ -41,7 +41,7 @@ Antes de comenzar, asegúrate de tener instalado:
   source venv/bin/activate (Linux/Mac)
 ```
 
-#### 4.1 *Opcional - Si pide permirsos (Ejecutar antes del uvircorn)
+#### 4.1 *Opcional - Si pide permisos (Ejecutar antes del uvircorn)
 
 
 ```bash
