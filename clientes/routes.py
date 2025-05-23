@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Depends, Form
+from fastapi import APIRouter, HTTPException, Request, Depends, Form
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError #para manejo de errores
@@ -97,3 +97,20 @@ def eliminar_cliente(
     except IntegrityError:
         db.rollback()
         return JSONResponse(content={"message": "error"})
+
+    
+#Ruta para obtener el cliente
+@router.get("/clientes/buscar/{cedula}", response_class=JSONResponse)
+def buscar_cliente_por_cedula(cedula: str, db: Session = Depends(get_db)):
+    cliente = db.query(Cliente).filter(Cliente.cedula == cedula).first()
+
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente no encontrado")
+
+    return {
+        "id": cliente.id_cliente,
+        "nombre": cliente.nombre_cliente,
+        "cedula": cliente.cedula,
+        "direccion": cliente.direccion_cliente,
+        # Agrega más campos si los tienes
+    }

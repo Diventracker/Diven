@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generar Venta</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="/static/css/modulos.css">
+</head>
+
+<body>
+  <main class="container mt-3">
+
+    <!-- Información General -->
+    <section class="mb-3 p-3 border rounded bg-panel">
+      <div id="alerta-cliente-no-encontrado"
+        class="alert alert-warning text-center small fade show position-fixed start-50 translate-middle-x shadow-lg"
+        role="alert"
+        style="max-width: 400px; z-index: 1050; display: none;">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> ¡Cliente no encontrado!
+      </div>
+      <h2 class="text-center mb-3">Información General</h2>
+
+      <div class="row">
+        <!-- Datos del cliente -->
+        <div class="col-md-8">
+          <div class="card h-100 shadow-sm">
+            <div class="card-header">
+              <h6 class="mb-0"><i class="bi bi-person-circle me-2"></i>Datos del Cliente</h6>
+            </div>
+            <div class="card-body">
+              <div class="row mb-3">
+                <div class="col-md-8">
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Buscar cliente por CC" id="cc-input">
+                    <button class="btn btn-outline-enviar" type="button" onclick="buscarCliente()"><i class="bi bi-search"></i></button>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <button class="btn btn-enviar w-100"><i class="bi bi-plus-lg me-1"></i>Nuevo</button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Nombre</label>
+                  <input type="hidden" id="id-cliente">
+                  <input id="nombre-cliente" type="text" class="form-control" value="Cliente General" readonly>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">CC</label>
+                  <input id="cc-cliente" type="text" class="form-control" value="00000000" readonly>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 mb-3">
+                  <label class="form-label">Dirección</label>
+                  <input id="direccion-cliente" type="text" class="form-control" readonly>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Datos de la venta-->
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-header">
+              <h6 class="mb-0"><i class="bi bi-receipt-cutoff me-2"></i>Datos de la Venta</h6>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12 mb-3">
+                  <label class="form-label">Fecha</label>
+                  <input type="date" class="form-control" value="{{ fecha_actual }}" readonly>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 mb-3">
+                  <label class="form-label">Vendedor</label>
+                  <input type="text" class="form-control" value="{{ nombre_usuario }}" readonly>
+                  <input type="hidden" id="id-usuario" value="{{ id_usuario }}">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Información de Productos -->
+    <section class="p-3 border rounded bg-panel">
+      <h2 class="text-center mb-3">Información de Productos</h2>
+
+      <!-- Card Buscar los productos -->
+
+      <div class="row mb-4">
+        <div class="col-12">
+          <div class="card shadow-sm">
+            <div class="card-header">
+              <h6 class="mb-0"><i class="bi bi-search me-2"></i>Buscar Productos</h6>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-5">
+                  <div class="input-group">
+                    <input id="buscador-producto" type="text" class="form-control" placeholder="Buscar por código o nombre">
+                    <button class="btn btn-outline-enviar" type="button" onclick="buscarProducto()"><i class="bi bi-search"></i></button>
+                  </div>
+                </div>
+                <div class="col-md-5">
+                  <!-- <select class="form-select">
+                    <option selected>Todas las categorías</option>
+                    <option>Electrónicos</option>
+                  </select> -->
+                </div>
+                <div class="col-md-2">
+                  <button class="btn btn-enviar w-100" data-bs-toggle="modal" data-bs-target="#productosModal">
+                    <i class="bi bi-grid me-1"></i>Ver todos
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de productos seleccionados -->
+      <table id="tabla-productos" class="table">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Sub.Total</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Las filas se agregarán dinámicamente aquí -->
+          <!-- Fila de total -->
+          <tr class="table-active">
+            <td colspan="3"></td>
+            <td class="fw-bold">TOTAL:</td>
+            <td class="fw-bold fs-5"><span id="total-venta">$0.00</span></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="d-flex justify-content-end gap-2 py-3">
+        <button onclick="location.href='/ventas'" class="btn btn-outline-danger"><i class="bi bi-x-lg me-1"></i>Cancelar</button>
+        <button class="btn btn-enviar" onclick="generarVenta()" ><i class="bi bi-check-lg me-1"></i>Finalizar Venta</button>
+      </div>
+
+  </main>
+
+<!-- Modal para visualizar todos los productos (Versión Cards) -->
+<div class="modal fade" id="productosModal2" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-grid-3x3-gap me-2"></i>Catálogo de Productos</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Buscar producto">
+              <button class="btn btn-outline-enviar" type="button"><i class="bi bi-search"></i></button>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <select class="form-select">
+              <option selected>Todas las categorías</option>
+              <option>Electrónicos</option>
+              <option>Ropa</option>
+              <option>Alimentos</option>
+              <option>Hogar</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select class="form-select">
+              <option selected>Con stock</option>
+              <option>Todos</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="row row-cols-1 row-cols-md-5 g-3">
+          <!-- Producto 1 -->
+          <div class="col">
+            <div class="card h-100">
+              <div class="card-body py-2">
+                <h6 class="card-title">Smartphone Galaxy S23</h6>
+                <p class="card-text text-muted small mb-1">SKU: P001</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="badge bg-stock">Stock: 15</span>
+                  <span class="fw-bold">$899.99</span>
+                </div>
+              </div>
+              <div class="card-footer bg-white p-2">
+                <button class="btn btn-enviar btn-sm w-100"><i class="bi bi-plus-lg me-1"></i>Agregar</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Producto 2 -->
+          <div class="col">
+            <div class="card h-100">
+              <div class="card-body py-2">
+                <h6 class="card-title">iPhone 15 Pro</h6>
+                <p class="card-text text-muted small mb-1">SKU: P002</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="badge bg-stock">Stock: 8</span>
+                  <span class="fw-bold">$1,099.99</span>
+                </div>
+              </div>
+              <div class="card-footer bg-white p-2">
+                <button class="btn btn-enviar btn-sm w-100"><i class="bi bi-plus-lg me-1"></i>Agregar</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Producto 3 -->
+          <div class="col">
+            <div class="card h-100">
+              <div class="card-body py-2">
+                <h6 class="card-title">Cargador rápido USB-C</h6>
+                <p class="card-text text-muted small mb-1">SKU: P023</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="badge bg-stock">Stock: 42</span>
+                  <span class="fw-bold">$29.99</span>
+                </div>
+              </div>
+              <div class="card-footer bg-white p-2">
+                <button class="btn btn-enviar btn-sm w-100"><i class="bi bi-plus-lg me-1"></i>Agregar</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Producto 4 -->
+          <div class="col">
+            <div class="card h-100">
+              <div class="card-body py-2">
+                <h6 class="card-title">Funda protectora silicona</h6>
+                <p class="card-text text-muted small mb-1">SKU: P045</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="badge bg-stock">Stock: 56</span>
+                  <span class="fw-bold">$19.99</span>
+                </div>
+              </div>
+              <div class="card-footer bg-white p-2">
+                <button class="btn btn-enviar btn-sm w-100"><i class="bi bi-plus-lg me-1"></i>Agregar</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Producto 5 -->
+          <div class="col">
+            <div class="card h-100">
+              <div class="card-body py-2">
+                <h6 class="card-title">Audífonos Bluetooth JBL</h6>
+                <p class="card-text text-muted small mb-1">SKU: P067</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="badge bg-stock">Stock: 12</span>
+                  <span class="fw-bold">$59.99</span>
+                </div>
+              </div>
+              <div class="card-footer bg-white p-2">
+                <button class="btn btn-enviar btn-sm w-100"><i class="bi bi-plus-lg me-1"></i>Agregar</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Producto 6 -->
+          <div class="col">
+            <div class="card h-100">
+              <div class="card-body py-2">
+                <h6 class="card-title">Smart TV Samsung 50"</h6>
+                <p class="card-text text-muted small mb-1">SKU: P089</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="badge bg-stock">Stock: 5</span>
+                  <span class="fw-bold">$499.99</span>
+                </div>
+              </div>
+              <div class="card-footer bg-white p-2">
+                <button class="btn btn-enviar btn-sm w-100"><i class="bi bi-plus-lg me-1"></i>Agregar</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Producto 7 -->
+          <div class="col">
+            <div class="card h-100 producto-seleccionado">
+              <div class="card-body py-2">
+                <h6 class="card-title">Tablet Samsung Galaxy Tab</h6>
+                <p class="card-text text-muted small mb-1">SKU: P112</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="badge bg-stock">Stock: 9</span>
+                  <span class="fw-bold">$349.99</span>
+                </div>
+              </div>
+              <div class="card-footer bg-white p-2">
+                <button class="btn btn-enviar btn-sm w-100"><i class="bi bi-check-lg me-1"></i>Seleccionado</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Producto 8 -->
+          <div class="col">
+            <div class="card h-100">
+              <div class="card-body py-2">
+                <h6 class="card-title">Smartwatch Garmin</h6>
+                <p class="card-text text-muted small mb-1">SKU: P134</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="badge bg-stock">Stock: 7</span>
+                  <span class="fw-bold">$279.99</span>
+                </div>
+              </div>
+              <div class="card-footer bg-white p-2">
+                <button class="btn btn-enviar btn-sm w-100"><i class="bi bi-plus-lg me-1"></i>Agregar</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Producto 9 -->
+          <div class="col">
+            <div class="card h-100">
+              <div class="card-body py-2">
+                <h6 class="card-title">Laptop Dell XPS 13</h6>
+                <p class="card-text text-muted small mb-1">SKU: P156</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="badge bg-stock">Stock: 4</span>
+                  <span class="fw-bold">$1,299.99</span>
+                </div>
+              </div>
+              <div class="card-footer bg-white p-2">
+                <button class="btn btn-enviar btn-sm w-100"><i class="bi bi-plus-lg me-1"></i>Agregar</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Producto 10 -->
+          <div class="col">
+            <div class="card h-100">
+              <div class="card-body py-2">
+                <h6 class="card-title">Mouse inalámbrico</h6>
+                <p class="card-text text-muted small mb-1">SKU: P178</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="badge bg-stock">Stock: 22</span>
+                  <span class="fw-bold">$24.99</span>
+                </div>
+              </div>
+              <div class="card-footer bg-white p-2">
+                <button class="btn btn-enviar btn-sm w-100"><i class="bi bi-plus-lg me-1"></i>Agregar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-enviar">Agregar seleccionados</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para visualizar todos los productos (Versión Tabla) -->
+<div class="modal fade" id="productosModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-list-ul me-2"></i>Catálogo de Productos</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Buscar producto" id="input-busqueda-modal">
+              <button class="btn btn-outline-enviar" onclick="cargarProductosDesdeUI()" type="button"><i class="bi bi-search"></i></button>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <!-- <select class="form-select">
+              <option selected>Todas las categorías</option>
+              <option>Electrónicos</option>
+              <option>Ropa</option>
+              <option>Alimentos</option>
+              <option>Hogar</option>
+            </select> -->
+          </div>
+          <div class="col-md-2">
+            <select class="form-select" id="filtro-stock" onchange="cargarProductosDesdeUI()">
+              <option value="true" selected>Con stock</option>
+              <option value="false">Todos</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="table-responsive">
+          <table id="tabla-productos-modal" class="table table-hover">
+            <thead>
+              <tr>
+                <th>SKU</th>
+                <th>Nombre del Producto</th>
+                <th>Modelo</th>
+                <th>Stock</th>
+                <th>Precio</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>P001</td>
+                <td>Smartphone Galaxy</td>
+                <td>S23</td>
+                <td><span class="badge bg-stock">15</span></td>
+                <td class="fw-bold">$899.99</td>
+                <td>
+                  <button class="btn btn-enviar btn-sm"><i class="bi bi-plus-lg me-1"></i>Agregar</button>
+                </td>
+              </tr>
+              <tr class="table-light">
+                <td>P112</td>
+                <td>Tablet Samsung</td>
+                <td>Galaxy Tab</td>
+                <td><span class="badge bg-stock">9</span></td>
+                <td class="fw-bold">$349.99</td>
+                <td>
+                  <button class="btn btn-enviar btn-sm"><i class="bi bi-check-lg me-1"></i>Seleccionado</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-enviar" onclick="agregarSeleccionadosATabla()">Agregar seleccionados</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/ventas/buscarCliente.js"></script>
+  <script src="/static/js/ventas/tablaProductos.js"></script>
+  <script src="/static/js/ventas/buscarModal.js"></script>
+  <script src="/static/js/ventas/enviarVenta.js"></script>
+
+</body>
+
+</html>

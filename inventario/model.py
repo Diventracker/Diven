@@ -19,3 +19,6 @@ class Producto(Base):
     fecha_compra = Column(Date, nullable=False)
 
     proveedor = relationship("Proveedor", back_populates="productos")
+    # En Producto
+    # (Si quieres que Producto conozca sus detalles de venta)
+    detalles_venta = relationship("DetalleVenta", back_populates="producto")

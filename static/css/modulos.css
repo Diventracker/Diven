@@ -45,8 +45,13 @@ a {
     font-family: "sub_titulo";
 }
 
+/* Badge styles */
+.badge.bg-stock {
+    background-color: var(--color2) !important;
+  }
+
 /*Cambiar el estilo al input cuando se le da click*/
-.form-control:focus {
+.form-control:focus, .form-select:focus {
     border-color: var(--color2);
     box-shadow: 0 0 0 0.25rem rgba(94, 145, 136, 0.25);
 }
@@ -109,5 +114,59 @@ a {
 
 .modal-title{
     color: white;
+}
+
+/*  estilo para el modulo de ventas */
+
+.bg-panel {
+    background-color: #f0f4f3; /* Ajusta según contraste deseado */
+}
+  
+.border-acento {
+    border: 3px solid var(--color2);
+}
+
+.seccion-formulario {
+    border: 2px solid var(--color2);
+    padding: 1rem;
+    border-radius: 8px;
+    background-color: var(--color1);
+}
+
+.thead-claro {
+    background-color: var(--color2);
+    color: white;
+}
+
+.resumen-panel {
+    background-color: var(--color3);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    min-width: 300px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+  
+.section {
+    margin-bottom: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.bg-panel {
+    background-color: #f4f9f8; /* Más contraste con el fondo blanco */
+}
+
+.resumen-panel {
+    background-color: var(--color3); /* Contraste oscuro */
+    color: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    min-width: 300px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.border-acento {
+    border: 2px solid var(--color2);
 }
 

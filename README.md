@@ -41,7 +41,9 @@ Antes de comenzar, asegúrate de tener instalado:
   source venv/bin/activate (Linux/Mac)
 ```
 
-#### 4.1 *Opcional - Si pide permisos (Ejecutar antes del uvircorn)
+
+#### 4.1 *Opcional - Si pide permirsos (Ejecutar antes del activate)
+
 
 
 ```bash
@@ -73,17 +75,17 @@ Antes de comenzar, asegúrate de tener instalado:
 
 ```bash
 /Diven/
-├── 📄 main.py                 # Punto de entrada de la app FastAPI
-├── 📁 modulos/                # Módulos independientes organizados por funcionalidad
-│   └── 🔁 routes.py              # Define las rutas (endpoints) y conecta con controllers
-│   └── 🧠 controllers.py         # Lógica del negocio (servicios, reglas)
-│   └── 🧱 models.py              # Modelos de SQLAlchemy (estructuras de la base de datos)
-│   └── 🧾 schemas.py             # Schemas de Pydantic (validación y serialización de datos)
-│   └── 🖥️templates/              # Archivos HTML usando Jinja2 para el renderizado
-├── 🎨 static/                 # Archivos estáticos (CSS, JS, imágenes, etc.)
-├── 🧰 utils/                  # Funciones auxiliares o reutilizables
-├── 🗃️ database/               # Configuración y conexión a la base de datos
-└── 📋 requirements.txt        # Lista de dependencias del proyecto
+├── 📄 main.py                # Punto de entrada de la app FastAPI
+├── 📁 modulos/               # Módulos independientes organizados por funcionalidad
+│   └── 🔁 routes.py             # Define las rutas (endpoints) y conecta con controllers
+│   └── 🧠 controllers.py        # Lógica del negocio (servicios, reglas)
+│   └── 🧱 models.py             # Modelos de SQLAlchemy (estructuras de la base de datos)
+│   └── 🧾 schemas.py            # Schemas de Pydantic (validación y serialización de datos)
+│   └── 🖥️templates/             # Archivos HTML usando Jinja2 para el renderizado
+├── 🎨 static/                # Archivos estáticos (CSS, JS, imágenes, etc.)
+├── 🧰 utils/                 # Funciones auxiliares o reutilizables
+├── 🗃️ database/              # Configuración y conexión a la base de datos
+└── 📋 requirements.txt       # Lista de dependencias del proyecto
 ```
 
 ## Tecnologías
