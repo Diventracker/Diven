@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Response
 from fastapi.staticfiles import StaticFiles
 from homepage import routes as homepage_router
 from login import routes as login_router
@@ -13,6 +13,16 @@ from garantias import routes as garantias_router
 from dashboard import routes as dashboard_router
 
 app = FastAPI()
+
+
+# ✅ Middleware para evitar caché
+@app.middleware("http")
+async def no_cache_middleware(request: Request, call_next):
+    response: Response = await call_next(request)
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 # Cargar configuraciones
 
