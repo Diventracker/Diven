@@ -3,149 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Servicios</title>
+    <title>Gestión de  ventas </title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/static/css/modulos.css"> 
 </head>
 <body>
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Gestión de Servicios</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-        <link rel="stylesheet" href="/static/css/modulos.css"> 
-    </head>
-    <body>
-        <main class="container mt-4">
-    
-            <!-- Información General -->
-            <section class="mb-5 p-3 border rounded bg-panel">
-              <h2 class="text-center mb-4">Información General</h2>
-          
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="card mb-3">
-                    <div class="card-header"> <h3> Datos del Cliente </h3> </div>
-                    <div class="card-body">
-                        <h4> Buscar cliente </h4>
-                      <div class="input-group mb-2">
-                        <input type="text" class="form-control" placeholder="Buscar cliente por CC">
-                        <button class="btn btn-outline-enviar" type="submit">Buscar</button>
-                        <button type="button" class="btn btn-outline-primary ms-2 "> Nuevo + </button>
-                      </div>
-                      <h4> Nombre del cliente </h4>
-                      <input type="text" class="form-control mb-2" placeholder="Nombre" value="Cliente General">
-                      <h4> Identificacion</h4>
-                      <input type="text" class="form-control mb-2" placeholder="DNI/RUC" value="00000000">
-                      <h4> Direccion </h4>
-                      <input type="text" class="form-control" placeholder="Dirección">
-                    </div>
-                  </div>
-                </div>
-          
-                <div class="col-md-6">
-                  <div class="card mb-3">
-                    <div class="card-header"> <h3> Datos de la venta </h3> </div>
-                    <div class="card-body">
-                        <h4> Fecha de la venta  </h4>
-                      <input type="text" class="form-control mb-2" placeholder="Fecha" value="17/05/2025">
-                      <h4> Vendedor </h4>
-                      <input type="text" class="form-control" placeholder="Vendedor" value="Juan Pérez">
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          
-            <!-- Información de Productos -->
-            <section class="mb-5 p-3 border rounded bg-panel">
-              <h2 class="text-center mb-4">Información de Productos</h2>
-          
-              <div class="input-group mb-4">
-                <input type="text" class="form-control" placeholder="Buscar por código o nombre">
+<main>
+    <div class="container-fluid px-4">
+        <div class="mt-4 text-center">
+            <h2 class="mt-4">Ventas</h2>
+        </div>
+        
+        <!-- Contenedor para centrar el buscador y el botón -->
+        <div class="d-flex justify-content-center align-items-center gap-2 my-3">
+            <form class="d-flex align-items-center gap-2">
+                <input class="form-control" type="search" placeholder="Buscar Venta" aria-label="Search">
                 <button class="btn btn-outline-enviar" type="submit">Buscar</button>
-                <select class="form-select">
-                  <option>Todas las categorías</option>
-                </select>
-                <button class="btn btn-outline-enviar" type="button">Ver todos</button>
-              </div>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Código</th>
-                    <th>Descripción</th>
-                    <th>Precio</th>
-                    <th>Cantidad</th>
-                    <th>Sub.Total</th>
-                    <th>Acciones</th>
-                  </tr>
+            </form>
+            <button class="btn btn-enviar d-inline-flex align-items-center" onclick="location.href='/crear_venta'">
+                <i class="bi bi-cash-coin me-2" style="font-size: 1.2rem;"></i> Nueva Venta
+            </button>
+        </div>    
+
+        <!-- Tabla centrada -->
+        <div class="d-flex justify-content-center">
+            <div class="table-responsive p-4 w-75">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID Venta</th>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>2024-03-24</td>
+                            <td>Juan Pérez</td>
+                            <td>$500</td>
+                            <td>Pagado</td>
+                            <td>
+                                <button class="btn" data-bs-toggle="modal" data-bs-target="#modaldetalle">
+                                    <i class="bi bi-plus-circle"></i> Detalles
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+<div class="modal fade" id="modaldetalle" tabindex="-1" aria-labelledby="modaldetalle" aria-hidden="true">
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modaldetalle">MAXIRECARGAS</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Cliente:</strong> </p>
+                    <p><strong>Fecha:</strong> </p>
+                    <p><strong>Estado:</strong> </p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Vendedor:</strong> </p>
+                    <p><strong>Descripción:</strong> </p>
+                </div>
+            </div>
+            <hr>
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Producto</th>
+                        <th>Descripción</th>
+                    </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>P001</td>
-                    <td>Smartphone Galaxy S23</td>
-                    <td>$899.99</td>
-                    <td>1</td>
-                    <td>$899.99</td>
-                    <td>
-                      <button class="btn btn-sm btn-outline-danger">
-                        <i class="bi bi-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>P045</td>
-                    <td>Funda protectora silicona negra</td>
-                    <td>$19.99</td>
-                    <td>2</td>
-                    <td>$39.98</td>
-                    <td>
-                      <button class="btn btn-sm btn-outline-danger">
-                        <i class="bi bi-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>P023</td>
-                    <td>Cargador rápido USB-C</td>
-                    <td>$29.99</td>
-                    <td>1</td>
-                    <td>$29.99</td>
-                    <td>
-                      <button class="btn btn-sm btn-outline-danger">
-                        <i class="bi bi-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  <!-- Fila de Precio Final -->
-                  <tr>
-                    <td colspan="3"></td>
-                    <th>Total</th>
-                    <td><strong>$969.96</strong></td>
-                  </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
                 </tbody>
-              </table>
-              
-              
-    
-                <button class="btn btn-eliminar">Cancelar</button>
-                <button class="btn btn-enviar">Finalizar</button>
-        
-      
-          
-          </main>
-          
-          
-    
-    </body>
-    </html>
-    
-
-
+            </table>
+            <p class="text-end"><strong>Total:</strong></p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+        </div>
+    </div>
+</div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

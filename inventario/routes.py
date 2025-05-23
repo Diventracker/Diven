@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.exc import IntegrityError
 from database.database import get_db
-from inventario.schema import ProductoCreate
+from inventario.schema import ProductoCreate, ProductoOut
 from proveedores.model import Proveedor
 from inventario.model import Producto
 
@@ -162,3 +162,51 @@ def eliminar_producto(
     except IntegrityError:
         db.rollback()
         return JSONResponse(content={"message": "error"})
+
+
+
+#Ruta para obtener un unico producto
+@router.get("/productos/buscar/{termino}", response_model=ProductoOut)
+def buscar_producto(termino: str, db: Session = Depends(get_db)):
+    producto = db.query(Producto).filter(
+        (Producto.id_producto.ilike(f"%{termino}%")) |
+        (Producto.nombre_producto.ilike(f"%{termino}%"))
+    ).first()
+
+    if not producto:
+        raise HTTPException(status_code=404, detail="Producto no encontrado")
+
+    return {
+        "codigo": str(producto.id_producto),
+        "descripcion": producto.nombre_producto,
+        "precio": float(producto.precio_venta),
+        "stock": float(producto.stock)
+    }
+
+#Ruta para obtener los productos en el modal de ventas como json en base al stock
+@router.get("/api/productos", response_model=list[ProductoOut])
+def api_productos(search: str = "", con_stock: bool = True, db: Session = Depends(get_db)):
+    query = db.query(Producto)
+    
+    if search:
+        query = query.filter(
+            (Producto.nombre_producto.ilike(f"%{search}%")) |
+            (Producto.id_producto.ilike(f"%{search}%"))
+        )
+    
+    if con_stock:
+        query = query.filter(Producto.stock > 0)
+
+    productos = query.all()
+
+    # Mapear al schema ProductoOut
+    return [
+        ProductoOut(
+            codigo=str(prod.id_producto),  # Lo pasa a string si no lo manda como int
+            descripcion=prod.nombre_producto,
+            modelo=prod.modelo,
+            precio=prod.precio,
+            stock=prod.stock
+        )
+        for prod in productos
+    ]

@@ -10,7 +10,6 @@ from inventario import routes as inventario_router
 from proveedores import routes as proveedores_router
 from ventas import routes as ventas_router
 from garantias import routes as garantias_router
-from gestionventas import routes as gestionventas_router
 
 app = FastAPI()
 
@@ -34,4 +33,3 @@ app.include_router(inventario_router.router)
 app.include_router(proveedores_router.router)
 app.include_router(ventas_router.router)
 app.include_router(garantias_router.router)
-app.include_router(gestionventas_router.router)

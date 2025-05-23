@@ -10,7 +10,7 @@ templates = Jinja2Templates(directory="access/templates")  # Ruta donde están l
 def home(request: Request):
     usuario_id = request.cookies.get("usuario_id")
     if usuario_id:
-        return templates.TemplateResponse("layout_admin.html", {"request": request})
+        return templates.TemplateResponse("layout_adminv2.html", {"request": request})
     return RedirectResponse(url="/login?error=2", status_code=303)
 
 #Xd
