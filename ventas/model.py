@@ -4,7 +4,7 @@ from database.database import Base
 from datetime import datetime, timezone
 
 class Venta(Base):
-    __tablename__ = 'venta'
+    __tablename__ = 'Venta'
 
     id_venta = Column(Integer, primary_key=True, autoincrement=True)
     id_cliente = Column(Integer, ForeignKey('Cliente.id_cliente'), nullable=False)
@@ -17,10 +17,10 @@ class Venta(Base):
     detalles = relationship("DetalleVenta", back_populates="venta", cascade="all, delete-orphan")
 
 class DetalleVenta(Base):
-    __tablename__ = 'detalle_venta'
+    __tablename__ = 'Detalle_Venta'
 
     id_detalle = Column(Integer, primary_key=True, autoincrement=True)
-    id_venta = Column(Integer, ForeignKey('venta.id_venta'), nullable=False)
+    id_venta = Column(Integer, ForeignKey('Venta.id_venta'), nullable=False)
     id_producto = Column(Integer, ForeignKey('Producto.id_producto'), nullable=False)
     cantidad = Column(Integer, nullable=False)
     precio_unitario = Column(DECIMAL(10, 2), nullable=False)

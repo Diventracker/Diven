@@ -205,7 +205,7 @@ def api_productos(search: str = "", con_stock: bool = True, db: Session = Depend
             codigo=str(prod.id_producto),  # Lo pasa a string si no lo manda como int
             descripcion=prod.nombre_producto,
             modelo=prod.modelo,
-            precio=prod.precio,
+            precio=prod.precio_venta,
             stock=prod.stock
         )
         for prod in productos

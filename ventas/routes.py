@@ -40,6 +40,7 @@ def Ventas_get(request: Request, db: Session = Depends(get_db)):
         "id_usuario": usuario_id
     })
 
+#Funcion para registrar las ventas
 @router.post("/ventas/generar")
 def generar_venta(data: dict, db: Session = Depends(get_db)):
     id_cliente = data["id_cliente"]
