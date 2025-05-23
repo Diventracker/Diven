@@ -15,7 +15,7 @@ from dashboard import routes as dashboard_router
 app = FastAPI()
 
 
-# ✅ Middleware para evitar caché
+# Middleware para evitar caché
 @app.middleware("http")
 async def no_cache_middleware(request: Request, call_next):
     response: Response = await call_next(request)
@@ -24,7 +24,6 @@ async def no_cache_middleware(request: Request, call_next):
     response.headers["Expires"] = "0"
     return response
 
-# Cargar configuraciones
 
 # Montamos la carpeta 'static'
 app.mount("/static", StaticFiles(directory="static"), name="static")

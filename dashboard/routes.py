@@ -12,13 +12,12 @@ from servicios.model import  ServicioTecnico
 from garantias.model import Garantia
 from datetime import datetime
 
-
-
 router = APIRouter()
+
 templates = Jinja2Templates(directory="dashboard/templates")
 
 
-#Ruta para la ventana del login
+#Ruta para la ventana del dashboard
 @router.get("/dashboard", response_class=HTMLResponse, tags=["dashboard"])
 def dashboard_get(request: Request):
     return templates.TemplateResponse("dashboard.html", {"request": request})

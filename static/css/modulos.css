@@ -32,6 +32,10 @@
     src: url(/static/fuentes/Roboto/Roboto-VariableFont_wdth\,wght.ttf) format("truetype");
 }
 
+/* main{
+    margin-left: 85px;
+} */
+
 /* Estilos generales */
 span {
     font-family: "contenido";
