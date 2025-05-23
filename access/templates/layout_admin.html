@@ -32,7 +32,7 @@
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userMenu">
                     <li><a class="dropdown-item d-flex align-items-center py-2" href="#"><i class="bi bi-pencil-square me-2"></i> Editar Perfil</a></li>
                       <li><a class="dropdown-item d-flex align-items-center py-2" href="vista_empleado.html"><i class="bi bi-pencil-square me-2"></i> Vista empleado </a></li>
-                    <li><a class="dropdown-item d-flex align-items-center py-2" href="/"><i class="bi bi-box-arrow-right me-2"></i> Cerrar Sesión</a></li>
+                    <li><form action="/logout" method="post"><button type="submit" class="dropdown-item d-flex align-items-center py-2" href="/"><i class="bi bi-box-arrow-right me-2"></i> Cerrar Sesión</button></form></li>
                 </ul>
             </div>
         </div>
@@ -43,7 +43,7 @@
         <!-- Menú lateral -->
         <nav id="sidebar">                
             <ul class="nav flex-column">
-                <li class="nav-item"><a class="nav-link" href="Modulo_Dashboard.html" target="modulos"><i class="bi bi-clock-history"></i> Dashboard </a></li>
+                <li class="nav-item"><a class="nav-link" href="/dashboard" target="modulos"><i class="bi bi-clock-history"></i> Dashboard </a></li>
                 <li class="nav-item"><a class="nav-link" href="/inventario" target="modulos"><i class="bi bi-box-seam"></i> Inventario</a></li>
                 <li class="nav-item"><a class="nav-link" href="/clientes" target="modulos"><i class="bi bi-people"></i> Gestión Clientes</a></li>
                 <li class="nav-item"><a class="nav-link" href="/garantias" target="modulos"><i class="bi bi-shield-check"></i> Garantías</a></li>

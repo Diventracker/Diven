@@ -41,7 +41,9 @@ Antes de comenzar, asegúrate de tener instalado:
   source venv/bin/activate (Linux/Mac)
 ```
 
+
 #### 4.1 *Opcional - Si pide permirsos (Ejecutar antes del activate)
+
 
 
 ```bash

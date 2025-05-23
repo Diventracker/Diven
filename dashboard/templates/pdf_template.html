@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 30px;
+        }
+        h1, h2, h3 {
+            color: #008080;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        th {
+            background-color: #008080;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f3f3f3;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .small-text {
+            font-size: 0.8rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>DivenTracker</h1>
+        <h3>Informe de {{ tipo }}</h3>
+        <p>Desde: {{ fecha_inicio }} — Hasta: {{ fecha_fin }}</p>
+        <p class="small-text">Generado el {{ fecha_actual }}</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                {% for col in datos[0].keys() %}
+                    <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for fila in datos %}
+                <tr>
+                    {% for valor in fila.values() %}
+                        <td>{{ valor }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
