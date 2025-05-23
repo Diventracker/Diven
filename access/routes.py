@@ -16,7 +16,7 @@ def home(request: Request):
 #Xd Ruta para cerrar sesion
 @router.post("/logout")
 def logout():
-    response = RedirectResponse(url="/", status_code=303)
+    response = RedirectResponse(url="/login", status_code=303)
     response.delete_cookie(key="usuario_id")
     return response
 
