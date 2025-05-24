@@ -9,134 +9,199 @@
     <link rel="stylesheet" href="/static/css/modulos.css">    
 </head>
 <body>
-
-    <main>
-        <div class="container-fluid mt-4">
-            {% if request.query_params.get("success") == "1" %}
-            <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
-                <i class="bi bi-check-circle-fill me-2"></i> ¡Proveedor actualizado correctamente!
-            </div>
-            {% elif request.query_params.get("create") == "1" %}
-            <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
-                <i class="bi bi-check-circle-fill me-2"></i> ¡Proveedor creado correctamente!
-            </div>
-            {% elif request.query_params.get("deleted") == "1" %}
-            <div class="alert alert-danger d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
-                <i class="bi bi-trash-fill me-2"></i> ¡Proveedor eliminado correctamente!
-            </div>
-            {% elif request.query_params.get("error") == "1" %}
-            <div class="alert alert-warning d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i> ¡Ya existe un proveedor con este Nit!
-            </div>
-            {% endif %}
-            <div class="mt-4 text-center">
-                <h2 class="mt-4">Gestión de Proveedores</h2>
-            </div>            
-
-                <!-- Barra de búsqueda y botón registrar -->
-            <div class="d-flex align-items-center gap-2 flex-wrap justify-content-center my-3">
-                <form class="d-flex align-items-center gap-2" method="get" action="/proveedores">
-                    <input class="form-control" name="search" value="{{ search | default('') }}" type="search" placeholder="Buscar Proveedor" aria-label="Search">
-                    <button class="btn btn-outline-enviar" type="submit">Buscar</button>
-                </form>
-                <button class="btn" data-bs-toggle="modal" data-bs-target="#modalRegistro">
-                    <i class="bi bi-plus-circle"></i> Registrar Proveeedor
-                </button>
-            </div>
-
-            <!-- Tabla de Proveedores -->
-            <div class="d-flex justify-content-center">
-                <div class="table-responsive p-4">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>NIT</th>
-                                <th>Nombre del Proveedor</th>
-                                <th>Representante de Ventas</th>
-                                <th>Teléfono</th>
-                                <th>Dirección</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla-proveedor">                            
-                            {% for p in proveedores %}
-                            <tr>                                
-                                <td>{{ p.nit }}</td>
-                                <td>{{ p.nombre_proveedor }}</td>
-                                <td>{{ p.representante_ventas }}</td>
-                                <td>{{ p.telefono_representante_ventas }}</td>
-                                <td>{{ p.direccion_proveedor }}</td>
-                                <td>
-                                    <!-- Por si queremos ver detalles del cliente
-                                        <button class="btn btn-sm btn-outline-secondary me-1">
-                                            <i class="bi bi-eye"></i>
-                                        </button>
-                                        -->
-                                    <button class="btn btn-sm btn-outline-secondary me-1 edit-button" data-bs-toggle="modal" data-bs-target="#modalEditar"
-                                        data-id="{{ p.id_proveedor }}"
-                                        data-nit="{{ p.nit }}"
-                                        data-nombreP="{{ p.nombre_proveedor }}"
-                                        data-representante="{{ p.representante_ventas }}"
-                                        data-telefonoR="{{ p.telefono_representante_ventas }}"
-                                        data-direccion="{{ p.direccion_proveedor }}">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar"
-                                            data-id="{{ p.id_proveedor }}"
-                                            data-nombre="{{ p.nombre_proveedor }}">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                    </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+<main>           
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card mb-4 shadow-sm">
+              <div class="card-header bg-white py-3">
+                <h5 class="mb-0 text-teal-dark"><i class="bi bi-truck me-2"></i>Gestión de Proveedores</h5>
+              </div>
+              <div class="card-body">
+                <!-- Alertas -->
+                {% if request.query_params.get("success") == "1" %}
+                    <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
+                        <i class="bi bi-check-circle-fill me-2"></i> ¡Proveedor actualizado correctamente!
+                    </div>
+                {% elif request.query_params.get("create") == "1" %}
+                    <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
+                        <i class="bi bi-check-circle-fill me-2"></i> ¡Proveedor creado correctamente!
+                    </div>
+                {% elif request.query_params.get("deleted") == "1" %}
+                    <div class="alert alert-danger d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
+                        <i class="bi bi-trash-fill me-2"></i> ¡Proveedor eliminado correctamente!
+                    </div>
+                {% elif request.query_params.get("error") == "1" %}
+                    <div class="alert alert-warning d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i> ¡Ya existe un proveedor con este Nit!
+                    </div>
+                {% endif %}
+            
+                <!-- Búsqueda y filtros -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                        <h6 class="mb-0"><i class="bi bi-search me-2"></i>Buscar Proveedores</h6>
+                        </div>
+                        <div class="card-body">
+                        <div class="row">
+                            <div class="mb-2 col-md-4">
+                                <form method="get" action="/proveedores">
+                                    <div class="input-group">
+                                        <input name="search" value="{{ search | default('') }}" type="search" class="form-control" placeholder="Buscar por nombre o NIT">
+                                        <button class="btn btn-outline-enviar" type="submit"><i class="bi bi-search"></i></button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="mb-2 col-md-3 col-lg-3">
+                            <select class="form-select">
+                                <option selected>Ordenar por</option>
+                                <option>Nombre (A-Z)</option>
+                                <option>Nombre (Z-A)</option>
+                                <option>Precio (menor a mayor)</option>
+                                <option>Precio (mayor a menor)</option>
+                                <option>Stock (menor a mayor)</option>
+                                <option>Stock (mayor a menor)</option>
+                            </select>
+                            </div>
+                            <div class="col-md-1 col-lg-2 col-xl-3"></div>
+                            <div class="col-md-4 col-lg-3 col-xl-2">
+                            <button class="btn btn-enviar w-100" data-bs-toggle="modal" data-bs-target="#modalRegistro">
+                                <i class="bi bi-telephone-plus me-1"></i>Nuevo Proveedor
+                            </button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
                 </div>
+                
+                <!-- Tabla de proveedores -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                        <h6 class="mb-0"><i class="bi bi-grid me-2"></i>Lista de Proveedores</h6>
+                        </div>
+                        <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>NIT</th>
+                                        <th>Nombre del Proveedor</th>
+                                        <th>Representante de Ventas</th>
+                                        <th>Teléfono</th>
+                                        <th>Dirección</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-proveedor">                            
+                                    {% for p in proveedores %}
+                                    <tr>                                
+                                        <td>{{ p.nit }}</td>
+                                        <td>{{ p.nombre_proveedor }}</td>
+                                        <td>{{ p.representante_ventas }}</td>
+                                        <td>{{ p.telefono_representante_ventas }}</td>
+                                        <td>{{ p.direccion_proveedor }}</td>
+                                        <td>
+                                            <!-- Por si queremos ver detalles del cliente
+                                                <button class="btn btn-sm btn-outline-secondary me-1">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
+                                                -->
+                                            <button class="btn btn-sm btn-outline-secondary me-1 edit-button" data-bs-toggle="modal" data-bs-target="#modalEditar"
+                                                data-id="{{ p.id_proveedor }}"
+                                                data-nit="{{ p.nit }}"
+                                                data-nombreP="{{ p.nombre_proveedor }}"
+                                                data-representante="{{ p.representante_ventas }}"
+                                                data-telefonoR="{{ p.telefono_representante_ventas }}"
+                                                data-direccion="{{ p.direccion_proveedor }}">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar"
+                                                    data-id="{{ p.id_proveedor }}"
+                                                    data-nombre="{{ p.nombre_proveedor }}">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                            </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Paginación -->
+                        <nav aria-label="Paginación de productos">
+                            <ul class="pagination justify-content-center mt-4">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Siguiente</a>
+                            </li>
+                            </ul>
+                        </nav>
+                        </div>
+                    </div>
+                    </div>
+                </div>    
+              </div>
             </div>
+          </div>
         </div>
-    </main>
+      </div>
+    </div>
+</main>
 
-    <!-- Modal para el registro del proveedor -->
-    <div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalRegistroLabel">Registrar Nuevo Proveedor</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="/proveedores/crear" method="post">
-                        <div class="mb-3">
-                            <label for="nit" class="form-label">NIT:</label>
-                            <input type="text" class="form-control" name="nit" required>
-                        </div>
+<!-- Modal para el registro del proveedor -->
+<div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalRegistroLabel">Registrar Nuevo Proveedor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/proveedores/crear" method="post">
+                    <div class="mb-3">
+                        <label for="nit" class="form-label">NIT:</label>
+                        <input type="text" class="form-control" name="nit" required>
+                    </div>
 
-                        <div class="mb-3">
-                            <label for="nombreProveedor" class="form-label">Nombre del Proveedor:</label>
-                            <input type="text" class="form-control" name="nombre_proveedor" required>
-                        </div>
+                    <div class="mb-3">
+                        <label for="nombreProveedor" class="form-label">Nombre del Proveedor:</label>
+                        <input type="text" class="form-control" name="nombre_proveedor" required>
+                    </div>
 
-                        <div class="mb-3">
-                            <label for="representante" class="form-label">Representante de Ventas:</label>
-                            <input type="text" class="form-control" name="representante_ventas" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" required>
-                        </div>
+                    <div class="mb-3">
+                        <label for="representante" class="form-label">Representante de Ventas:</label>
+                        <input type="text" class="form-control" name="representante_ventas" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" required>
+                    </div>
 
-                        <div class="mb-3">
-                            <label for="telefono" class="form-label">Teléfono:</label>
-                            <input type="tel" class="form-control" name="telefono_representante_ventas" required pattern="\d{10}">
-                        </div>
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Teléfono:</label>
+                        <input type="tel" class="form-control" name="telefono_representante_ventas" required pattern="\d{10}">
+                    </div>
 
-                        <div class="mb-3">
-                            <label for="direccion" class="form-label">Dirección:</label>
-                            <input type="text" class="form-control" name="direccion_proveedor" required>
-                        </div>
+                    <div class="mb-3">
+                        <label for="direccion" class="form-label">Dirección:</label>
+                        <input type="text" class="form-control" name="direccion_proveedor" required>
+                    </div>
 
-                        <button type="submit" class="btn btn-enviar w-100">Guardar Proveedor</button>
-                    </form>
-                </div>
+                    <button type="submit" class="btn btn-enviar w-100">Guardar Proveedor</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
+
 <!-- Modal Editar -->
 <div class="modal fade" id="modalEditar" aria-labelledby="modalEditarLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -197,9 +262,11 @@
         </div>
     </div>
 </div>
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/static/js/funciones.js"></script>
-    <script src="/static/js/modulo_proveedores.js"></script>    
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/static/js/funciones.js"></script>
+<script src="/static/js/modulo_proveedores.js"></script> 
+
 </body>
 </html>
