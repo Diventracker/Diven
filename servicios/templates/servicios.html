@@ -10,86 +10,147 @@
 </head>
 <body>
 <main>
-    <div class="container-fluid">
-        <!-- Alerta que solo aparece con las opciones del crud -->
-        {% if request.query_params.get("success") == "1" %}
-        <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
-            <i class="bi bi-check-circle-fill me-2"></i> ¡Servicio actualizado correctamente!
-        </div>
-        {% elif request.query_params.get("create") == "1" %}
-        <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
-            <i class="bi bi-check-circle-fill me-2"></i> ¡Servicio creado correctamente!
-        </div>
-        {% elif request.query_params.get("deleted") == "1" %}
-        <div class="alert alert-danger d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
-            <i class="bi bi-trash-fill me-2"></i> ¡Servicio eliminado correctamente!
-        </div>
-        {% endif %}
-        
-        
-        <div class="mt-4 text-center">
-            <h2 class="mt-4">Servicio Técnico</h2>
-        </div>
-
-        <!-- Contenedor para centrar el buscador y el botón -->
-        <div class="d-flex justify-content-center align-items-center gap-2 my-3">
-            <form class="d-flex align-items-center gap-2" method="get" action="/servicios">
-                <input class="form-control" name="search" value="" type="search" placeholder="Buscar servicios" aria-label="Search">
-                <button class="btn btn-outline-enviar" type="submit">Buscar</button>
-            </form>
-            <button class="btn" data-bs-toggle="modal" data-bs-target="#modalRegistro">
-                <i class="bi bi-plus-circle"></i> Registrar
-            </button>
-        </div>
-
-        <!-- Tabla de Servicios -->
-        <div class="d-flex justify-content-center">
-            <div class="table-responsive p-4">
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>ID servicio</th>
-                            <th>Tipo de equipo</th>
-                            <th>Marca</th>
-                            <th>Modelo</th>
-                            <th>Descripción</th>
-                            <th>Fecha recepción</th>
-                            <th>Fecha entrega</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-servicios">
-                        {% for s in servicios %}
-                        <tr>
-                            <td>{{ s.id_servicio }}</td>
-                            <td>{{ s.tipo_equipo }}</td>
-                            <td>{{ s.marca_equipo }}</td>
-                            <td>{{ s.modelo_equipo }}</td>
-                            <td>{{ s.descripcion_problema }}</td>
-                            <td>{{ s.fecha_recepcion }}</td>
-                            <td>{{ s.fecha_entrega_estimada }}</td>
-                            <td>{{ s.estado_servicio }}</td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-secondary me-1 edit-button" data-bs-toggle="modal" data-bs-target="#modalEditar"
-                                data-id="{{ s.id_servicio }}"
-                                data-tipo="{{ s.tipo_equipo }}" data-marca="{{ s.marca_equipo }}"
-                                data-modelo="{{ s.modelo_equipo }}" data-descripcion="{{ s.descripcion_problema }}"
-                                data-fechaRecepcion="{{ s.fecha_recepcion }}" data-fechaEntrega="{{ s.fecha_entrega_estimada }}"
-                                data-estado="{{ s.estado_servicio }}"
-                                > 
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button data-id="{{ s.id_servicio }}" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card mb-4 shadow-sm">
+              <div class="card-header bg-white py-3">
+                <h5 class="mb-0 text-teal-dark"><i class="bi bi-tools me-2"></i>Servicio Técnico</h5>
+              </div>
+              <div class="card-body">
+                <!-- Alertas -->
+                 {% if request.query_params.get("success") == "1" %}
+                    <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
+                        <i class="bi bi-check-circle-fill me-2"></i> ¡Servicio actualizado correctamente!
+                    </div>
+                {% elif request.query_params.get("create") == "1" %}
+                    <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
+                        <i class="bi bi-check-circle-fill me-2"></i> ¡Servicio creado correctamente!
+                    </div>
+                {% elif request.query_params.get("deleted") == "1" %}
+                    <div class="alert alert-danger d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
+                        <i class="bi bi-trash-fill me-2"></i> ¡Servicio eliminado correctamente!
+                    </div>
+                {% endif %}
+                 
+                <!-- Búsqueda y filtros -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                        <h6 class="mb-0"><i class="bi bi-search me-2"></i>Buscar Servicio Técnico</h6>
+                        </div>
+                        <div class="card-body">
+                        <div class="row">
+                            <div class="mb-2 col-md-4">
+                                <form method="get" action="/servicios">
+                                    <div class="input-group">
+                                        <input name="search" value="{{ search | default('') }}" type="search" class="form-control" placeholder="Buscar por equipo o id">
+                                        <button class="btn btn-outline-enviar" type="submit"><i class="bi bi-search"></i></button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="mb-2 col-md-3 col-lg-3">
+                            <select class="form-select">
+                                <option selected>Ordenar por</option>
+                                <option>Nombre del equipo (A-Z)</option>
+                                <option>Nombre del equipo (Z-A)</option>
+                                <option>Estado</option>
+                                <option>Fecha de recepcion (más reciente)</option>
+                                <option>Fecha de entrega (más reciente)</option>
+                            </select>
+                            </div>
+                            <div class="col-md-1 col-lg-2 col-xl-3"></div>
+                            <div class="col-md-4 col-lg-3 col-xl-2">
+                            <button class="btn btn-enviar w-100" data-bs-toggle="modal" data-bs-target="#modalRegistro">
+                                <i class="bi bi-clipboard-plus me-1"></i>Nuevo Servicio
+                            </button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                
+                <!-- Tabla de Servicios -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                        <h6 class="mb-0"><i class="bi bi-grid me-2"></i>Lista de Servicios Técnicos</h6>
+                        </div>
+                        <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID servicio</th>
+                                        <th>Tipo de equipo</th>
+                                        <th>Marca</th>
+                                        <th>Modelo</th>
+                                        <th>Descripción</th>
+                                        <th>Fecha recepción</th>
+                                        <th>Fecha entrega</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-servicios">
+                                    {% for s in servicios %}
+                                    <tr>
+                                        <td>{{ s.id_servicio }}</td>
+                                        <td>{{ s.tipo_equipo }}</td>
+                                        <td>{{ s.marca_equipo }}</td>
+                                        <td>{{ s.modelo_equipo }}</td>
+                                        <td>{{ s.descripcion_problema }}</td>
+                                        <td>{{ s.fecha_recepcion }}</td>
+                                        <td>{{ s.fecha_entrega_estimada }}</td>
+                                        <td>{{ s.estado_servicio }}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-secondary me-1 edit-button" data-bs-toggle="modal" data-bs-target="#modalEditar"
+                                            data-id="{{ s.id_servicio }}"
+                                            data-tipo="{{ s.tipo_equipo }}" data-marca="{{ s.marca_equipo }}"
+                                            data-modelo="{{ s.modelo_equipo }}" data-descripcion="{{ s.descripcion_problema }}"
+                                            data-fechaRecepcion="{{ s.fecha_recepcion }}" data-fechaEntrega="{{ s.fecha_entrega_estimada }}"
+                                            data-estado="{{ s.estado_servicio }}"
+                                            > 
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button data-id="{{ s.id_servicio }}" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Paginación -->
+                        <nav aria-label="Paginación de productos">
+                            <ul class="pagination justify-content-center mt-4">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Siguiente</a>
+                            </li>
+                            </ul>
+                        </nav>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
 </main>
 

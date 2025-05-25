@@ -12,10 +12,19 @@
 </head>
 
 <body>
-  <main>
-    <div class="container-fluid px-4">
-      <!-- Alertas -->
-      {% if request.query_params.get("success") == "1" %}
+<main>
+<!-- Page Content -->
+<div id="page-content-wrapper">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0 text-teal-dark"><i class="bi bi-box-seam me-2"></i>Gestión de Inventario</h5>
+          </div>
+          <div class="card-body">
+            <!-- Alertas -->
+            {% if request.query_params.get("success") == "1" %}
             <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
                 <i class="bi bi-check-circle-fill me-2"></i> ¡Producto actualizado correctamente!
             </div>
@@ -32,83 +41,257 @@
                 <i class="bi bi-exclamation-triangle-fill me-2"></i> ¡Error con el producto!
             </div>
             {% endif %}
-      <div class="mt-4 text-center">
-        <h2 class="mt-4">Inventario</h2>
-      </div>
-
-      <!-- Contenedor para centrar el buscador y el botón -->
-      <div class="d-flex justify-content-center align-items-center gap-2 my-3">
-        <form class="d-flex align-items-center gap-2" method="get" action="/inventario">
-          <input class="form-control" type="search" name="search" value="{{ search | default('') }}" placeholder="Buscar Producto" aria-label="Search">
-          <button class="btn btn-outline-enviar" type="submit">Buscar</button>
-        </form>
-        <button class="btn" data-bs-toggle="modal" data-bs-target="#modalRegistro">
-          <i class="bi bi-plus-circle"></i> Agregar Producto
-        </button>
-      </div>
-      <!-- Tabla centrada -->
-      <div class="d-flex justify-content-center">
-        <!-- Importante esta clase responsive NO LA BORREN xd -->
-        <div class="table-responsive p-4">
-          <table class="table table-striped table-hover">
-            <thead>
-              <tr>
-                <th>ID del producto</th>
-                <th>Nombre del producto</th>
-                <th>Marca</th>
-                <th>Existencias</th>
-                <th>Precio de compra</th>
-                <th>Precio de venta</th>
-                <th>Proveedor</th>
-                <th>Acción</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for p in productos %}
-                <tr>
-                  <td>{{ p.id_producto }}</td>
-                  <td>{{ p.nombre_producto }}</td>
-                  <td>{{ p.marca }}</td>
-                  <td>{{ p.stock }}</td>
-                  <td>${{ (p.precio or 0) | float | round(2) }}</td>
-                  <td>${{ (p.precio_venta or 0) | float | round(2) }}</td>
-                  <td>{{ p.proveedor.nombre_proveedor }}</td>
-                  <td>
-                    <button class="btn btn-sm btn-outline-secondary me-1 edit-button" data-bs-toggle="modal" data-bs-target="#modalEditar"
-                            data-id="{{ p.id_producto }}"
-                            data-nombre="{{ p.nombre_producto }}"
-                            data-marca="{{ p.marca }}"
-                            data-modelo="{{ p.modelo }}"
-                            data-descripcion="{{ p.descripcion }}"
-                            data-stock="{{ p.stock }}"
-                            data-precio="{{ p.precio }}"
-                            data-precioVenta="{{ p.precio_venta }}"
-                            data-nombreProveedor="{{ p.proveedor.nombre_proveedor }}"
-                            data-idProveedor="{{ p.proveedor.id_proveedor }}"                            
-                            data-inicio="{{ p.fecha_inicio_garantia }}"
-                            data-fin="{{ p.fecha_expiracion_garantia }}"
-                            data-compra="{{ p.fecha_compra }}">
-                        <i class="bi bi-pencil"></i>
-                    </button>
-                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar"
-                            data-id="{{ p.id_producto }}"
-                            data-nombre="{{ p.nombre_producto }}">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                  </td>  
-                </tr>
-                {% endfor %}
-            </tbody>
-          </table>
+            <!-- Pestañas de navegación -->
+            <ul class="nav nav-tabs mb-4" id="inventoryTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="products-tab" data-bs-toggle="tab" data-bs-target="#products" type="button" role="tab" aria-controls="products" aria-selected="true">
+                  <i class="bi bi-grid me-1"></i> Productos
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="stock-tab" data-bs-toggle="tab" data-bs-target="#stock" type="button" role="tab" aria-controls="stock" aria-selected="false">
+                  <i class="bi bi-clipboard-data me-1"></i> Control de Stock
+                </button>
+              </li>
+            </ul>
+            
+            <!-- Contenido de las pestañas -->
+            <div class="tab-content" id="inventoryTabsContent">
+              <!-- Pestaña de Productos -->
+              <div class="tab-pane fade show active" id="products" role="tabpanel" aria-labelledby="products-tab">
+                <!-- Búsqueda y filtros -->
+                <div class="row mb-4">
+                  <div class="col-12">
+                    <div class="card shadow-sm">
+                      <div class="card-header">
+                        <h6 class="mb-0"><i class="bi bi-search me-2"></i>Buscar Productos</h6>
+                      </div>
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="mb-2 col-md-4">
+                            <form method="get" action="/inventario">
+                              <div class="input-group">
+                                <input type="search" class="form-control" name="search" value="{{ search | default('') }}" placeholder="Buscar por nombre o id">
+                                <button class="btn btn-outline-enviar" type="submit"><i class="bi bi-search"></i></button>
+                              </div>
+                            </form>
+                          </div>
+                          <div class="mb-2 col-md-3 col-lg-3">
+                            <select class="form-select">
+                              <option selected>Ordenar por</option>
+                              <option>Nombre (A-Z)</option>
+                              <option>Nombre (Z-A)</option>
+                              <option>Precio (menor a mayor)</option>
+                              <option>Precio (mayor a menor)</option>
+                              <option>Existencias (menor a mayor)</option>
+                              <option>Existencias (mayor a menor)</option>
+                            </select>
+                          </div>
+                          <div class="col-md-1 col-lg-2 col-xl-3"></div>
+                          <div class="col-md-4 col-lg-3 col-xl-2">
+                            <button class="btn btn-enviar w-100" data-bs-toggle="modal" data-bs-target="#modalRegistro">
+                              <i class="bi bi-plus-circle me-1"></i>Nuevo Producto
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Tabla de productos -->
+                <div class="row mb-4">
+                  <div class="col-12">
+                    <div class="card shadow-sm">
+                      <div class="card-header">
+                        <h6 class="mb-0"><i class="bi bi-grid me-2"></i>Lista de Productos</h6>
+                      </div>
+                      <div class="card-body">
+                        <div class="table-responsive">
+                          <table class="table table-striped table-hover">
+                            <thead>
+                              <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Marca</th>
+                                <th>Existencias</th>
+                                <th>Precio de compra</th>
+                                <th>Precio de venta</th>
+                                <th>Proveedor</th>
+                                <th>Acción</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for p in productos %}
+                                <tr>
+                                  <td>{{ p.id_producto }}</td>
+                                  <td>{{ p.nombre_producto }}</td>
+                                  <td>{{ p.marca }}</td>
+                                  <td>{{ p.stock }}</td>
+                                  <td>${{ (p.precio or 0) | float | round(2) }}</td>
+                                  <td>${{ (p.precio_venta or 0) | float | round(2) }}</td>
+                                  <td>{{ p.proveedor.nombre_proveedor }}</td>
+                                  <td>
+                                    <button class="btn btn-sm btn-outline-secondary me-1 edit-button" data-bs-toggle="modal" data-bs-target="#modalEditar"
+                                            data-id="{{ p.id_producto }}"
+                                            data-nombre="{{ p.nombre_producto }}"
+                                            data-marca="{{ p.marca }}"
+                                            data-modelo="{{ p.modelo }}"
+                                            data-descripcion="{{ p.descripcion }}"
+                                            data-stock="{{ p.stock }}"
+                                            data-precio="{{ p.precio }}"
+                                            data-precioVenta="{{ p.precio_venta }}"
+                                            data-nombreProveedor="{{ p.proveedor.nombre_proveedor }}"
+                                            data-idProveedor="{{ p.proveedor.id_proveedor }}"                            
+                                            data-inicio="{{ p.fecha_inicio_garantia }}"
+                                            data-fin="{{ p.fecha_expiracion_garantia }}"
+                                            data-compra="{{ p.fecha_compra }}">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar"
+                                            data-id="{{ p.id_producto }}"
+                                            data-nombre="{{ p.nombre_producto }}">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                  </td>  
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                          </table>
+                        </div>
+                        
+                        <!-- Paginación -->
+                        <nav aria-label="Paginación de productos">
+                          <ul class="pagination justify-content-center mt-4">
+                            <li class="page-item disabled">
+                              <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                              <a class="page-link" href="#">Siguiente</a>
+                            </li>
+                          </ul>
+                        </nav>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Pestaña de Control de Stock -->
+              <div class="tab-pane fade" id="stock" role="tabpanel" aria-labelledby="stock-tab">
+                <div class="row mb-4">
+                  <div class="col-md-6">
+                    <div class="card shadow-sm">
+                      <div class="card-header">
+                        <h6 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Registrar Movimiento de Stock</h6>
+                      </div>
+                      <div class="card-body">
+                        <form>
+                          <div class="mb-3">
+                            <label for="stockProduct" class="form-label">Producto</label>
+                            <select class="form-select" id="stockProduct" required>
+                              <option selected disabled value="">Seleccionar producto</option>
+                              <option>Smartphone Galaxy S23 (P001)</option>
+                              <option>iPhone 15 Pro (P002)</option>
+                              <option>Cargador rápido USB-C (P023)</option>
+                              <option>Funda protectora silicona negra (P045)</option>
+                              <option>Audífonos Bluetooth JBL (P067)</option>
+                            </select>
+                          </div>
+                          <div class="row mb-3">
+                            <div class="col-md-6">
+                              <label for="stockType" class="form-label">Tipo de Movimiento</label>
+                              <select class="form-select" id="stockType" required>
+                                <option selected disabled value="">Seleccionar tipo</option>
+                                <option>Entrada</option>
+                                <option>Salida</option>
+                                <option>Ajuste</option>
+                              </select>
+                            </div>
+                            <div class="col-md-6">
+                              <label for="stockQuantity" class="form-label">Cantidad</label>
+                              <input type="number" class="form-control" id="stockQuantity" min="1" required>
+                            </div>
+                          </div>
+                          <div class="mb-3">
+                            <label for="stockReason" class="form-label">Motivo</label>
+                            <select class="form-select" id="stockReason" required>
+                              <option selected disabled value="">Seleccionar motivo</option>
+                              <option>Compra</option>
+                              <option>Venta</option>
+                              <option>Devolución</option>
+                              <option>Merma</option>
+                              <option>Inventario</option>
+                              <option>Otro</option>
+                            </select>
+                          </div>
+                          <div class="mb-3">
+                            <label for="stockNotes" class="form-label">Notas</label>
+                            <textarea class="form-control" id="stockNotes" rows="2"></textarea>
+                          </div>
+                          <div class="d-grid">
+                            <button type="submit" class="btn btn-enviar">Registrar Movimiento</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="card shadow-sm">
+                      <div class="card-header">
+                        <h6 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Alertas de Stock</h6>
+                      </div>
+                      <div class="card-body p-0">
+                        <div class="list-group list-group-flush">
+                          <a href="#" class="list-group-item list-group-item-action py-3">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h6 class="mb-1">Smartphone Galaxy S23 (P001)</h6>
+                              <span class="badge bg-danger">Stock bajo</span>
+                            </div>
+                            <p class="mb-1 small text-muted">Quedan 3 unidades (mínimo: 5)</p>
+                          </a>
+                          <a href="#" class="list-group-item list-group-item-action py-3">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h6 class="mb-1">Audífonos Bluetooth JBL (P067)</h6>
+                              <span class="badge bg-warning text-dark">Stock bajo</span>
+                            </div>
+                            <p class="mb-1 small text-muted">Quedan 4 unidades (mínimo: 5)</p>
+                          </a>
+                          <a href="#" class="list-group-item list-group-item-action py-3">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h6 class="mb-1">Smartwatch Garmin (P134)</h6>
+                              <span class="badge bg-danger">Stock bajo</span>
+                            </div>
+                            <p class="mb-1 small text-muted">Quedan 2 unidades (mínimo: 5)</p>
+                          </a>
+                          <a href="#" class="list-group-item list-group-item-action py-3">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h6 class="mb-1">Cargador rápido USB-C (P023)</h6>
+                              <span class="badge bg-warning text-dark">Stock bajo</span>
+                            </div>
+                            <p class="mb-1 small text-muted">Quedan 6 unidades (mínimo: 10)</p>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
     </div>
-  </main>
-
+  </div>
+</div>
+</main>
+      
 <!-- Modal Crear un Nuevo Producto -->
   <div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Agregar Nuevo Producto</h5>
@@ -174,7 +357,7 @@
 
   <!-- Modal Editar un Nuevo Producto -->
   <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Actualizar Producto</h5>
