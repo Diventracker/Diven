@@ -40,7 +40,7 @@ def crear_servicio(
     request: Request,  # Para acceder a la cookie
     cliente_id: int = Form(...),
     tipo_equipo: str = Form(...),
-    marca: str = Form(...),
+    #se elimino la linea de marca
     modelo_equipo: str = Form(...),
     descripcion: str = Form(...),
     fecha_recepcion: str = Form(...),
@@ -60,7 +60,7 @@ def crear_servicio(
         id_cliente=cliente_id,
         id_usuario=usuario_id,  
         tipo_equipo=tipo_equipo,
-        marca_equipo=marca,
+        #se elimino marca
         modelo_equipo=modelo_equipo,
         descripcion_problema=descripcion,
         fecha_recepcion=fecha_recepcion,
@@ -97,7 +97,7 @@ def eliminar_servicio(service_id: int, db: Session = Depends(get_db)):
 def editar_servicio(
     service_id: int,
     tipo_equipo: str = Form(...),
-    marca: str = Form(...),
+    #se elimino marca
     modelo_equipo: str = Form(...),
     descripcion: str = Form(...),
     fecha_recepcion: str = Form(...),
@@ -112,7 +112,7 @@ def editar_servicio(
 
     # Actualizar los campos
     servicio.tipo_equipo = tipo_equipo
-    servicio.marca_equipo = marca
+    #se elminio marca de actualizar
     servicio.modelo_equipo = modelo_equipo
     servicio.descripcion_problema = descripcion
     servicio.fecha_recepcion = fecha_recepcion

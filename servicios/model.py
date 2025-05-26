@@ -14,7 +14,7 @@ class ServicioTecnico(Base):
     id_cliente = Column(Integer, ForeignKey("Cliente.id_cliente"))
     id_usuario = Column(Integer, ForeignKey("Usuario.id_usuario"))
     tipo_equipo = Column(String(50), nullable=False)
-    marca_equipo = Column(String(50), nullable=False)
+    #se elimino la columna de marca
     modelo_equipo = Column(String(50), nullable=False)
     descripcion_problema = Column(String, nullable=False)
     fecha_recepcion = Column(Date, nullable=False)
