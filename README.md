@@ -103,9 +103,9 @@ Antes de comenzar, asegúrate de tener instalado:
 ## 👥 Autores
 
 - [@Joaquin-canon](https://github.com/Joaquin-canon)
-- [@ZontPizzaLove1](https://github.com/ZontPizzaLove1)
-- [@Zeus??¿](https://github.com/Diventracker)
-- [@lolroll??¿](https://github.com/Diventracker)
+- [@Deivit-Agudelo](https://github.com/ZontPizzaLove1)
+- [@SergioMora-17](https://github.com/Diventracker)
+- [@Harol_p??¿](https://github.com/Diventracker)
 - [@AndwSX](https://github.com/AndwSX)
 
 
