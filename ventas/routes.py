@@ -2,36 +2,37 @@ from datetime import date, datetime, timezone
 from fastapi import APIRouter, HTTPException, Request, Form, Depends, Response
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from database.database import get_db
 from inventario.model import Producto
 from usuarios.model import Usuario
 from ventas.model import DetalleVenta, Venta
-
+from sqlalchemy import desc
 
 router = APIRouter()
 templates = Jinja2Templates(directory="ventas/templates")
 
-
-#Ruta para la lista de las ventas
 @router.get("/ventas", response_class=HTMLResponse, tags=["gestionventas"])
-def gestionventas_get(request: Request):
-    return templates.TemplateResponse("ventas.html", {"request": request})
-
+def gestionventas_get(request: Request, db: Session = Depends(get_db)):
+    ventas = db.query(Venta).options(joinedload(Venta.cliente)).order_by(desc(Venta.fecha_venta)).all()
+    return templates.TemplateResponse("ventas.html", {
+        "request": request,
+        "ventas": ventas
+    })
 
 @router.get("/crear_venta", response_class=HTMLResponse, tags=["ventas"])
 def Ventas_get(request: Request, db: Session = Depends(get_db)):
     usuario_id = request.cookies.get("usuario_id")
-    
+
     if not usuario_id:
         return RedirectResponse(url="/login?error=2", status_code=303)
 
     usuario = db.query(Usuario).filter(Usuario.id_usuario == usuario_id).first()
-    
+
     if not usuario:
         return RedirectResponse(url="/login?error=2", status_code=303)
 
-    fecha_actual = date.today().strftime("%Y-%m-%d")  # Formato para el input type="date"
+    fecha_actual = date.today().strftime("%Y-%m-%d")
 
     return templates.TemplateResponse("crear.html", {
         "request": request,
@@ -40,12 +41,11 @@ def Ventas_get(request: Request, db: Session = Depends(get_db)):
         "id_usuario": usuario_id
     })
 
-#Funcion para registrar las ventas
 @router.post("/ventas/generar")
 def generar_venta(data: dict, db: Session = Depends(get_db)):
     id_cliente = data["id_cliente"]
     id_usuario = data["id_usuario"]
-    productos = data["productos"]  # Lista dicts con id_producto, cantidad, precio_unitario (del front)
+    productos = data["productos"]
 
     total_venta = 0
     detalles = []
@@ -55,16 +55,12 @@ def generar_venta(data: dict, db: Session = Depends(get_db)):
         cantidad = item["cantidad"]
 
         producto = db.query(Producto).filter(Producto.id_producto == id_producto).first()
-
         if not producto:
             raise HTTPException(status_code=404, detail=f"Producto {id_producto} no encontrado")
-
         if producto.stock < cantidad:
             raise HTTPException(status_code=400, detail=f"Stock insuficiente para {producto.nombre_producto}")
 
-        # Precio real desde la BD
         precio_real = producto.precio_venta if producto.precio_venta is not None else producto.precio
-
         subtotal = cantidad * float(precio_real)
         total_venta += subtotal
 
@@ -83,7 +79,7 @@ def generar_venta(data: dict, db: Session = Depends(get_db)):
         total_venta=total_venta
     )
     db.add(nueva_venta)
-    db.flush()  # Para obtener id_venta
+    db.flush()
 
     for det in detalles:
         nuevo_detalle = DetalleVenta(
@@ -95,5 +91,29 @@ def generar_venta(data: dict, db: Session = Depends(get_db)):
         db.add(nuevo_detalle)
 
     db.commit()
-
     return {"message": "Venta registrada con éxito", "id_venta": nueva_venta.id_venta}
+
+@router.get("/ventas/detalle/{id_venta}", response_class=JSONResponse)
+def obtener_detalle(id_venta: int, db: Session = Depends(get_db)):
+    venta = db.query(Venta).options(joinedload(Venta.cliente), joinedload(Venta.usuario)).filter(Venta.id_venta == id_venta).first()
+    if not venta:
+        raise HTTPException(status_code=404, detail="Venta no encontrada")
+
+    detalles = db.query(DetalleVenta).filter(DetalleVenta.id_venta == id_venta).all()
+
+    resultado = {
+        "cliente": venta.cliente.nombre_cliente,
+        "fecha": venta.fecha_venta.strftime("%d/%m/%Y"),
+        "vendedor": venta.usuario.nombre_usuario,
+        "total": int(venta.total_venta),
+        "detalles": []
+    }
+
+    for d in detalles:
+        producto = db.query(Producto).filter(Producto.id_producto == d.id_producto).first()
+        resultado["detalles"].append({
+            "producto": producto.nombre_producto if producto else "¿?",
+            "descripcion": producto.descripcion if producto else "¿?"
+        })
+
+    return resultado

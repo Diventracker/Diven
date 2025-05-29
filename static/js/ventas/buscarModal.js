@@ -29,7 +29,7 @@ function llenarTablaProductosModal(productos) {
             <td>${producto.descripcion}</td>
             <td>${producto.modelo || "-"}</td>
             <td>${producto.stock}</td>
-            <td>$${producto.precio.toFixed(2)}</td>
+            <td>$${producto.precio.toLocaleString("es-CO")}</td>
             <td>
                 <button class="btn btn-sm ${seleccionado ? "btn-secondary" : "btn-enviar"}">
                     <i class="bi bi-${seleccionado ? "check" : "plus-circle"}"></i> ${seleccionado ? "Agregado" : "Agregar"}
