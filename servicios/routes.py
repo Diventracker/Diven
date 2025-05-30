@@ -1,6 +1,6 @@
-from fastapi import APIRouter,HTTPException, Depends, Request, Form
-from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
-from fastapi.templating import Jinja2Templates
+from fastapi import APIRouter,HTTPException, Depends, Request, Form 
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse 
+from fastapi.templating import Jinja2Templates 
 from sqlalchemy.orm import Session
 from database.database import get_db
 from servicios.model import ServicioTecnico
@@ -10,23 +10,47 @@ from clientes.model import Cliente
 router = APIRouter()
 templates = Jinja2Templates(directory="servicios/templates")  # Ruta donde están las vistas
 
-
 @router.get("/servicios", response_class=HTMLResponse, tags=["servicio_tecnico"])
-def obtener_servicios(request: Request, search: str = "", db: Session = Depends(get_db)):
+
+def listar_servicios(
+    request: Request,
+    db: Session = Depends(get_db),
+    page: int = 1,
+    limit: int = 8,
+    search: str = ""
+):
+    if page < 1:
+        page = 1
+
+    query = db.query(ServicioTecnico)
+
     rol = request.cookies.get("rol")  # Obtener rol de la cookie
 
+
     if search:
-        servicios = db.query(ServicioTecnico).filter(
+        query = query.filter(
             (ServicioTecnico.id_servicio.ilike(f"%{search}%")) |
             (ServicioTecnico.tipo_equipo.ilike(f"%{search}%"))
-        ).all()
-    else:
-        servicios = db.query(ServicioTecnico).all()
 
+        )
+    
+    total = query.count()
+    offset = (page - 1) * limit
+    servicios = query.offset(offset).limit(limit).all()
+
+    total_pages = (total + limit - 1) // limit  # Redondeo hacia arriba
+
+   
     return templates.TemplateResponse("servicios.html", {
         "request": request,
         "servicios": servicios,
+
+        "page": page,
+        "total_pages": total_pages,
+        "search": search,
+
         "rol": rol  
+
     })
 
 
