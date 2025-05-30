@@ -8,11 +8,11 @@ from clientes import model  # Asegúrate de importar los modelos Cliente y Usuar
 
 
 class ServicioTecnico(Base):
-    __tablename__= "Servicio_Tecnico"
+    __tablename__= "servicio_tecnico"
 
     id_servicio = Column(Integer, primary_key=True, index=True)
-    id_cliente = Column(Integer, ForeignKey("Cliente.id_cliente"))
-    id_usuario = Column(Integer, ForeignKey("Usuario.id_usuario"))
+    id_cliente = Column(Integer, ForeignKey("cliente.id_cliente"))
+    id_usuario = Column(Integer, ForeignKey("usuario.id_usuario"))
     tipo_equipo = Column(String(50), nullable=False)
     #se elimino la columna de marca
     modelo_equipo = Column(String(50), nullable=False)

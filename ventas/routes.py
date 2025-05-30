@@ -1,26 +1,41 @@
 from datetime import date, datetime, timezone
-from fastapi import APIRouter, HTTPException, Request, Form, Depends, Response
+from fastapi import APIRouter, HTTPException, Request, Depends
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session, joinedload
+from clientes.model import Cliente
 from database.database import get_db
 from inventario.model import Producto
 from usuarios.model import Usuario
 from ventas.model import DetalleVenta, Venta
-from sqlalchemy import desc
+from sqlalchemy import desc, or_
 
 router = APIRouter()
 templates = Jinja2Templates(directory="ventas/templates")
 
-@router.get("/ventas", response_class=HTMLResponse, tags=["gestionventas"])
-def gestionventas_get(request: Request, db: Session = Depends(get_db)):
-    ventas = db.query(Venta).options(joinedload(Venta.cliente)).order_by(desc(Venta.fecha_venta)).all()
+#Ruta para mostrar todas las ventas
+@router.get("/ventas", response_class=HTMLResponse, tags=["Ventas"])
+def gestionventas_get(request: Request, search: str = "", db: Session = Depends(get_db)):
+    if search:
+        ventas = (
+            db.query(Venta).join(Venta.cliente).filter(or_(
+                    Cliente.nombre_cliente.ilike(f"%{search}%"),
+                    Venta.id_venta.ilike(f"%{search}%")
+                )).options(joinedload(Venta.cliente)).all()
+        )
+    else:
+        ventas = (
+            db.query(Venta).options(joinedload(Venta.cliente))
+            .order_by(desc(Venta.fecha_venta)).all()
+        )
+    
     return templates.TemplateResponse("ventas.html", {
         "request": request,
         "ventas": ventas
     })
 
-@router.get("/crear_venta", response_class=HTMLResponse, tags=["ventas"])
+#Ruta para mostrar la vista de crear una nueva venta
+@router.get("/crear_venta", response_class=HTMLResponse, tags=["Ventas"])
 def Ventas_get(request: Request, db: Session = Depends(get_db)):
     usuario_id = request.cookies.get("usuario_id")
 
@@ -41,7 +56,8 @@ def Ventas_get(request: Request, db: Session = Depends(get_db)):
         "id_usuario": usuario_id
     })
 
-@router.post("/ventas/generar")
+#Ruta para registrar la venta del producto
+@router.post("/ventas/generar", tags=["Ventas"])
 def generar_venta(data: dict, db: Session = Depends(get_db)):
     id_cliente = data["id_cliente"]
     id_usuario = data["id_usuario"]
@@ -50,6 +66,9 @@ def generar_venta(data: dict, db: Session = Depends(get_db)):
     total_venta = 0
     detalles = []
 
+    if not productos:
+        raise HTTPException(status_code=400, detail="No se han agregado productos a la venta")
+    
     for item in productos:
         id_producto = item["id_producto"]
         cantidad = item["cantidad"]
@@ -93,7 +112,9 @@ def generar_venta(data: dict, db: Session = Depends(get_db)):
     db.commit()
     return {"message": "Venta registrada con éxito", "id_venta": nueva_venta.id_venta}
 
-@router.get("/ventas/detalle/{id_venta}", response_class=JSONResponse)
+
+#Ruta para obtener venta pr id
+@router.get("/ventas/detalle/{id_venta}", response_class=JSONResponse, tags=["Ventas"])
 def obtener_detalle(id_venta: int, db: Session = Depends(get_db)):
     venta = db.query(Venta).options(joinedload(Venta.cliente), joinedload(Venta.usuario)).filter(Venta.id_venta == id_venta).first()
     if not venta:
@@ -117,3 +138,25 @@ def obtener_detalle(id_venta: int, db: Session = Depends(get_db)):
         })
 
     return resultado
+
+#Mostar la venta Cuando ya este finalizada
+@router.get("/ventas/comprobante/{id_venta}", response_class=HTMLResponse, tags=["Ventas"])
+def ver_comprobante(id_venta: int, request: Request, db: Session = Depends(get_db)):
+    venta = db.query(Venta).filter(Venta.id_venta == id_venta).first()
+    if not venta:
+        return HTMLResponse(content="Venta no encontrada", status_code=404)
+    
+    cliente = db.query(Cliente).filter(Cliente.id_cliente == venta.id_cliente).first()
+    detalles = (
+        db.query(DetalleVenta)
+        .filter(DetalleVenta.id_venta == venta.id_venta)
+        .join(Producto)
+        .all()
+    )
+
+    return templates.TemplateResponse("comprobante.html", {
+        "request": request,
+        "venta": venta,
+        "cliente": cliente,
+        "detalles": detalles
+    })

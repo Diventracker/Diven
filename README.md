@@ -17,7 +17,7 @@ Antes de comenzar, asegúrate de tener instalado:
 #### 1. Clona el proyecto
 
 ```bash
-  git clone https://github.com/AndwSX/Diven.git
+  git clone https://github.com/Diventracker/Diven.git
 ```
 
 #### 2. Entra en el directorio del proyecto
@@ -42,7 +42,7 @@ Antes de comenzar, asegúrate de tener instalado:
 ```
 
 
-#### 4.1 *Opcional - Si pide permirsos (Ejecutar antes del activate)
+#### 4.1 *Opcional - Si pide permisos (Ejecutar antes del activate)
 
 
 

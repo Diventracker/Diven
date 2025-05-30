@@ -38,6 +38,7 @@ def crear_cliente(
     direccion_cliente: str = Form(...),
     telefono_cliente: str = Form(...),
     email_cliente: str = Form(...),
+    lugar: str = Form(...),
     db: Session = Depends(get_db)
 ):
     nuevo = Cliente(
@@ -51,11 +52,25 @@ def crear_cliente(
     try:
         db.add(nuevo)
         db.commit()
-        return RedirectResponse(url="/clientes?create=1", status_code=303)  # Redirección con éxito
-    
+        db.refresh(nuevo)  # actualiza el objeto con el id generado
+
+        if lugar == "ventas":
+            # Devolver los datos del cliente recién creado
+            return JSONResponse(content={
+                "id": nuevo.id_cliente,
+                "nombre_cliente": nuevo.nombre_cliente,
+                "cedula": nuevo.cedula,
+                "direccion_cliente": nuevo.direccion_cliente
+            })
+
+        # Si no es ventas, redirigir como antes
+        return RedirectResponse(url="/clientes?create=1", status_code=303)
+
     except IntegrityError:
-        db.rollback()  # Revierte cambios en caso de error
-        return RedirectResponse(url="/clientes?error=1", status_code=303)  # Redirección con error
+        db.rollback()
+        if lugar == "ventas":
+            return JSONResponse(content={"error": "Ya existe un cliente con esa cédula o Correo"}, status_code=400)
+        return RedirectResponse(url="/clientes?error=1", status_code=303)
 
 
 #Editar Cliente

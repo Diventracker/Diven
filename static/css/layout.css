@@ -4,6 +4,9 @@
     --color3: #3e5954; /* Acento oscuro */
     --color4: #253342; /* Nav */
     --color5: #232226; /* Texto contraste */
+
+    --sidebar-width: 60px;
+    --sidebar-expanded-width: 220px;
 }
 
 /* Fuentes personalizadas */
@@ -59,33 +62,6 @@ body {
     overflow: hidden;
 }
 
-#sidebar {
-    width: 250px;
-    background-color: var(--color2);    
-    border-right: 1px solid #dee2e6;
-    transition: all 0.3s ease;
-    overflow-y: auto;
-    flex-shrink: 0;
-}
-
-#sidebar.collapsed {
-    width: 0;
-    padding: 0;
-    overflow: hidden;
-    border: none;
-}
-
-/* Botón de colapso */
-#sidebarToggle {
-    background-color: var(--color2);
-    border: none;
-    color: white;
-    transition: background-color 0.3s ease;
-}
-
-#sidebarToggle:hover {
-    background-color: var(--color3); /* Color más oscuro al pasar el mouse */
-}
 
 #mainContent {
     flex: 1;
@@ -99,38 +75,137 @@ iframe {
     border: none;
 }
 
-.alto-row {
-    height: calc(100vh - 66px); /* Altura total menos la altura de la navbar */
-    overflow: hidden;
-}
-
-/* Estilos para el menú lateral */
-#sidebar .nav-link {
-    padding: 0.75rem 1rem;
-    color: white;
-    display: flex;
-    align-items: center;
-    transition: all 0.2s;
-}
-
-#sidebar .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 5px;
-}
-
-#sidebar .nav-link i {    
-    margin-right: 10px;
-    width: 20px;
-    text-align: center;
-}
 
 /* Estilos para la navbar superior */
 .navbar-top {
     height: 66px;
 }
 
-/* Estilo para el enlace activo */
-#sidebar .nav-link:focus {
-    background-color: rgba(255, 255, 255, 0.2);    
-    border-radius: 5px; /* Redondear las esquinas */
-  }
+/* Sidebar styles */
+#sidebar-wrapper {
+    position: fixed;
+    width: var(--sidebar-width);
+    background-color: var(--color4);
+    transition: width 0.2s ease-in-out;
+    z-index: 1000;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    max-height: 70vh;
+    display: flex;
+    flex-direction: column;
+}
+  
+#sidebar-wrapper:hover {
+    width: var(--sidebar-expanded-width);
+}
+
+.sidebar-heading {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    color: var(--color1);
+    font-weight: bold;
+    background-color: var(--color3);
+}
+  
+.list-group {
+    flex-grow: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    padding-bottom: 10px;
+}
+
+.list-group::-webkit-scrollbar {
+    width: 5px;
+}
+
+.list-group::-webkit-scrollbar-thumb {
+    background-color: rgba(255,255,255,0.3);
+    border-radius: 10px;
+}
+
+.list-group-item {
+    background-color: transparent;
+    color: var(--color1);
+    border: none;
+    padding: 15px 20px;
+    transition: all 0.3s;
+    white-space: nowrap;
+    cursor: pointer;
+    overflow: hidden;
+    
+}
+
+.list-group-item:hover {
+    background-color: rgba(94, 145, 136, 0.3);
+}
+
+.list-group-item.active {
+    background-color: var(--color2);
+    border-color: transparent;
+}
+
+.list-group-item i {
+    width: 20px;
+    margin-right: 20px;
+    text-align: center;
+}
+.menu-text {
+    opacity: 0;
+    transition: opacity 0.1s;
+    font-weight: 500;
+}
+
+#sidebar-wrapper:hover .menu-text {
+    opacity: 1;
+}
+
+/* Main content */
+#page-content-wrapper {
+    margin-left: calc(var(--sidebar-width) + 20px);
+    width: calc(100% - var(--sidebar-width) - 20px);
+    transition: margin-left 0.2s ease-in-out, width 0.2s ease-in-out;
+}
+
+#sidebar-wrapper:hover + #page-content-wrapper {
+    margin-left: calc(var(--sidebar-expanded-width) + 20px);
+    width: calc(100% - var(--sidebar-expanded-width) - 20px);
+}
+
+@media (max-width: 768px) {
+#sidebar-wrapper {
+    width: 0;
+    left: 0;
+    border-radius: 0 15px 15px 0;
+}
+
+#page-content-wrapper {
+    margin-left: 0;
+    width: 100%;
+}
+
+#sidebar-wrapper.show {
+    width: var(--sidebar-expanded-width);
+}
+
+#sidebar-wrapper.show + #page-content-wrapper {
+    margin-left: var(--sidebar-expanded-width);
+    width: calc(100% - var(--sidebar-expanded-width));
+}
+
+.toggle-sidebar {
+    display: block !important;
+}
+}
+
+.toggle-sidebar {
+    display: none;
+    z-index: 1050;
+    background-color: var(--color2);
+    color: white;
+}

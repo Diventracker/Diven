@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
   <link rel="stylesheet" href="/static/css/modulos.css">
 </head>
-
 <body>
 <main class="container mt-3">
 
@@ -45,8 +44,8 @@
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Nombre</label>
-                  <input type="hidden" id="id-cliente">
-                  <input id="nombre-cliente" type="text" class="form-control" value="Cliente General" readonly>
+                  <input type="hidden" id="id-cliente" value="55">
+                  <input id="nombre-cliente" type="text" class="form-control" value="Cliente Mostrador" readonly>
                 </div>
                 <div class="col-md-6 mb-3">
                   <label class="form-label">CC</label>
@@ -56,7 +55,7 @@
               <div class="row">
                 <div class="col-md-12 mb-3">
                   <label class="form-label">Dirección</label>
-                  <input id="direccion-cliente" type="text" class="form-control" readonly>
+                  <input id="direccion-cliente" type="text" class="form-control" value="Direcion General" readonly>
                 </div>
               </div>
             </div>
@@ -244,7 +243,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form action="/clientes/crear" method="post">
+                <form id="form-cliente">
                     <div class="mb-3">
                         <label for="nombre" class="form-label">Nombre:</label>
                         <input type="text" class="form-control" id="nombre" name="nombre_cliente" required pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" maxlength="50">
@@ -265,6 +264,7 @@
                         <label for="correo" class="form-label">Correo:</label>
                         <input type="email" class="form-control" id="correo" name="email_cliente" required>
                     </div>
+                    <input type="hidden" name="lugar" value="ventas">
                     <button type="submit" class="btn btn-enviar w-100">Guardar Cliente</button>
                 </form>
             </div>
@@ -275,11 +275,11 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/static/js/ventas/buscarCliente.js"></script>
-<script src="/static/js/ventas/tablaProductos.js"></script>
-<script src="/static/js/ventas/buscarModal.js"></script>
-<script src="/static/js/ventas/enviarVenta.js"></script>
-
+<script src="/static/js/ventas/crear/buscarCliente.js"></script>
+<script src="/static/js/ventas/crear/tablaProductos.js"></script>
+<script src="/static/js/ventas/crear/buscarModal.js"></script>
+<script src="/static/js/ventas/crear/enviarVenta.js"></script>
+<script src="/static/js/ventas/crear/crearCliente.js"></script>
 </body>
 
 </html>

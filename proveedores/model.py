@@ -3,7 +3,7 @@ from database.database import Base
 from sqlalchemy.orm import relationship
 
 class Proveedor(Base):
-    __tablename__ = "Proveedor"
+    __tablename__ = "proveedor"
 
     id_proveedor = Column(Integer, primary_key=True, index=True)
     nit = Column(String(20), nullable=False)
