@@ -4,11 +4,11 @@ from database.database import Base
 from datetime import datetime, timezone
 
 class Venta(Base):
-    __tablename__ = 'Venta'
+    __tablename__ = 'venta'
 
     id_venta = Column(Integer, primary_key=True, autoincrement=True)
-    id_cliente = Column(Integer, ForeignKey('Cliente.id_cliente'), nullable=False)
-    id_usuario = Column(Integer, ForeignKey('Usuario.id_usuario'), nullable=False)
+    id_cliente = Column(Integer, ForeignKey('cliente.id_cliente'), nullable=False)
+    id_usuario = Column(Integer, ForeignKey('usuario.id_usuario'), nullable=False)
     fecha_venta = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     total_venta = Column(DECIMAL(10, 2), nullable=False)
 
@@ -17,11 +17,11 @@ class Venta(Base):
     detalles = relationship("DetalleVenta", back_populates="venta", cascade="all, delete-orphan")
 
 class DetalleVenta(Base):
-    __tablename__ = 'Detalle_Venta'
+    __tablename__ = 'detalle_venta'
 
     id_detalle = Column(Integer, primary_key=True, autoincrement=True)
-    id_venta = Column(Integer, ForeignKey('Venta.id_venta'), nullable=False)
-    id_producto = Column(Integer, ForeignKey('Producto.id_producto'), nullable=False)
+    id_venta = Column(Integer, ForeignKey('venta.id_venta'), nullable=False)
+    id_producto = Column(Integer, ForeignKey('producto.id_producto'), nullable=False)
     cantidad = Column(Integer, nullable=False)
     precio_unitario = Column(DECIMAL(10, 2), nullable=False)
 

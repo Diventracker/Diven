@@ -32,9 +32,9 @@ async function buscarCliente() {
             }, 500);
         }, 3000);
 
-        document.getElementById("nombre-cliente").value = "Cliente General";
+        document.getElementById("nombre-cliente").value = "Cliente Mostrador";
         document.getElementById("cc-cliente").value = "00000000";
-        document.getElementById("direccion-cliente").value = "";
-        document.getElementById("id-cliente").value = "0";
+        document.getElementById("direccion-cliente").value = "Direcion General";
+        document.getElementById("id-cliente").value = "55";
     }
 }

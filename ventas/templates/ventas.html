@@ -10,7 +10,8 @@
 </head>
 <body>
 
-<main>  
+<main> 
+  <!-- Page Content -->
     <div id="page-content-wrapper">
       <div class="container-fluid">
         <div class="row">
@@ -21,7 +22,7 @@
               </div>
               <div class="card-body">
 
-                <!-- Pestañas -->
+                <!-- Pestañas de navegación -->
                 <ul class="nav nav-tabs mb-4" id="ventasTabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="ventas-tab" data-bs-toggle="tab" data-bs-target="#ventas" type="button" role="tab">Ventas de Productos</button>
@@ -30,11 +31,11 @@
                         <button class="nav-link" id="servicios-tab" data-bs-toggle="tab" data-bs-target="#servicios" type="button" role="tab">Servicios Facturados</button>
                     </li>
                 </ul>
-
+                <!-- Contenido de las pestañas -->
                 <div class="tab-content" id="ventasTabsContent">
-
-                  <!-- Ventas de productos -->
+                  <!-- Pestaña de Ventas de Productos -->
                   <div class="tab-pane fade show active" id="ventas" role="tabpanel">
+                     <!-- Búsqueda y filtros -->
                     <div class="row mb-4">
                       <div class="col-12">
                         <div class="card shadow-sm">
@@ -42,10 +43,10 @@
                           <div class="card-body">
                             <div class="row">
                               <div class="mb-2 col-md-4">
-                                <form action="">
+                                <form action="/ventas" method="get">
                                   <div class="input-group">
-                                    <input type="search" class="form-control" placeholder="Buscar por nombre, código o descripción">
-                                    <button class="btn btn-outline-enviar" type="button"><i class="bi bi-search"></i></button>
+                                    <input name="search" value="{{ search | default('') }}" type="search" class="form-control" placeholder="Buscar por id o cliente">
+                                    <button class="btn btn-outline-enviar" type="submit"><i class="bi bi-search"></i></button>
                                   </div>
                                 </form>
                               </div>
@@ -98,11 +99,11 @@
                                     <td>${{ "{:,.0f}".format(v.total_venta) | replace(",", ".") }}</td>
                                     <td>Pagado</td>
                                     <td>
-                                      <button class="btn btn-primary btn-sm"
+                                      <button class="btn btn-sm btn-outline-secondary "
                                               onclick="verDetalles('{{ v.id_venta }}')"
                                               data-bs-toggle="modal"
                                               data-bs-target="#modaldetalle">
-                                        <i class="bi bi-plus-circle"></i> Detalles
+                                        <i class="bi bi-eye"></i> Detalles
                                       </button>
                                     </td>
                                   </tr>
@@ -110,6 +111,22 @@
                                 </tbody>
                               </table>
                             </div>
+                            <!-- Paginación -->
+                            <nav aria-label="Paginación de productos">
+                                <ul class="pagination justify-content-center mt-4">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1"
+                                            aria-disabled="true">Anterior</a>
+                                    </li>
+                                    <li class="page-item active"><a class="page-link" href="#">1</a>
+                                    </li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">Siguiente</a>
+                                    </li>
+                                </ul>
+                            </nav>
                           </div>
                         </div>
                       </div>

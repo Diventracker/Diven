@@ -13,6 +13,12 @@ async function generarVenta() {
   
       productos.push({ id_producto, cantidad, precio_unitario });
     });
+
+    // Validar que hay al menos un producto
+    if (productos.length === 0) {
+      alert("❌ Debes agregar al menos un producto antes de generar la venta.");
+      return;
+    }
   
     const datosVenta = {
       id_cliente: parseInt(idCliente),
@@ -31,7 +37,7 @@ async function generarVenta() {
   
       if (!res.ok) throw new Error(respuesta.detail || "Error al registrar la venta");
   
-      alert(`✅ Venta registrada. ID: ${respuesta.id_venta}`);
+      window.location.href = `/ventas/comprobante/${respuesta.id_venta}`; //Aqui enviar al formulario al momento de realizar la venta
       // Aquí podrías limpiar la tabla o redireccionar, según necesites.
     } catch (error) {
       alert("❌ Error: " + error.message);
