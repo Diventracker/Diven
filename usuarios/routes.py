@@ -18,6 +18,8 @@ templates = Jinja2Templates(directory="usuarios/templates")  # Ruta donde están
 #Ruta principal para mostrar tabla usuarios
 @router.get("/usuarios", tags=["Usuarios"])
 def listar_usuarios(request: Request, search: str = "", db: Session = Depends(get_db)):
+    rol = request.cookies.get("rol")  # Leer rol de la cookie
+
     if search:
         usuarios = db.query(Usuario).filter(
             (Usuario.nombre_usuario.ilike(f"%{search}%")) |
@@ -26,7 +28,12 @@ def listar_usuarios(request: Request, search: str = "", db: Session = Depends(ge
     else:
         usuarios = db.query(Usuario).order_by(Usuario.id_usuario.desc()).all()
 
-    return templates.TemplateResponse("usuarios.html", {"request": request, "usuarios": usuarios, "search": search})
+    return templates.TemplateResponse("usuarios.html", {
+        "request": request,
+        "usuarios": usuarios,
+        "search": search,
+        "rol": rol
+    })
 
 
 # Inicializamos un contexto de hash para bcrypt

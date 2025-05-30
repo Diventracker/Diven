@@ -20,7 +20,8 @@ templates = Jinja2Templates(directory="dashboard/templates")
 #Ruta para la ventana del dashboard
 @router.get("/dashboard", response_class=HTMLResponse, tags=["dashboard"])
 def dashboard_get(request: Request):
-    return templates.TemplateResponse("dashboard.html", {"request": request})
+    rol = request.cookies.get("rol") 
+    return templates.TemplateResponse("dashboard.html", {"request": request, "rol": rol})
 
 
 

@@ -13,6 +13,8 @@ templates = Jinja2Templates(directory="servicios/templates")  # Ruta donde está
 
 @router.get("/servicios", response_class=HTMLResponse, tags=["servicio_tecnico"])
 def obtener_servicios(request: Request, search: str = "", db: Session = Depends(get_db)):
+    rol = request.cookies.get("rol")  # Obtener rol de la cookie
+
     if search:
         servicios = db.query(ServicioTecnico).filter(
             (ServicioTecnico.id_servicio.ilike(f"%{search}%")) |
@@ -20,7 +22,12 @@ def obtener_servicios(request: Request, search: str = "", db: Session = Depends(
         ).all()
     else:
         servicios = db.query(ServicioTecnico).all()
-    return templates.TemplateResponse("servicios.html", {"request": request, "servicios": servicios})
+
+    return templates.TemplateResponse("servicios.html", {
+        "request": request,
+        "servicios": servicios,
+        "rol": rol  
+    })
 
 
 #Obetener los clientes para agregarlos al Select

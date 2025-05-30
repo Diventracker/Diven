@@ -93,7 +93,9 @@
                                         <th scope="col">Dirección</th>
                                         <th scope="col">Teléfono</th>
                                         <th scope="col">Correo</th>
+                                        {% if rol == "Administrador" %}
                                         <th scope="col">Acción</th>
+                                        {% endif %}
                                     </tr>
                                 </thead>
                                 <tbody id="tabla-clientes">
@@ -104,6 +106,7 @@
                                         <td>{{ cliente.direccion_cliente }}</td>
                                         <td>{{ cliente.telefono_cliente }}</td>
                                         <td>{{ cliente.email_cliente }}</td>
+                                        {% if rol == "Administrador" %}
                                         <td>
                                             <!-- Por si queremos ver detalles del cliente
                                                 <button class="btn btn-sm btn-outline-secondary me-1">
@@ -124,7 +127,8 @@
                                                     data-nombre="{{ cliente.nombre_cliente }}">
                                                 <i class="bi bi-trash"></i>
                                             </button>
-                                            </td>
+                                        </td>
+                                        {% endif %}
                                     </tr>
                                     {% endfor %}                        
                                 </tbody>
