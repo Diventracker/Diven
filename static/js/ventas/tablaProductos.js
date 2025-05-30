@@ -30,13 +30,11 @@ function agregarFilaProducto(producto) {
     let productoYaAgregado = false;
 
     filas.forEach(fila => {
-        const codigo = fila.cells[0]?.textContent.trim(); // primera celda = código
+        const codigo = fila.cells[0]?.textContent.trim();
         if (codigo === String(producto.codigo).trim()) {
-            // Producto ya existe en la tabla, actualizar cantidad y subtotal
             const inputCantidad = fila.querySelector(".cantidad-input");
             let cantidadActual = parseInt(inputCantidad.value) || 0;
 
-            // 🔴 Validar contra el stock
             if (cantidadActual + 1 > producto.stock) {
                 alert(`Solo hay ${producto.stock} unidades disponibles de ${producto.descripcion}`);
                 return;
@@ -46,7 +44,10 @@ function agregarFilaProducto(producto) {
             inputCantidad.value = cantidadActual;
 
             const nuevoSubtotal = cantidadActual * producto.precio;
-            fila.querySelector(".subtotal").textContent = `$${nuevoSubtotal.toFixed(2)}`;
+            fila.querySelector(".subtotal").textContent = nuevoSubtotal.toLocaleString('es-CO', {
+                style: 'currency',
+                currency: 'COP'
+            });
 
             productoYaAgregado = true;
         }
@@ -54,50 +55,44 @@ function agregarFilaProducto(producto) {
 
     if (!productoYaAgregado) {
         const fila = document.createElement("tr");
-        const precioUnitario = producto.precio.toFixed(2);
+        const precioUnitario = producto.precio;
 
         fila.innerHTML = `
           <td>${producto.codigo}</td>
           <td>${producto.descripcion}</td>
-          <td>$${precioUnitario}</td>
+          <td>${precioUnitario.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</td>
           <td>
             <input type="number" value="1" min="1" class="form-control cantidad-input mx-auto" style="width: 70px;">
           </td>
-          <td class="subtotal">$${precioUnitario}</td>
+          <td class="subtotal">${precioUnitario.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</td>
           <td>
             <button class="btn btn-sm btn-outline-danger" onclick="this.closest('tr').remove(); actualizarTotal();"><i class="bi bi-trash"></i></button>
           </td>
         `;
 
-        // Insertar antes de la fila TOTAL
         const filaTotal = tabla.querySelector("tr.table-active");
         tabla.insertBefore(fila, filaTotal);
 
         const inputCantidad = fila.querySelector(".cantidad-input");
         inputCantidad.addEventListener("input", () => {
-            const cantidad = parseInt(inputCantidad.value) || 1;
-            // 🔴 Validar stock manualmente
+            let cantidad = parseInt(inputCantidad.value) || 1;
 
             if (cantidad > producto.stock) {
                 alert(`Solo hay ${producto.stock} unidades disponibles`);
-                inputCantidad.value = producto.stock;
                 cantidad = producto.stock;
+                inputCantidad.value = cantidad;
             }
 
             const subtotal = cantidad * producto.precio;
-            fila.querySelector(".subtotal").textContent = `$${subtotal.toFixed(2)}`;
+            fila.querySelector(".subtotal").textContent = subtotal.toLocaleString('es-CO', {
+                style: 'currency',
+                currency: 'COP'
+            });
+
             actualizarTotal();
         });
     }
 
-    actualizarTotal();
-}
-
-
-
-function eliminarFila(boton) {
-    const fila = boton.closest("tr");
-    fila.remove();
     actualizarTotal();
 }
 
@@ -106,9 +101,16 @@ function actualizarTotal() {
     let total = 0;
 
     filas.forEach(fila => {
-        const subtotalTexto = fila.querySelector(".subtotal").textContent.replace("$", "");
+        const subtotalTexto = fila.querySelector(".subtotal").textContent
+  .replace(/\$/g, '')      // quita el signo $
+  .replace(/\./g, '')      // quita separador de miles (.)
+  .replace(/,/g, '.');     // convierte coma decimal (si aparece) a punto
+
         total += parseFloat(subtotalTexto);
     });
 
-    document.getElementById("total-venta").textContent = `$${total.toFixed(2)}`;
+    document.getElementById("total-venta").textContent = total.toLocaleString('es-CO', {
+        style: 'currency',
+        currency: 'COP'
+    });
 }

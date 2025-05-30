@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-05-2025 a las 22:56:02
+-- Tiempo de generación: 30-05-2025 a las 00:41:38
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -67,7 +67,10 @@ INSERT INTO `cliente` (`id_cliente`, `nombre_cliente`, `cedula`, `direccion_clie
 (28, 'Patricia Rodríguez', '1267890123', 'Calle 13 #25-35', '5306789012', 'patricia.rodriguez@email.com'),
 (29, 'Roberto Torres', '1278901234', 'Avenida 18 #45-55', '5407890123', 'roberto.torres@email.com'),
 (45, 'Zoeeee Guadalupe', '129012345', 'Diagonal 78', '3222323232', 'andw@gmail.com'),
-(52, 'Harol', '123222323', 'diagonal 56', '3224354565', 'harol@gmail.com');
+(52, 'Harol', '123222323', 'diagonal 56', '3224354565', 'harol@gmail.com'),
+(53, 'Joaquin Cañon', '1012443507', 'tv 77 i # 65 j 16 sur ', '3053970242', 'Danielcf97@hotmail.com'),
+(55, 'Cliente Mostrador ', '00000000', 'Direcion General', '0000000000', 'Cliente@cliente.com'),
+(56, 'Mario', '1548652458', 'tv 8 cll 123 x2 ', '3122015614', 'mariio@cliente.com');
 
 -- --------------------------------------------------------
 
@@ -80,8 +83,49 @@ CREATE TABLE `detalle_venta` (
   `id_venta` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL,
-  `precio_unitario` decimal(10,2) NOT NULL
+  `precio_unitario` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `detalle_venta`
+--
+
+INSERT INTO `detalle_venta` (`id_detalle`, `id_venta`, `id_producto`, `cantidad`, `precio_unitario`) VALUES
+(1, 1, 4, 1, 10000),
+(2, 2, 4, 30, 10000),
+(3, 3, 5, 1, 180000),
+(4, 4, 5, 5, 180000),
+(5, 5, 1, 1, 40000),
+(6, 6, 9, 1, 40000),
+(7, 7, 4, 1, 10000),
+(8, 8, 18, 1, 43000),
+(9, 9, 2, 1, 50000),
+(10, 9, 8, 1, 1400000),
+(11, 10, 14, 1, 49000),
+(12, 11, 5, 1, 180000),
+(13, 11, 8, 1, 1400000),
+(14, 12, 5, 1, 180000),
+(15, 13, 8, 1, 1400000),
+(16, 14, 1, 1, 40000),
+(17, 15, 5, 1, 180000),
+(18, 16, 2, 2, 50000),
+(19, 16, 10, 1, 45000),
+(20, 16, 12, 3, 47000),
+(21, 16, 14, 3, 49000),
+(22, 16, 16, 2, 37000),
+(23, 17, 1, 1, 40000),
+(24, 17, 2, 1, 50000),
+(25, 17, 5, 1, 180000),
+(26, 18, 1, 1, 40000),
+(27, 19, 1, 1, 40000),
+(28, 20, 9, 1, 40000),
+(29, 20, 10, 1, 45000),
+(30, 20, 11, 1, 42000),
+(31, 21, 2, 1, 50000),
+(32, 21, 5, 1, 180000),
+(33, 21, 10, 1, 45000),
+(34, 22, 1, 1, 40000),
+(35, 22, 5, 1, 180000);
 
 -- --------------------------------------------------------
 
@@ -135,13 +179,13 @@ CREATE TABLE `producto` (
   `marca` varchar(50) NOT NULL,
   `modelo` varchar(50) NOT NULL,
   `descripcion` text NOT NULL,
-  `precio` decimal(10,2) NOT NULL,
+  `precio` int(10) NOT NULL,
   `stock` int(11) NOT NULL,
   `id_proveedor` int(11) NOT NULL,
   `fecha_inicio_garantia` date DEFAULT NULL,
   `fecha_expiracion_garantia` date DEFAULT NULL,
   `fecha_compra` date NOT NULL,
-  `precio_venta` decimal(10,2) DEFAULT NULL
+  `precio_venta` int(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -149,11 +193,21 @@ CREATE TABLE `producto` (
 --
 
 INSERT INTO `producto` (`id_producto`, `nombre_producto`, `marca`, `modelo`, `descripcion`, `precio`, `stock`, `id_proveedor`, `fecha_inicio_garantia`, `fecha_expiracion_garantia`, `fecha_compra`, `precio_venta`) VALUES
-(1, 'Laptop Gamer', 'Asus', 'ROG Strix', 'Laptop de alto rendimiento para gaming', 4500000.00, 10, 1, NULL, NULL, '2024-01-01', 40000.00),
-(2, 'Laptop Gamer', 'Asus', 'ROG Strix', 'Laptop de alto rendimiento para gaming', 4400000.00, 5, 2, '2024-02-01', '2026-02-01', '2024-02-01', 50000.00),
-(4, 'USBB ', 'kingston', 'b876', '32gb', 5000.00, 32, 2, '2025-04-04', '2025-04-12', '2025-04-11', 10000.00),
-(5, 'Tecladinho', 'Redragon', 'K552', 'White', 100000.00, 32, 7, '2025-04-03', '2025-04-19', '2025-04-04', 180000.00),
-(8, 'Computador', 'hp', 'paser76', 'Amd, 16gb ram', 1000000.00, 3, 1, '2025-04-01', '2025-04-25', '2025-04-07', 1400000.00);
+(1, 'Laptop Gamer', 'Asus', 'ROG Strix', 'Laptop de alto rendimiento para gaming', 4500000, 4, 1, NULL, NULL, '2024-01-01', 40000),
+(2, 'Laptop Gamer', 'Asus', 'ROG Strix', 'Laptop de alto rendimiento para gaming', 4400000, 0, 2, '2024-02-01', '2026-02-01', '2024-02-01', 50000),
+(4, 'USBB ', 'kingston', 'b876', '32gb', 5000, 0, 2, '2025-04-04', '2025-04-12', '2025-04-11', 10000),
+(5, 'Tecladinho', 'Redragon', 'K552', 'White', 100000, 20, 7, '2025-04-03', '2025-04-19', '2025-04-04', 180000),
+(8, 'Computador', 'hp', 'paser76', 'Amd, 16gb ram', 1000000, 0, 1, '2025-04-01', '2025-04-25', '2025-04-07', 1400000),
+(9, 'Cartucho Negro 664', 'HP', '664', 'Tinta negra original HP', 25000, 18, 7, '2025-05-01', '2025-11-01', '2025-05-01', 40000),
+(10, 'Cartucho Color 664', 'HP', '664 Color', 'Tinta color original HP', 28000, 12, 7, '2025-05-01', '2025-11-01', '2025-05-01', 45000),
+(11, 'Cartucho Negro 21', 'HP', '21', 'Cartucho tinta negra HP 21', 27000, 11, 7, '2025-05-02', '2025-11-02', '2025-05-02', 42000),
+(12, 'Cartucho Color 22', 'HP', '22', 'Cartucho tinta color HP 22', 30000, 7, 7, '2025-05-02', '2025-11-02', '2025-05-02', 47000),
+(13, 'Cartucho PG-145 Negro', 'Canon', 'PG-145', 'Tinta negra para Canon Pixma', 26000, 18, 7, '2025-05-03', '2025-11-03', '2025-05-03', 42000),
+(14, 'Cartucho CL-146 Color', 'Canon', 'CL-146', 'Tinta color Canon original', 32000, 10, 7, '2025-05-03', '2025-11-03', '2025-05-03', 49000),
+(15, 'Cartucho T664 Negro', 'Epson', 'T664', 'Botella tinta negra Epson EcoTank', 18000, 25, 2, '2025-05-04', '2025-11-04', '2025-05-04', 35000),
+(16, 'Cartucho T664 Color', 'Epson', 'T664 Color', 'Botella tinta color Epson EcoTank', 20000, 20, 2, '2025-05-04', '2025-11-04', '2025-05-04', 37000),
+(17, 'Cartucho LC103BK', 'Brother', 'LC103BK', 'Tinta negra original Brother', 23000, 13, 1, '2025-05-05', '2025-11-05', '2025-05-05', 39000),
+(18, 'Cartucho LC103CL', 'Brother', 'LC103CL', 'Tinta color original Brother', 26000, 10, 1, '2025-05-05', '2025-11-05', '2025-05-05', 43000);
 
 -- --------------------------------------------------------
 
@@ -240,6 +294,7 @@ CREATE TABLE `usuario` (
   `id_usuario` int(11) NOT NULL,
   `nombre_usuario` varchar(100) NOT NULL,
   `correo` varchar(100) NOT NULL,
+  `Tel` int(15) NOT NULL,
   `clave` varchar(255) NOT NULL,
   `rol` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -248,10 +303,10 @@ CREATE TABLE `usuario` (
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`id_usuario`, `nombre_usuario`, `correo`, `clave`, `rol`) VALUES
-(1, 'Administrador', 'admin@tienda.com', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Administrador'),
-(6, 'Test', 'test-hh08p33yo@srv1.mail-tester.com', '$2b$12$r6Jl3YLSy2Y09Zb6O9c0jehbVrzcNnh170hzktc4NNs5EbrFgl066', 'Administrador'),
-(7, 'Camilo', 'camilo@gmail.com', '$2b$12$yro3DZDDrGXH84lNobflwebTK8Ywirw6KcAQNPOgmel7oY8tq7SSq', 'Tecnico');
+INSERT INTO `usuario` (`id_usuario`, `nombre_usuario`, `correo`, `Tel`, `clave`, `rol`) VALUES
+(1, 'Administrador', 'admin@tienda.com', 0, '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Administrador'),
+(6, 'Test', 'test-hh08p33yo@srv1.mail-tester.com', 0, '$2b$12$r6Jl3YLSy2Y09Zb6O9c0jehbVrzcNnh170hzktc4NNs5EbrFgl066', 'Administrador'),
+(7, 'Camilo', 'camilo@gmail.com', 0, '$2b$12$yro3DZDDrGXH84lNobflwebTK8Ywirw6KcAQNPOgmel7oY8tq7SSq', 'Tecnico');
 
 -- --------------------------------------------------------
 
@@ -264,8 +319,37 @@ CREATE TABLE `venta` (
   `id_cliente` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `fecha_venta` date NOT NULL,
-  `total_venta` decimal(10,2) NOT NULL
+  `total_venta` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `venta`
+--
+
+INSERT INTO `venta` (`id_venta`, `id_cliente`, `id_usuario`, `fecha_venta`, `total_venta`) VALUES
+(1, 5, 1, '2025-05-27', 10000),
+(2, 5, 1, '2025-05-27', 300000),
+(3, 5, 1, '2025-05-27', 180000),
+(4, 6, 1, '2025-05-27', 900000),
+(5, 53, 1, '2025-05-28', 40000),
+(6, 53, 1, '2025-05-28', 40000),
+(7, 53, 1, '2025-05-28', 10000),
+(8, 55, 1, '2025-05-28', 43000),
+(9, 5, 1, '2025-05-28', 1450000),
+(10, 14, 1, '2025-05-28', 49000),
+(11, 55, 1, '2025-05-28', 1580000),
+(12, 53, 1, '2025-05-29', 180000),
+(13, 53, 1, '2025-05-29', 1400000),
+(14, 55, 1, '2025-05-29', 40000),
+(15, 55, 1, '2025-05-29', 180000),
+(16, 53, 1, '2025-05-29', 507000),
+(17, 53, 1, '2025-05-29', 270000),
+(18, 53, 1, '2025-05-29', 40000),
+(19, 53, 1, '2025-05-29', 40000),
+(20, 53, 1, '2025-05-29', 127000),
+(21, 55, 1, '2025-05-29', 275000),
+(22, 55, 1, '2025-05-29', 220000),
+(23, 53, 1, '2025-05-29', 0);
 
 --
 -- Índices para tablas volcadas
@@ -346,13 +430,13 @@ ALTER TABLE `venta`
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT de la tabla `garantia_producto`
@@ -370,7 +454,7 @@ ALTER TABLE `garantia_servicio`
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `proveedor`
@@ -394,7 +478,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `venta`
 --
 ALTER TABLE `venta`
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- Restricciones para tablas volcadas

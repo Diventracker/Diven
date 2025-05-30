@@ -7,19 +7,19 @@ class ProductoCreate(BaseModel):
     marca: str
     modelo: str
     descripcion: str
-    precio: float
+    precio: int
     stock: int
     id_proveedor: int
     fecha_inicio_garantia: date | None = None
     fecha_expiracion_garantia: date | None = None
     fecha_compra: date
-    precio_venta: float | None = None
+    precio_venta: int | None = None
 
 #Para las consultas de las facturas
 class ProductoOut(BaseModel):
     codigo: str         # equivale a Producto.id_producto
     descripcion: str    # equivale a Producto.nombre_producto
     modelo: Optional[str] = None         # Producto.modelo
-    precio: float
+    precio: int
     stock: int
     

@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Date, DECIMAL, Text, ForeignKey
 from database.database import Base
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.mysql import INTEGER
 
 class Producto(Base):
     __tablename__ = "Producto"
@@ -10,8 +11,8 @@ class Producto(Base):
     marca = Column(String(50), nullable=False)
     modelo = Column(String(50), nullable=False)
     descripcion = Column(Text, nullable=False)
-    precio = Column(DECIMAL(10, 2), nullable=False)
-    precio_venta = Column(DECIMAL(10, 2), nullable=True)  
+    precio = Column(INTEGER(unsigned=True), nullable=False) 
+    precio_venta = Column(INTEGER(unsigned=True), nullable=True) 
     stock = Column(Integer, nullable=False)
     id_proveedor = Column(Integer, ForeignKey("Proveedor.id_proveedor"), nullable=False)
     fecha_inicio_garantia = Column(Date, nullable=True)
