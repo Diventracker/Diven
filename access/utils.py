@@ -16,4 +16,4 @@ def verificar_usuario(roles_permitidos: list[str] = None):
 
         return {"usuario_id": usuario_id, "rol": tipo_usuario} #Retorna como DICT y se accede usuario["usuario_id"]
 
-    return Depends(inner) #Ejecuta esta funcion antes de la ruta 
+    return Depends(inner) #Ejecuta esta funcion antes de la ruta

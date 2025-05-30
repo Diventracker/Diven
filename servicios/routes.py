@@ -11,6 +11,7 @@ router = APIRouter()
 templates = Jinja2Templates(directory="servicios/templates")  # Ruta donde están las vistas
 
 @router.get("/servicios", response_class=HTMLResponse, tags=["servicio_tecnico"])
+
 def listar_servicios(
     request: Request,
     db: Session = Depends(get_db),
@@ -23,10 +24,14 @@ def listar_servicios(
 
     query = db.query(ServicioTecnico)
 
+    rol = request.cookies.get("rol")  # Obtener rol de la cookie
+
+
     if search:
         query = query.filter(
             (ServicioTecnico.id_servicio.ilike(f"%{search}%")) |
             (ServicioTecnico.tipo_equipo.ilike(f"%{search}%"))
+
         )
     
     total = query.count()
@@ -35,12 +40,17 @@ def listar_servicios(
 
     total_pages = (total + limit - 1) // limit  # Redondeo hacia arriba
 
+   
     return templates.TemplateResponse("servicios.html", {
         "request": request,
         "servicios": servicios,
+
         "page": page,
         "total_pages": total_pages,
         "search": search,
+
+        "rol": rol  
+
     })
 
 

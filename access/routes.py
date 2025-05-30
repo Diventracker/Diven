@@ -6,11 +6,14 @@ router = APIRouter()
 
 templates = Jinja2Templates(directory="access/templates")  # Ruta donde están las vistas
 
-@router.get("/admin", tags=["admin"])
+@router.get("/diventracker", tags=["admin"])
 def home(request: Request):
     usuario_id = request.cookies.get("usuario_id")
+ 
+    rol = request.cookies.get("rol")  # <--- Agrega esta línea    
+
     if usuario_id:
-        return templates.TemplateResponse("layout_adminv2.html", {"request": request})
+        return templates.TemplateResponse("layout_adminv2.html", {"request": request, "rol": rol})
     return RedirectResponse(url="/login?error=2", status_code=303)
 
 #Xd Ruta para cerrar sesion

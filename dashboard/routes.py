@@ -11,18 +11,25 @@ from proveedores.model import Proveedor
 from servicios.model import  ServicioTecnico
 from garantias.model import Garantia
 from datetime import datetime
+from ventas.model import Venta
+from servicios.model import ServicioTecnico  # Asegúrate de importar tu modelo
 
 router = APIRouter()
 
 templates = Jinja2Templates(directory="dashboard/templates")
 
 
-#Ruta para la ventana del dashboard
+#Ruta para la ventana del dashboard/y mostrar la informacion de ventas y servicios
 @router.get("/dashboard", response_class=HTMLResponse, tags=["dashboard"])
-def dashboard_get(request: Request):
-    return templates.TemplateResponse("dashboard.html", {"request": request})
+def dashboard_get(request: Request, db: Session = Depends(get_db)):
+    ultimas_ventas = db.query(Venta).order_by(Venta.fecha_venta.desc()).limit(5).all()
+    ultimos_servicios = db.query(ServicioTecnico).order_by(ServicioTecnico.fecha_recepcion.desc()).limit(5).all()
 
-
+    return templates.TemplateResponse("dashboard.html", {
+        "request": request,
+        "ultimas_ventas": ultimas_ventas,
+        "ultimos_servicios": ultimos_servicios
+    })
 
 
 @router.post("/api/generar-informe")
@@ -119,3 +126,7 @@ async def generar_informe(request: Request, db: Session = Depends(get_db)):
 
     path = generar_pdf_informe(tipo, fecha_inicio_str, fecha_fin_str, datos, columnas)
     return FileResponse(path, filename=f"informe_{tipo}.pdf", media_type="application/pdf")
+
+
+
+

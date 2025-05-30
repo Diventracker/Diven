@@ -1,252 +1,300 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuarios</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="/static/css/modulos.css">   
+    <link rel="stylesheet" href="/static/css/modulos.css">
 </head>
+<script>
+    // Captura todos los botones de editar
+    document.querySelectorAll('.btn-editar').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            const nombre = this.getAttribute('data-nombre');
+            const correo = this.getAttribute('data-correo');
+            const rol = this.getAttribute('data-rol');
+
+            // Insertar valores en los inputs del modal
+            document.getElementById('id_usuario').value = id;
+            document.getElementById('editNombre').value = nombre;
+            document.getElementById('editCorreo').value = correo;
+
+            // Setear el valor del select de rol
+            const selectRol = document.getElementById('editRol');
+            selectRol.value = rol;
+
+            // Si no existe como opción, la crea
+            if (![...selectRol.options].some(opt => opt.value === rol)) {
+                const nueva = new Option(rol, rol, true, true);
+                selectRol.add(nueva, 0); // la agrega al principio
+            }
+        });
+    });
+</script>
+
 <body>
 
-<main>
-    <!-- Page Content -->
-    <div id="page-content-wrapper">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-            <div class="card mb-4 shadow-sm">
-              <div class="card-header bg-white py-3">
-                <h5 class="mb-0 text-teal-dark"><i class="bi bi-person-gear me-2"></i>Registro de Usuarios</h5>
-              </div>
-              <div class="card-body">
-    
-                <!-- Alertas -->
-                 {% if request.query_params.get("success") == "1" %}
-                    <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
-                        <i class="bi bi-check-circle-fill me-2"></i> ¡Usuario actualizado correctamente!
-                    </div>
-                {% elif request.query_params.get("create") == "1" %}
-                    <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
-                        <i class="bi bi-check-circle-fill me-2"></i> ¡Usuario creado correctamente!
-                    </div>
-                {% elif request.query_params.get("deleted") == "1" %}
-                    <div class="alert alert-danger d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
-                        <i class="bi bi-trash-fill me-2"></i> ¡Usuario eliminado correctamente!
-                    </div>
-                {% elif request.query_params.get("error") == "1" %}
-                    <div class="alert alert-warning d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg" role="alert" style="max-width: 400px; z-index: 1050;">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i> ¡Este usuario no puede ser eliminado!
-                    </div>
-                {% endif %}
-                    
-                <!-- Búsqueda y filtros -->
-                <div class="row mb-4">
+    <main>
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
                     <div class="col-12">
-                    <div class="card shadow-sm">
-                        <div class="card-header">
-                        <h6 class="mb-0"><i class="bi bi-search me-2"></i>Buscar Usuarios</h6>
-                        </div>
-                        <div class="card-body">
-                        <div class="row">
-                            <div class="mb-2 col-md-4">
-                                <form method="get" action="/usuarios">
-                                    <div class="input-group">
-                                        <input name="search" value="{{ search | default('') }}" type="search" class="form-control" placeholder="Buscar por nombre o correo">
-                                        <button class="btn btn-outline-enviar" type="submit"><i class="bi bi-search"></i></button>
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-header bg-white py-3">
+                                <h5 class="mb-0 text-teal-dark"><i class="bi bi-person-gear me-2"></i>Registro de
+                                    Usuarios</h5>
+                            </div>
+                            <div class="card-body">
+
+                                <!-- Alertas -->
+                                {% if request.query_params.get("success") == "1" %}
+                                <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg"
+                                    role="alert" style="max-width: 400px; z-index: 1050;">
+                                    <i class="bi bi-check-circle-fill me-2"></i> ¡Usuario actualizado correctamente!
+                                </div>
+                                {% elif request.query_params.get("create") == "1" %}
+                                <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg"
+                                    role="alert" style="max-width: 400px; z-index: 1050;">
+                                    <i class="bi bi-check-circle-fill me-2"></i> ¡Usuario creado correctamente!
+                                </div>
+                                {% elif request.query_params.get("deleted") == "1" %}
+                                <div class="alert alert-danger d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg"
+                                    role="alert" style="max-width: 400px; z-index: 1050;">
+                                    <i class="bi bi-trash-fill me-2"></i> ¡Usuario eliminado correctamente!
+                                </div>
+                                {% elif request.query_params.get("error") == "1" %}
+                                <div class="alert alert-warning d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg"
+                                    role="alert" style="max-width: 400px; z-index: 1050;">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i> ¡Este usuario no puede ser
+                                    eliminado!
+                                </div>
+                                {% endif %}
+
+                                <!-- Búsqueda y filtros -->
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header">
+                                                <h6 class="mb-0"><i class="bi bi-search me-2"></i>Buscar Usuarios</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="mb-2 col-md-4">
+                                                        <form method="get" action="/usuarios">
+                                                            <div class="input-group">
+                                                                <input name="search" value="{{ search | default('') }}"
+                                                                    type="search" class="form-control"
+                                                                    placeholder="Buscar por nombre o correo">
+                                                                <button class="btn btn-outline-enviar" type="submit"><i
+                                                                        class="bi bi-search"></i></button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="mb-2 col-md-3 col-lg-3">
+                                                        <select class="form-select">
+                                                            <option selected>Ordenar por</option>
+                                                            <option>Nombre (A-Z)</option>
+                                                            <option>Nombre (Z-A)</option>
+                                                            <option>Rol (A-Z)</option>
+                                                            <option>Rol (Z-A)</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-1 col-lg-2 col-xl-3"></div>
+                                                    <div class="col-md-4 col-lg-3 col-xl-2">
+                                                        <button class="btn btn-enviar w-100" data-bs-toggle="modal"
+                                                            data-bs-target="#modalRegistro">
+                                                            <i class="bi bi-person-add me-1"></i>Nuevo Usuario
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </form>
-                            </div>
-                            <div class="mb-2 col-md-3 col-lg-3">
-                            <select class="form-select">
-                                <option selected>Ordenar por</option>
-                                <option>Nombre (A-Z)</option>
-                                <option>Nombre (Z-A)</option>
-                                <option>Rol (A-Z)</option>
-                                <option>Rol (Z-A)</option>
-                            </select>
-                            </div>
-                            <div class="col-md-1 col-lg-2 col-xl-3"></div>
-                            <div class="col-md-4 col-lg-3 col-xl-2">
-                            <button class="btn btn-enviar w-100" data-bs-toggle="modal" data-bs-target="#modalRegistro">
-                                <i class="bi bi-person-add me-1"></i>Nuevo Usuario
-                            </button>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                
-                <!-- Tabla de Usuarios -->
-                <div class="row mb-4">
-                    <div class="col-12">
-                    <div class="card shadow-sm">
-                        <div class="card-header">
-                        <h6 class="mb-0"><i class="bi bi-grid me-2"></i>Lista de Usuarios</h6>
-                        </div>
-                        <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Nombre del empleado</th>                                
-                                        <th scope="col">Correo</th>
-                                        <th scope="col">Rol</th>
-                                        <th scope="col">Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody>                            
-                                    {% for usuario in usuarios %}
-                                    <tr>                                
-                                        <td>{{ usuario.nombre_usuario }}</td>
-                                        <td>{{ usuario.correo }}</td>
-                                        <td>{{ usuario.rol }}</td>
-                                        <td>
-                                            <!-- Por si queremos ver detalles del cliente
+                                </div>
+
+                                <!-- Tabla de Usuarios -->
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header">
+                                                <h6 class="mb-0"><i class="bi bi-grid me-2"></i>Lista de Usuarios</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <table class="table table-striped table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">Nombre del Usuario</th>
+                                                                <th scope="col">Correo</th>
+                                                                <th scope="col">Rol</th>
+                                                                <th scope="col">Acción</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for usuario in usuarios %}
+                                                            <tr>
+                                                                <td>{{ usuario.nombre_usuario }}</td>
+                                                                <td>{{ usuario.correo }}</td>
+                                                                <td>{{ usuario.rol }}</td>
+                                                                <td>
+                                                                    <!-- Por si queremos ver detalles del cliente
                                                 <button class="btn btn-sm btn-outline-secondary me-1">
                                                     <i class="bi bi-eye"></i>
                                                 </button>
                                                 -->
-                                            <button class="btn btn-sm btn-outline-secondary me-1 edit-button" data-bs-toggle="modal" data-bs-target="#modalEditar"
-                                                data-id="{{ usuario.id_usuario }}"
-                                                data-nombre="{{ usuario.nombre_usuario }}"
-                                                data-correo="{{ usuario.correo }}"
-                                                data-rol="{{ usuario.rol }}">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar"
-                                                    data-id="{{ usuario.id_usuario }}"
-                                                    data-nombre="{{ usuario.nombre_usuario }}">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                            </td>
-                                    </tr>
-                                    {% endfor %}       
-                                </tbody>
-                            </table>
+                                                                    <button
+                                                                        class="btn btn-sm btn-outline-secondary me-1 edit-button"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#modalEditar"
+                                                                        data-id="{{ usuario.id_usuario }}"
+                                                                        data-nombre="{{ usuario.nombre_usuario }}"
+                                                                        data-correo="{{ usuario.correo }}"
+                                                                        data-rol="{{ usuario.rol }}">
+                                                                        <i class="bi bi-pencil"></i>
+                                                                    </button>
+                                                                    <button class="btn btn-sm btn-outline-danger"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#modalEliminar"
+                                                                        data-id="{{ usuario.id_usuario }}"
+                                                                        data-nombre="{{ usuario.nombre_usuario }}">
+                                                                        <i class="bi bi-trash"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                <!-- Paginación -->
+                                                <nav aria-label="Paginación de usuarios">
+                                                    <ul class="pagination justify-content-center mt-4">
+                                                        <li class="page-item disabled">
+                                                            <a class="page-link" href="#" tabindex="-1"
+                                                                aria-disabled="true">Anterior</a>
+                                                        </li>
+                                                        <li class="page-item active"><a class="page-link" href="#">1</a>
+                                                        </li>
+                                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                                        <li class="page-item">
+                                                            <a class="page-link" href="#">Siguiente</a>
+                                                        </li>
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        
-                        <!-- Paginación -->
-                        <nav aria-label="Paginación de usuarios">
-                            <ul class="pagination justify-content-center mt-4">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">Siguiente</a>
-                            </li>
-                            </ul>
-                        </nav>
-                        </div>
-                    </div>
                     </div>
                 </div>
-                </div>  
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-</main>
+    </main>
 
-<!-- Modal Registro -->
-<div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalRegistroLabel">Registrar Nuevo Usuario</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form action="/usuario/crear" method="post">
-                    <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre del empleado:</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre_usuario" required pattern="[A-Za-z\s]+" maxlength="50">
-                    </div>                        
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Correo:</label>
-                        <input type="email" class="form-control" id="email" name="correo" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="rol" class="form-label">Rol del Usuario:</label>
-                        <select name="rol" class="form-control" required>
-                            <option value="x" selected disabled></option>
-                            <option value="Administrador">Administrador</option>
-                            <option value="Tecnico">Técnico</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-enviar w-100">Registrar Empleado</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal Editar -->
-<div class="modal fade" id="modalEditar" aria-labelledby="modalEditarLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalEditarLabel">Actualizar Usuario</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Pasar el id del cliente mediante el link del form -->
-                <form id="editUsuarioForm">
-                    <input type="hidden" id="editUsuarioId" name="id_usuario">
-                    <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre de usuario:</label>
-                        <input type="text" class="form-control" id="editNombre" name="nombre_usuario" required pattern="[A-Za-z\s]+" maxlength="50">
-                    </div>                       
-                    <div class="mb-3">
-                        <label for="correo" class="form-label">Correo:</label>
-                        <input type="email" class="form-control" id="editCorreo" name="correo" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="rol" class="form-label">Rol del Usuario:</label>
-                        <select name="rol" class="form-control" required>
-                            <option id="editRol" selected></option>
-                            <option value="Administrador">Administrador</option>
-                            <option value="Tecnico">Tecnico</option>
-                        </select>
-                    </div>
-                    <button type="submit" id="saveChanges" class="btn btn-enviar w-100">Actualizar Usuario</button>
-                </form>
+    <!-- Modal Registro -->
+    <div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalRegistroLabel">Registrar Nuevo Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/usuario/crear" method="post">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre del Usuario:</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre_usuario" required
+                                pattern="[A-Za-z\s]+" maxlength="50">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Correo:</label>
+                            <input type="email" class="form-control" id="email" name="correo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="rol" class="form-label">Rol del Usuario:</label>
+                            <select name="rol" class="form-control" required>
+                                <option value="x" selected disabled></option>
+                                <option value="Administrador">Administrador</option>
+                                <option value="Tecnico">Técnico</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-enviar w-100">Registrar Usuario</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    <!-- Modal Editar -->
+    <div class="modal fade" id="modalEditar" aria-labelledby="modalEditarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditarLabel">Actualizar Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Pasar el id del cliente mediante el link del form -->
+                    <form id="editUsuarioForm">
+                        <input type="hidden" id="editUsuarioId" name="id_usuario">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre de usuario:</label>
+                            <input type="text" class="form-control" id="editNombre" name="nombre_usuario" required
+                                pattern="[A-Za-z\s]+" maxlength="50">
+                        </div>
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo:</label>
+                            <input type="email" class="form-control" id="editCorreo" name="correo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="rol" class="form-label">Rol del Usuario:</label>
+                            <select id="editRol" name="rol" class="form-control" required>
+                                <option value="" disabled selected>Seleccionar rol...</option>
+                                <option value="Administrador">Administrador</option>
+                                <option value="Tecnico">Tecnico</option>
+                            </select>
+                        </div>
+                        <button type="submit" id="saveChanges" class="btn btn-enviar w-100">Actualizar Usuario</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<!-- Modal Eliminar -->
-<div class="modal fade" id="modalEliminar" aria-labelledby="modalEliminarLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalEliminarLabel">Eliminar Usuario</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body text-center">
-                <p >¿Seguro que desea eliminar este Usuario?</p>
-                <input type="hidden" id="usuarioIdToDelete"/>
-                <!-- Span que muestra el nombre del cliente -->
-                <span id="nombreUsuario" class="fw-bold d-block fs-4"></span>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
+    <!-- Modal Eliminar -->
+    <div class="modal fade" id="modalEliminar" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEliminarLabel">Eliminar Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>¿Seguro que desea eliminar este Usuario?</p>
+                    <input type="hidden" id="usuarioIdToDelete" />
+                    <!-- Span que muestra el nombre del cliente -->
+                    <span id="nombreUsuario" class="fw-bold d-block fs-4"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/static/js/funciones.js"></script>
-<script src="/static/js/modulo_usuarios.js"></script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/funciones.js"></script>
+    <script src="/static/js/modulo_usuarios.js"></script>
 
 </body>
+
 </html>

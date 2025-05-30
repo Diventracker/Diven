@@ -17,16 +17,22 @@ templates = Jinja2Templates(directory="inventario/templates")
 # Vista principal del inventario
 @router.get("/inventario", response_class=HTMLResponse, tags=["Productos"])
 def vista_inventario(request: Request, search: str = "", db: Session = Depends(get_db)):
-   if search:
+    rol = request.cookies.get("rol")  # Obtener rol desde cookies
+
+    if search:
         productos = db.query(Producto).filter(
             (Producto.nombre_producto.ilike(f"%{search}%")) |
             (Producto.id_producto.ilike(f"%{search}%"))
         ).all()
-   else:
-        
+    else:
         productos = db.query(Producto).options(joinedload(Producto.proveedor)).order_by(Producto.id_producto.desc()).all()
 
-   return templates.TemplateResponse("inventario.html", {"request": request, "productos": productos, "search": search})
+    return templates.TemplateResponse("inventario.html", {
+        "request": request,
+        "productos": productos,
+        "search": search,
+        "rol": rol  
+    })
 
 
 #Obetener los proveedores para agregarlos al Select
@@ -49,8 +55,8 @@ def crear_producto(
     modelo: str = Form(...),
     descripcion: str = Form(...),
     stock: int = Form(...),
-    precio: float = Form(...),
-    precio_venta: float = Form(None),
+    precio: int = Form(...),
+    precio_venta: int = Form(None),
     proveedor_id: int = Form(...),
     fecha_inicio_garantia: str = Form(None),
     fecha_expiracion_garantia: str = Form(None),
@@ -101,8 +107,8 @@ def editar_producto(
     modelo: str = Form(...),
     descripcion: str = Form(...),
     stock: int = Form(...),
-    precio: float = Form(...),
-    precio_venta: float = Form(None),
+    precio: int = Form(...),
+    precio_venta: int = Form(None),
     proveedor_id: int = Form(...),
     fecha_inicio_garantia: str = Form(None),
     fecha_expiracion_garantia: str = Form(None),
@@ -179,8 +185,8 @@ def buscar_producto(termino: str, db: Session = Depends(get_db)):
     return {
         "codigo": str(producto.id_producto),
         "descripcion": producto.nombre_producto,
-        "precio": float(producto.precio_venta),
-        "stock": float(producto.stock)
+        "precio": int(producto.precio_venta),
+        "stock": int(producto.stock)
     }
 
 #Ruta para obtener los productos en el modal de ventas como json en base al stock
