@@ -20,7 +20,7 @@ templates = Jinja2Templates(directory="dashboard/templates")
 
 
 #Ruta para la ventana del dashboard/y mostrar la informacion de ventas y servicios
-
+@router.get("/dashboard", response_class=HTMLResponse, tags=["dashboard"])
 def dashboard_get(request: Request, db: Session = Depends(get_db)):
     ultimas_ventas = db.query(Venta).order_by(Venta.fecha_venta.desc()).limit(5).all()
     ultimos_servicios = db.query(ServicioTecnico).order_by(ServicioTecnico.fecha_recepcion.desc()).limit(5).all()
