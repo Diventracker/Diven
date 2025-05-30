@@ -36,7 +36,8 @@
           <h1 class="fs-3 fw-bold mb-0 text-dark">DivenTracker</h1>
         </div>
         <div class="card border-0 shadow-lg">
-          <div class="card-body p-4">
+          <!-- Card para la opcion del login -->
+          <div class="card-body p-4" id="login-card">
             <h2 class="fs-3 fw-bold mb-1 text-dark">Iniciar Sesión</h2>
             <p class="mb-4 text-teal-dark">
               Ingresa tus credenciales para acceder al sistema
@@ -63,7 +64,7 @@
                   <label for="password" class="form-label fw-medium mb-0 text-dark">
                     Contraseña
                   </label>
-                  <a href="#" class="text-decoration-none small text-primary">
+                  <a href="#" class="text-decoration-none small text-primary" id="forgot-password-link">
                     ¿Olvidaste tu contraseña?
                   </a>
                 </div>
@@ -84,6 +85,53 @@
                   Contacta al administrador
                 </a>
               </p>
+            </form>
+          </div>
+          <!-- Body de la card para la opcion del email(Recuperar) -->
+          <div class="card-body p-4 d-none" id="forgot-email-card">
+            <div class="d-flex align-items-center mb-3">
+              <button class="btn btn-link text-muted p-0 me-1 back-btn" data-target="login-card">
+                <i class="bi bi-arrow-bar-left fs-3"></i>
+              </button>
+              <h2 class="fs-3 fw-bold mb-0 text-dark">Recuperar Contraseña</h2>
+            </div>
+            <p class="text-muted mb-4">Ingresa tu correo electrónico para recibir el código de verificación</p>
+            
+            <form id="recovery-email-form">
+              <div class="mb-3">
+                <label for="recovery-email" class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control border-sage-light" id="recovery-email" placeholder="correo@ejemplo.com" required>
+              </div>
+              
+              <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary py-3">Enviar Código</button>
+              </div>
+            </form>
+          </div>
+          <!-- body para el token -->
+            <div class="card-body p-4 d-none" id="verify-code-card">
+            <div class="d-flex align-items-center mb-3">
+              <button class="btn btn-link text-muted p-0 me-1 back-btn" data-target="login-card">
+                <i class="bi bi-arrow-bar-left fs-3"></i>
+              </button>
+              <h2 class="fs-3 fw-bold mb-0 text-dark">Verificar Código</h2>
+            </div>
+            <p class="text-muted mb-4">Ingresa el código de 6 dígitos que enviamos a tu correo</p>
+            
+            <form id="verification-code-form">
+              <div class="mb-3">
+                <label for="verification-code" class="form-label">Código de Verificación</label>
+                <input type="text" class="form-control text-center letter-spacing" id="verification-code" placeholder="123456" maxlength="6" required>
+                <p class="text-muted small text-center mt-2" id="email-sent-to"></p>
+              </div>
+              
+              <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary py-3" id="verify-btn" disabled>Verificar Código</button>
+              </div>
+              
+              <div class="text-center mt-3">
+                <a href="#" class="text-decoration-none small text-primary" id="resend-code">¿No recibiste el código? Reenviar</a>
+              </div>
             </form>
           </div>
         </div>
@@ -132,6 +180,7 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/login.js"></script>
   <script src="/static/js/funciones.js"></script>
 </body>
 </html>
