@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DivenTraker</title>
+    <title>DivenTracker</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/static/css/layout.css">
@@ -12,12 +12,13 @@
 </head>
 
 <body>
+    
 
     <!-- Barra de Navegación Superior -->
     <nav class="navbar navbar-top bg-dark text-white px-3">
         <div class="container-fluid justify-content-start">
-            <!-- Botón para colapsar/expandir el menú lateral -->
-            <button class="btn btn-light me-3" type="button" id="sidebarToggle">
+            <!-- Toggle sidebar button (mobile) -->
+            <button class="btn me-3 toggle-sidebar" type="button" id="menu-toggle">
                 <i class="bi bi-list"></i>
             </button>
 
@@ -30,13 +31,11 @@
             <div class="dropdown ms-auto">
                 <button class="btn btn-light dropdown-toggle d-flex align-items-center px-3 py-2 rounded-pill shadow-sm"
                     type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-person-circle me-2"></i> Admin
+                    <i class="bi bi-person-circle me-2"></i> Cuenta
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userMenu">
                     <li><a class="dropdown-item d-flex align-items-center py-2" href="#"><i
                                 class="bi bi-pencil-square me-2"></i> Editar Perfil</a></li>
-                    <li><a class="dropdown-item d-flex align-items-center py-2" href="vista_empleado.html"><i
-                                class="bi bi-pencil-square me-2"></i> Vista empleado </a></li>
                     <li>
                         <form action="/logout" method="post"><button type="submit"
                                 class="dropdown-item d-flex align-items-center py-2" href="/"><i
@@ -47,39 +46,69 @@
         </div>
     </nav>
 
-    <!-- Contenedor principal con flexbox -->
-    <div class="content-wrapper alto-row">
-        <!-- Menú lateral -->
-        <nav id="sidebar">
-            <ul class="nav flex-column">
-                <li class="nav-item"><a class="nav-link" href="/dashboard" target="modulos"><i
-                            class="bi bi-clock-history"></i> Dashboard </a></li>
-                <li class="nav-item"><a class="nav-link" href="/inventario" target="modulos"><i
-                            class="bi bi-box-seam"></i> Inventario</a></li>
-                <li class="nav-item"><a class="nav-link" href="/clientes" target="modulos"><i class="bi bi-people"></i>
-                        Gestión Clientes</a></li>
-                <li class="nav-item"><a class="nav-link" href="/garantias" target="modulos"><i
-                            class="bi bi-shield-check"></i> Garantías</a></li>
-                <li class="nav-item"><a class="nav-link" href="/proveedores" target="modulos"><i
-                            class="bi bi-truck"></i> Gestión Proveedores</a></li>
-                <li class="nav-item"><a class="nav-link" href="/servicios" target="modulos"><i class="bi bi-tools"></i>
-                        Servicio Técnico</a></li>
-                <li class="nav-item"><a class="nav-link" href="/usuarios" target="modulos"><i
-                            class="bi bi-person-check"></i> Usuarios</a></li>
-                <li class="nav-item"><a class="nav-link" href="/ventas" target="modulos"><i
-                            class="bi bi-currency-dollar"></i> Ventas</a></li>
-            </ul>
-        </nav>
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <!-- <div class="sidebar-heading">
+        <i class="bi bi-shop"></i>
+        <span class="menu-text ms-2">Diventracker</span>
+        </div> -->
+        
+        <div class="list-group">
+            {% if rol == "Administrador" %}
+            <a onclick="cargarPagina('/dashboard')" data-link="/dashboard" class="list-group-item">
+                <i class="bi bi-speedometer2"></i>
+                <span class="menu-text">Dashboard</span>
+            </a>
+            {% endif %}
+            <a onclick="cargarPagina('/ventas')" data-link="/ventas" class="list-group-item">
+                <i class="bi bi-cash-coin"></i>
+                <span class="menu-text">Ventas</span>
+            </a>
+            
+            <a onclick="cargarPagina('/inventario')" data-link="/inventario" class="list-group-item">
+                <i class="bi bi-box-seam"></i>
+                <span class="menu-text">Inventario</span>
+            </a>
+            
+            <a onclick="cargarPagina('/servicios')" data-link="/servicios" class="list-group-item">
+                <i class="bi bi-tools"></i>
+                <span class="menu-text">Servicio Técnico</span>
+            </a>
+            <a onclick="cargarPagina('/garantias')" data-link="/garantias" class="list-group-item">
+                <i class="bi bi-shield-check"></i>
+                <span class="menu-text">Garantías</span>
+            </a>
+            <a onclick="cargarPagina('/clientes')" data-link="/clientes" class="list-group-item">
+                <i class="bi bi-people"></i>
+                <span class="menu-text">Gestión Clientes</span>
+            </a>
+            {% if rol == "Administrador" %}
+            <a onclick="cargarPagina('/proveedores')" data-link="/proveedores" class="list-group-item">
+                <i class="bi bi-truck"></i>
+                <span class="menu-text">Gestión Proveedores</span>
+            </a>
+            {% endif %}
+            {% if rol == "Administrador" %}
+            <a onclick="cargarPagina('/usuarios')" data-link="/usuarios" class="list-group-item">
+                <i class="bi bi-person-gear"></i>
+                <span class="menu-text">Usuarios</span>
+            </a>
+            {% endif %}
+        </div>
+    </div>
 
+
+    <!-- Contenedor principal con flexbox -->
+    <div class="content-wrapper">
         <!-- Contenido principal -->
         <main id="mainContent">
-            <iframe name="modulos" src="/dashboard"></iframe>
+            <iframe id="modulosIframe" name="modulos" src="/dashboard"></iframe>
         </main>
     </div>
 
     <!-- Scripts de Bootstrap y JavaScript personalizado -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/static/js/eventos.js"> </script>
+    <script src="/static/js/sidebar.js"> </script>
 </body>
 
 </html>
