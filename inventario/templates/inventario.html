@@ -42,6 +42,7 @@
             </div>
             {% endif %}
             <!-- Pestañas de navegación -->
+             {% if rol == "Administrador" %}
             <ul class="nav nav-tabs mb-4" id="inventoryTabs" role="tablist">
               <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="products-tab" data-bs-toggle="tab" data-bs-target="#products" type="button" role="tab" aria-controls="products" aria-selected="true">
@@ -54,6 +55,7 @@
                 </button>
               </li>
             </ul>
+            {% endif %}
             
             <!-- Contenido de las pestañas -->
             <div class="tab-content" id="inventoryTabsContent">
@@ -89,9 +91,11 @@
                           </div>
                           <div class="col-md-1 col-lg-2 col-xl-3"></div>
                           <div class="col-md-4 col-lg-3 col-xl-2">
+                            {% if rol == "Administrador" %}
                             <button class="btn btn-enviar w-100" data-bs-toggle="modal" data-bs-target="#modalRegistro">
                               <i class="bi bi-plus-circle me-1"></i>Nuevo Producto
                             </button>
+                            {% endif %}
                           </div>
                         </div>
                       </div>
@@ -118,7 +122,9 @@
                                 <th>Precio de compra</th>
                                 <th>Precio de venta</th>
                                 <th>Proveedor</th>
+                                {% if rol == "Administrador" %}
                                 <th>Acción</th>
+                                {% endif %}
                               </tr>
                             </thead>
                             <tbody>
@@ -128,9 +134,12 @@
                                   <td>{{ p.nombre_producto }}</td>
                                   <td>{{ p.marca }}</td>
                                   <td>{{ p.stock }}</td>
-                              <td>${{ "{:,.0f}".format(p.precio or 0) | replace(",", ".") }}</td>
-                              <td>${{ "{:,.0f}".format(p.precio_venta or 0) | replace(",", ".") }}</td>
+                                  <td>${{ "{:,.0f}".format(p.precio or 0) | replace(",", ".") }}</td>
+                                  <td>${{ "{:,.0f}".format(p.precio_venta or 0) | replace(",", ".") }}</td>
+                                  <td>{{ p.proveedor.nombre_proveedor }}</td>
+                                  {% if rol == "Administrador" %}
                                   <td>
+                                    
                                     <button class="btn btn-sm btn-outline-secondary me-1 edit-button" data-bs-toggle="modal" data-bs-target="#modalEditar"
                                             data-id="{{ p.id_producto }}"
                                             data-nombre="{{ p.nombre_producto }}"
@@ -152,7 +161,9 @@
                                             data-nombre="{{ p.nombre_producto }}">
                                         <i class="bi bi-trash"></i>
                                     </button>
-                                  </td>  
+                                    
+                                  </td>
+                                  {% endif %}   
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -180,6 +191,7 @@
               </div>
               
               <!-- Pestaña de Control de Stock -->
+               {% if rol == "Administrador" %}
               <div class="tab-pane fade" id="stock" role="tabpanel" aria-labelledby="stock-tab">
                 <div class="row mb-4">
                   <div class="col-md-6">
@@ -279,6 +291,7 @@
                   </div>
                 </div>
               </div>
+              {% endif %}
             </div>
           </div>
         </div>

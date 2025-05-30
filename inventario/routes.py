@@ -17,16 +17,22 @@ templates = Jinja2Templates(directory="inventario/templates")
 # Vista principal del inventario
 @router.get("/inventario", response_class=HTMLResponse, tags=["Productos"])
 def vista_inventario(request: Request, search: str = "", db: Session = Depends(get_db)):
-   if search:
+    rol = request.cookies.get("rol")  # Obtener rol desde cookies
+
+    if search:
         productos = db.query(Producto).filter(
             (Producto.nombre_producto.ilike(f"%{search}%")) |
             (Producto.id_producto.ilike(f"%{search}%"))
         ).all()
-   else:
-        
+    else:
         productos = db.query(Producto).options(joinedload(Producto.proveedor)).order_by(Producto.id_producto.desc()).all()
 
-   return templates.TemplateResponse("inventario.html", {"request": request, "productos": productos, "search": search})
+    return templates.TemplateResponse("inventario.html", {
+        "request": request,
+        "productos": productos,
+        "search": search,
+        "rol": rol  
+    })
 
 
 #Obetener los proveedores para agregarlos al Select

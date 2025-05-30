@@ -104,7 +104,9 @@
                                                                 <th>Fecha recepción</th>
                                                                 <th>Fecha entrega</th>
                                                                 <th>Estado</th>
+                                                                {% if rol == "Administrador" %}
                                                                 <th>Acciones</th>
+                                                                {% endif %}
                                                             </tr>
                                                         </thead>
                                                         <tbody id="tabla-servicios">
@@ -117,6 +119,7 @@
                                                                 <td>{{ s.fecha_recepcion }}</td>
                                                                 <td>{{ s.fecha_entrega_estimada }}</td>
                                                                 <td>{{ s.estado_servicio }}</td>
+                                                                {% if rol == "Administrador" %}
                                                                 <td>
                                                                     <button
                                                                         class="btn btn-sm btn-outline-secondary me-1 edit-button"
@@ -138,6 +141,7 @@
                                                                         <i class="bi bi-trash"></i>
                                                                     </button>
                                                                 </td>
+                                                                {% endif %}
                                                             </tr>
                                                             {% endfor %}
                                                         </tbody>

@@ -12,6 +12,7 @@
 </head>
 
 <body>
+    
 
     <!-- Barra de Navegación Superior -->
     <nav class="navbar navbar-top bg-dark text-white px-3">
@@ -53,19 +54,24 @@
         <i class="bi bi-shop"></i>
         <span class="menu-text ms-2">Diventracker</span>
         </div> -->
+        
         <div class="list-group">
+            {% if rol == "Administrador" %}
             <a href="/dashboard" target="modulos" class="list-group-item active">
                 <i class="bi bi-speedometer2"></i>
                 <span class="menu-text">Dashboard</span>
             </a>
+            {% endif %}
             <a href="/ventas" target="modulos" class="list-group-item">
                 <i class="bi bi-cash-coin"></i>
                 <span class="menu-text">Ventas</span>
             </a>
+            
             <a href="/inventario" target="modulos" class="list-group-item">
                 <i class="bi bi-box-seam"></i>
                 <span class="menu-text">Inventario</span>
             </a>
+            
             <a href="/servicios" target="modulos" target="modulos" class="list-group-item">
                 <i class="bi bi-tools"></i>
                 <span class="menu-text">Servicio Técnico</span>
@@ -78,14 +84,18 @@
                 <i class="bi bi-people"></i>
                 <span class="menu-text">Gestión Clientes</span>
             </a>
+            {% if rol == "Administrador" %}
             <a href="/proveedores" target="modulos" class="list-group-item">
                 <i class="bi bi-truck"></i>
                 <span class="menu-text">Gestión Proveedores</span>
             </a>
+            {% endif %}
+            {% if rol == "Administrador" %}
             <a href="/usuarios" target="modulos" class="list-group-item">
                 <i class="bi bi-person-gear"></i>
                 <span class="menu-text">Usuarios</span>
             </a>
+            {% endif %}
         </div>
     </div>
 

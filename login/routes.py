@@ -38,12 +38,13 @@ async def login_post(
 
     # Verificar el rol del usuario
     if usuario.rol == "Administrador":
-        response = RedirectResponse(url="/admin", status_code=302)
-    elif usuario.rol == "empleado":
-        response = RedirectResponse(url="/empleado", status_code=302)
+        response = RedirectResponse(url="/diventracker", status_code=302)
+    elif usuario.rol == "Tecnico":
+        response = RedirectResponse(url="/diventracker", status_code=302)
     else:
         return HTMLResponse(content="Rol no autorizado", status_code=403)
 
     # Guardar ID del usuario en cookie
     response.set_cookie(key="usuario_id", value=str(usuario.id_usuario))
+    response.set_cookie(key="rol", value=usuario.rol)  # <- Aquí agregas el rol
     return response
