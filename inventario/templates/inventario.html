@@ -122,15 +122,14 @@
                               </tr>
                             </thead>
                             <tbody>
-                              {% for p in productos %}
+              {% for p in productos %}
                                 <tr>
                                   <td>{{ p.id_producto }}</td>
                                   <td>{{ p.nombre_producto }}</td>
                                   <td>{{ p.marca }}</td>
                                   <td>{{ p.stock }}</td>
-                                  <td>${{ (p.precio or 0) | float | round(2) }}</td>
-                                  <td>${{ (p.precio_venta or 0) | float | round(2) }}</td>
-                                  <td>{{ p.proveedor.nombre_proveedor }}</td>
+                              <td>${{ "{:,.0f}".format(p.precio or 0) | replace(",", ".") }}</td>
+                              <td>${{ "{:,.0f}".format(p.precio_venta or 0) | replace(",", ".") }}</td>
                                   <td>
                                     <button class="btn btn-sm btn-outline-secondary me-1 edit-button" data-bs-toggle="modal" data-bs-target="#modalEditar"
                                             data-id="{{ p.id_producto }}"

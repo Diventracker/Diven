@@ -49,8 +49,8 @@ def crear_producto(
     modelo: str = Form(...),
     descripcion: str = Form(...),
     stock: int = Form(...),
-    precio: float = Form(...),
-    precio_venta: float = Form(None),
+    precio: int = Form(...),
+    precio_venta: int = Form(None),
     proveedor_id: int = Form(...),
     fecha_inicio_garantia: str = Form(None),
     fecha_expiracion_garantia: str = Form(None),
@@ -101,8 +101,8 @@ def editar_producto(
     modelo: str = Form(...),
     descripcion: str = Form(...),
     stock: int = Form(...),
-    precio: float = Form(...),
-    precio_venta: float = Form(None),
+    precio: int = Form(...),
+    precio_venta: int = Form(None),
     proveedor_id: int = Form(...),
     fecha_inicio_garantia: str = Form(None),
     fecha_expiracion_garantia: str = Form(None),
@@ -179,8 +179,8 @@ def buscar_producto(termino: str, db: Session = Depends(get_db)):
     return {
         "codigo": str(producto.id_producto),
         "descripcion": producto.nombre_producto,
-        "precio": float(producto.precio_venta),
-        "stock": float(producto.stock)
+        "precio": int(producto.precio_venta),
+        "stock": int(producto.stock)
     }
 
 #Ruta para obtener los productos en el modal de ventas como json en base al stock
