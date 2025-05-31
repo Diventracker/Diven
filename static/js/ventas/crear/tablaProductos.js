@@ -46,7 +46,9 @@ function agregarFilaProducto(producto) {
             const nuevoSubtotal = cantidadActual * producto.precio;
             fila.querySelector(".subtotal").textContent = nuevoSubtotal.toLocaleString('es-CO', {
                 style: 'currency',
-                currency: 'COP'
+                currency: 'COP',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
             });
 
             productoYaAgregado = true;
@@ -60,11 +62,11 @@ function agregarFilaProducto(producto) {
         fila.innerHTML = `
           <td>${producto.codigo}</td>
           <td>${producto.descripcion}</td>
-          <td>${precioUnitario.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</td>
+          <td>${precioUnitario.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
           <td>
             <input type="number" value="1" min="1" class="form-control cantidad-input mx-auto" style="width: 70px;">
           </td>
-          <td class="subtotal">${precioUnitario.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</td>
+          <td class="subtotal">${precioUnitario.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
           <td>
             <button class="btn btn-sm btn-outline-danger" onclick="this.closest('tr').remove(); actualizarTotal();"><i class="bi bi-trash"></i></button>
           </td>
@@ -86,7 +88,9 @@ function agregarFilaProducto(producto) {
             const subtotal = cantidad * producto.precio;
             fila.querySelector(".subtotal").textContent = subtotal.toLocaleString('es-CO', {
                 style: 'currency',
-                currency: 'COP'
+                currency: 'COP',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
             });
 
             actualizarTotal();
@@ -111,6 +115,8 @@ function actualizarTotal() {
 
     document.getElementById("total-venta").textContent = total.toLocaleString('es-CO', {
         style: 'currency',
-        currency: 'COP'
+        currency: 'COP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
     });
 }

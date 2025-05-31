@@ -209,3 +209,9 @@ iframe {
     background-color: var(--color2);
     color: white;
 }
+
+.dropdown-item:focus,
+.dropdown-item:hover {
+  background-color: var(--color2); /* Aquí pones el color que quieras */
+  color: white; /* Cambia el color del texto si quieres */
+}

@@ -9,10 +9,11 @@ templates = Jinja2Templates(directory="access/templates")  # Ruta donde están l
 @router.get("/diventracker", tags=["admin"])
 def home(request: Request):
     usuario_id = request.cookies.get("usuario_id")
-    rol = request.cookies.get("rol")  # <--- Agrega esta línea    
+    rol = request.cookies.get("rol")  # <--- Agrega esta línea  
+    usuario_nombre = request.cookies.get("nombre_usuario")   
 
     if usuario_id:
-        return templates.TemplateResponse("layout_admin.html", {"request": request, "rol": rol})
+        return templates.TemplateResponse("layout_admin.html", {"request": request, "rol": rol, "usuario_nombre": usuario_nombre})
     return RedirectResponse(url="/login?error=2", status_code=303)
 
 #Xd Ruta para cerrar sesion

@@ -55,6 +55,7 @@ def crear_usuario(
         enviar_correo(
             destinatario=usuario_creado.correo,
             asunto="Tu cuenta ha sido creada",
+            template_name="email_pass.html",
             nombre=usuario_creado.nombre_usuario,
             clave=clave_plana  # esta variable debe estar disponible en el scope
         )
@@ -90,6 +91,7 @@ def editar_usuario(
     except IntegrityError:
         db.rollback()
         return RedirectResponse(url="/usuarios?error=1", status_code=303)
+  
     
 #Eliminar usuario...
 @router.delete("/usuario/eliminar/{id_usuario}", tags=["Usuarios"])

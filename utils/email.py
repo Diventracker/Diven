@@ -2,16 +2,16 @@ from email.message import EmailMessage
 import smtplib
 from jinja2 import Environment, FileSystemLoader
 
-# Puedes usar Jinja2 directamente sin Request si es un correo
-env = Environment(loader=FileSystemLoader("usuarios/templates/email"))
+env = Environment(loader=FileSystemLoader("utils/email"))
 
-def enviar_correo(destinatario: str, asunto: str, nombre: str, clave: str):
+# Puedes usar Jinja2 directamente sin Request si es un correo
+def enviar_correo(destinatario: str, asunto: str, template_name: str, **kwargs):
     remitente = "rimuru.work@gmail.com"
-    clave_email = "zqvp dthg fgck gvxd"  # Nota: No es recomendable almacenar contraseñas de esta manera
+    clave_email = "zqvp dthg fgck gvxd" # Nota: No es recomendable almacenar contraseñas de esta manera
 
     # Renderizar el template con datos
-    template = env.get_template("email_pass.html")
-    html_content = template.render(nombre=nombre, clave=clave)
+    template = env.get_template(template_name)
+    html_content = template.render(**kwargs)
 
     mensaje = EmailMessage()
     mensaje["Subject"] = asunto

@@ -1,0 +1,189 @@
+:root {
+    /* Colores personalizados */
+    --color-white: #ffffff;
+    --color-teal: #5e9188;
+    --color-teal-dark: #3e5954;
+    --color-blue-dark: #253342;
+    --color-almost-black: #232226;
+}
+
+body {
+    background: linear-gradient(135deg, var(--color-teal) 0%, var(--color-almost-black) 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.password-card {
+    background: var(--color-white);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: none;
+    overflow: hidden;
+    max-width: 500px;
+    width: 100%;
+    margin: 20px;
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--color-teal) 0%, var(--color-teal-dark) 100%);
+    color: var(--color-white);
+    border: none;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+}
+
+.card-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    pointer-events: none;
+}
+
+.card-header h4 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.card-header .icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+}
+
+.card-body {
+    padding: 2.5rem;
+}
+
+.form-floating {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 1rem 1rem 1rem 3rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+}
+
+.form-control:focus {
+    border-color: var(--color-teal);
+    box-shadow: 0 0 0 0.25rem rgba(94, 145, 136, 0.15);
+    background-color: var(--color-white);
+}
+
+.form-floating > label {
+    padding-left: 3rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+
+.form-floating>.form-control, .form-floating>.form-control-plaintext {
+    padding: 0rem 2.75rem;
+}
+
+.form-floating > .form-control:not(:placeholder-shown) ~ label::after,
+.form-floating > .form-select ~ label::after {
+    background-color: transparent !important;
+}
+
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-teal);
+    font-size: 1.1rem;
+    z-index: 4;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 1.6rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    z-index: 4;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
+    color: var(--color-teal);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--color-teal) 0%, var(--color-teal-dark) 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 0.875rem 2rem;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(94, 145, 136, 0.3);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 2px solid #e9ecef;
+    color: #6c757d;
+    border-radius: 12px;
+    padding: 0.875rem 2rem;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    border-color: var(--color-teal);
+    color: var(--color-teal);
+    background: rgba(94, 145, 136, 0.05);
+}
+
+@media (max-width: 576px) {
+    .card-body {
+    padding: 1.5rem;
+    }
+    
+    .card-header {
+    padding: 1.5rem;
+    }
+    
+    .card-header .icon {
+    font-size: 2.5rem;
+    }
+    
+    .card-header h4 {
+    font-size: 1.25rem;
+    }
+}

@@ -5,6 +5,7 @@ setupEditButtons({
         id: 'editUsuarioId',
         nombre: 'editNombre',
         correo: 'editCorreo',
+        telefono: 'editTelefono',
         rol: 'editRol'        
     }
 });

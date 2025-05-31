@@ -11,46 +11,79 @@ window.addEventListener('resize', function() {
 }
 });
 
-
+//esta funcion es la del active sidebar, y los iframes
 document.addEventListener("DOMContentLoaded", function () {
-   const links = document.querySelectorAll(".list-group-item");
+    const links = document.querySelectorAll(".list-group-item");
+    const iframe = document.getElementById("modulosIframe");
 
-   links.forEach(link => {
-       link.addEventListener("click", function () {
-           // Quitar 'active' de todos
-           links.forEach(l => l.classList.remove("active"));
+    // Quitar cualquier clase 'active' existente
+    links.forEach(l => l.classList.remove("active"));
 
-           // Agregar 'active' al clicado
-           this.classList.add("active");
+    // Al cargar, verificar si hay uno guardado y marcarlo
+    const activeLink = localStorage.getItem("activeMenu");
+    let found = false;
 
-           // Guardar en localStorage el href o identificador del botón
-           localStorage.setItem("activeMenu", this.getAttribute("data-link"));
-       });
-   });
+    if (activeLink) {
+        links.forEach(link => {
+            if (link.getAttribute("data-link") === activeLink) {
+                link.classList.add("active");
+                found = true;
+            }
+        });
+    }
 
-   // Al cargar, verificar si hay uno guardado y marcarlo
-   const activeLink = localStorage.getItem("activeMenu");
-   if (activeLink) {
-       links.forEach(link => {
-           if (link.getAttribute("data-link") === activeLink) {
-               link.classList.add("active");
-           }
-       });
-   }
-});
+    // Si no se encontró, marcar el primero como activo por defecto
+    if (!found && links.length > 0) {
+        links[0].classList.add("active");
+        localStorage.setItem("activeMenu", links[0].getAttribute("data-link"));
+    }
 
-const iframe = document.getElementById("modulosIframe");
-
-// Al cargar la página, revisa si hay una URL guardada
-window.addEventListener("DOMContentLoaded", () => {
+    // Cargar URL guardada para el iframe
     const ultimaURL = localStorage.getItem("iframeURL");
     if (ultimaURL) {
-    iframe.src = ultimaURL;
+        iframe.src = ultimaURL;
+    } else if (found) {
+        // Si hay menú activo guardado pero no URL, puedes cargar esa URL en iframe
+        iframe.src = activeLink;
+    } else if (links.length > 0) {
+        // Si no hay nada guardado, cargar URL del primer link
+        iframe.src = links[0].getAttribute("data-link");
+        localStorage.setItem("iframeURL", iframe.src);
     }
+
+    // Escuchar clics para actualizar el active y el iframe
+    links.forEach(link => {
+        link.addEventListener("click", function () {
+            links.forEach(l => l.classList.remove("active"));
+            this.classList.add("active");
+            const url = this.getAttribute("data-link");
+            localStorage.setItem("activeMenu", url);
+            iframe.src = url;
+            localStorage.setItem("iframeURL", url);
+        });
+    });
 });
+
 
 // Cuando el usuario cambia de página dentro del iframe
 function cargarPagina(url) {
     iframe.src = url;
     localStorage.setItem("iframeURL", url); // Guardar en localStorage
+}
+
+//fetch para cerrar session y eliminar todo el cache y esas mmadas
+function cerrarSesion() {
+  // Limpiar cualquier dato en localStorage relacionado con la sesión
+  localStorage.removeItem("iframeURL");
+  localStorage.removeItem("activeMenu");
+
+  // Hacer la solicitud POST al backend para cerrar sesión
+  fetch("/logout", {
+    method: "POST",
+    credentials: "include"
+  }).then(() => {
+    window.location.href = "/login";
+  }).catch(() => {
+    alert("Error al cerrar sesión");
+  });
 }
