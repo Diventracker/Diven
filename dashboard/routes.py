@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Request, Form, Depends, Response
+from fastapi import APIRouter, Request, Form, Depends, Response , FastAPI
 from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
 from fastapi.templating import Jinja2Templates
-from sqlalchemy.orm import Session
-from database.database import get_db
+from sqlalchemy.orm import Session 
+from database.database import get_db 
 from utils.report_generator import generar_pdf_informe
 from inventario.model import Producto
 from clientes.model import Cliente
@@ -12,9 +12,12 @@ from servicios.model import  ServicioTecnico
 from garantias.model import Garantia
 from datetime import datetime
 from ventas.model import Venta
-from servicios.model import ServicioTecnico  # Asegúrate de importar tu modelo
+from servicios.model import ServicioTecnico# Asegúrate de importar tu modelo
+from sqlalchemy import extract, func
 
 router = APIRouter()
+
+app = FastAPI()
 
 templates = Jinja2Templates(directory="dashboard/templates")
 
@@ -128,5 +131,32 @@ async def generar_informe(request: Request, db: Session = Depends(get_db)):
     return FileResponse(path, filename=f"informe_{tipo}.pdf", media_type="application/pdf")
 
 
+#envio de datos a las graficas del dashboard
 
+@router.post("/api/datos")
+def get_ventas_por_mes(db: Session = Depends(get_db)):
+    resultados = db.query(
+        extract('month', Venta.fecha_venta).label("mes"),
+        func.sum(Venta.total_venta).label("total")
+    ).group_by("mes").order_by("mes").all()
 
+    meses_nombres = [
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ]
+
+    datos_por_mes = {mes: total for mes, total in resultados}
+
+    labels = meses_nombres
+    datos = [datos_por_mes.get(i + 1, 0) for i in range(12)]
+
+    return {
+        "labels": labels,
+        "datasets": [{
+            "label": "Total Ventas por Mes",
+            "data": datos,
+            "backgroundColor": '#5e9188',
+            "borderColor": '#5e9188',
+            "borderWidth": 2
+        }]
+    }
