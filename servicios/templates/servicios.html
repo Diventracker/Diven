@@ -7,6 +7,12 @@
     <title>Gestión de Servicios</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+      <!-- CSS de Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- jQuery (Select2 lo necesita) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- JS de Select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <link rel="stylesheet" href="/static/css/modulos.css">
 </head>
 
@@ -17,7 +23,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-                        <div class="card mb-4 shadow-sm">
+                        <div class="card shadow-sm">
                             <div class="card-header bg-white py-3">
                                 <h5 class="mb-0 text-teal-dark"><i class="bi bi-tools me-2"></i>Servicio Técnico</h5>
                             </div>
@@ -43,7 +49,7 @@
                                 <!-- Búsqueda y filtros -->
                                 <div class="row mb-4">
                                     <div class="col-12">
-                                        <div class="card shadow-sm">
+                                        <div class="card card-move shadow-sm">
                                             <div class="card-header">
                                                 <h6 class="mb-0"><i class="bi bi-search me-2"></i>Buscar Servicio
                                                     Técnico</h6>
@@ -63,15 +69,13 @@
                                                     </div>
                                                     <div class="mb-2 col-md-3 col-lg-3">
                                                         <div class="input-group">
-                                                            <select class="form-select" id="ordenar-servicios">
+                                                            <select class="form-select ordenar-tabla" data-tabla="tablaServicios">
                                                                 <option disabled selected>Ordenar por</option>
-                                                                <option value="tipo">Tipo de equipo (A-Z)</option>
-                                                                <option value="modelo">Modelo (A-Z)</option>
-                                                                <option value="estado">Estado</option>
-                                                                <option value="recepcion">Fecha recepción (más reciente)
-                                                                </option>
-                                                                <option value="entrega">Fecha entrega (más reciente)
-                                                                </option>
+                                                                <option value="1-asc">Tipo de equipo (A-Z)</option>
+                                                                <option value="2-asc">Modelo (A-Z)</option>
+                                                                <option value="6-asc">Estado</option>
+                                                                <option value="4-desc">Fecha recepción (más reciente)</option>
+                                                                <option value="5-desc">Fecha entrega (más reciente)</option>
                                                             </select>
                                                             <button class="btn btn-outline-enviar" onclick="location.href='/servicios'"><i
                                                                     class="bi bi-arrow-repeat"></i></button>
@@ -91,16 +95,16 @@
                                 </div>
 
                                 <!-- Tabla de Servicios -->
-                                <div class="row mb-4">
+                                <div class="row">
                                     <div class="col-12">
-                                        <div class="card shadow-sm">
+                                        <div class="card card-move shadow-sm">
                                             <div class="card-header">
                                                 <h6 class="mb-0"><i class="bi bi-grid me-2"></i>Lista de Servicios
                                                     Técnicos</h6>
                                             </div>
-                                            <div class="card-body">
+                                            <div class="card-body pb-0">
                                                 <div class="table-responsive">
-                                                    <table class="table table-striped table-hover" id="tablaServicios">
+                                                    <table class="table table-striped m-0 table-hover" id="tablaServicios">
                                                         <thead>
                                                             <tr>
                                                                 <th>ID servicio</th>
@@ -115,15 +119,15 @@
                                                                 {% endif %}
                                                             </tr>
                                                         </thead>
-                                                        <tbody id="tabla-servicios">
+                                                        <tbody>
                                                             {% for s in servicios %}
                                                             <tr>
                                                                 <td>{{ s.id_servicio }}</td>
                                                                 <td>{{ s.tipo_equipo }}</td>
                                                                 <td>{{ s.modelo_equipo }}</td>
                                                                 <td>{{ s.descripcion_problema }}</td>
-                                                                <td>{{ s.fecha_recepcion }}</td>
-                                                                <td>{{ s.fecha_entrega_estimada }}</td>
+                                                                <td data-valor="{{ s.fecha_recepcion.strftime('%Y-%m-%d') }}">{{ s.fecha_recepcion }}</td>
+                                                                <td data-valor="{{ s.fecha_entrega_estimada.strftime('%Y-%m-%d') }}">{{ s.fecha_entrega_estimada }}</td>
                                                                 <td>{{ s.estado_servicio }}</td>
                                                                 {% if rol == "Administrador" %}
                                                                 <td>
@@ -153,28 +157,36 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
-
-                                                <!-- Paginación -->
-                                                {% set current_page = page | default(1) %}
-                                                <nav aria-label="Paginación de Servicios">
-                                                    <ul class="pagination justify-content-center mt-4">
-                                                        <li class="page-item">
-                                                            <a class="page-link"
-                                                                href="/servicios?page={{ (page|default(1)) - 1 }}">Anterior</a>
-                                                        </li>
-                                                        {% for s in range(1, (total_pages|default(1)) + 1) %}
-                                                        <li
-                                                            class="page-item {% if s == (page|default(1)) %}active{% endif %}">
-                                                            <a class="page-link" href="/servicios?page={{ s }}">{{ s
-                                                                }}</a>
-                                                        </li>
-                                                        {% endfor %}
-                                                        <li class="page-item">
-                                                            <a class="page-link"
-                                                                href="/servicios?page={{ (page|default(1)) + 1 }}">Siguiente</a>
-                                                        </li>
-                                                    </ul>
-                                                </nav>
+                                                {# Macro para construir URLs de paginación con search opcional #}
+                                                 {% macro pagina_url(ruta, pagina, search) -%}
+                                                     {{ ruta }}?page={{ pagina }}{% if search %}&search={{ search }}{% endif %}
+                                                 {%- endmacro %}
+        
+                                                 {# Paginación visual #}
+                                                 <nav aria-label="Paginación de Servicios">
+                                                     <ul class="pagination justify-content-center mt-4">
+                                                         <!-- Botón Anterior -->
+                                                         <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+                                                             <a class="page-link" href="{% if page > 1 %}{{ pagina_url(ruta_base, page - 1, search) }}{% else %}#{% endif %}">
+                                                                 Anterior
+                                                             </a>
+                                                         </li>
+        
+                                                         <!-- Números de página -->
+                                                         {% for s in range(1, total_pages + 1) %}
+                                                             <li class="page-item {% if s == page %}active{% endif %}">
+                                                                 <a class="page-link" href="{{ pagina_url(ruta_base, s, search) }}">{{ s }}</a>
+                                                             </li>
+                                                         {% endfor %}
+        
+                                                         <!-- Botón Siguiente -->
+                                                         <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
+                                                             <a class="page-link" href="{% if page < total_pages %}{{ pagina_url(ruta_base, page + 1, search) }}{% else %}#{% endif %}">
+                                                                 Siguiente
+                                                             </a>
+                                                         </li>
+                                                     </ul>
+                                                 </nav>
                                             </div>
                                         </div>
                                     </div>
@@ -276,13 +288,11 @@
                 <div class="modal-body">
                     <form action="/servicio/crear" method="post">
 
-                        <div class="mb-3 position-relative">
+                        <div class="mb-3">
                             <label class="form-label">Cliente</label>
-                            <input type="text" id="buscar_cliente" class="form-control" placeholder="Buscar cliente..."
-                                autocomplete="off">
-                            <select id="cliente_select" class="form-control position-absolute" style="width: 94%;">
-                            </select>
-                            <input type="hidden" id="cliente_id" name="cliente_id">
+                            <select id="selectClientes" name="cliente_id" required>
+                                <option></option>
+                            </select>                            
                         </div>
                         <div class="mb-3">
                             <label for="tipo_equipo" class="form-label">Tipo de equipos</label>

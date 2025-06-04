@@ -11,27 +11,21 @@ router = APIRouter()
 templates = Jinja2Templates(directory="servicios/templates")  # Ruta donde están las vistas
 
 @router.get("/servicios", response_class=HTMLResponse, tags=["servicio_tecnico"])
-
 def listar_servicios(
     request: Request,
     db: Session = Depends(get_db),
     page: int = 1,
-    limit: int = 8,
+    limit: int = 9,
     search: str = ""
 ):
-    if page < 1:
-        page = 1
-
     query = db.query(ServicioTecnico)
 
     rol = request.cookies.get("rol")  # Obtener rol de la cookie
-
 
     if search:
         query = query.filter(
             (ServicioTecnico.id_servicio.ilike(f"%{search}%")) |
             (ServicioTecnico.tipo_equipo.ilike(f"%{search}%"))
-
         )
     
     total = query.count()
@@ -40,26 +34,23 @@ def listar_servicios(
 
     total_pages = (total + limit - 1) // limit  # Redondeo hacia arriba
 
-   
     return templates.TemplateResponse("servicios.html", {
         "request": request,
         "servicios": servicios,
-
+        "ruta_base": "/servicios",
         "page": page,
         "total_pages": total_pages,
         "search": search,
-
         "rol": rol  
-
     })
 
 
 #Obetener los clientes para agregarlos al Select
 @router.get("/servicios/clientes", response_class=JSONResponse)
-def filtrar_clientes(q: str = "", db: Session = Depends(get_db)):
+def filtrar_clientes(search: str = "", db: Session = Depends(get_db)):
     clientes = db.query(Cliente).filter(
-        (Cliente.nombre_cliente.ilike(f"%{q}%")) |
-        (Cliente.cedula.ilike(f"%{q}%"))
+        (Cliente.nombre_cliente.ilike(f"%{search}%")) |
+        (Cliente.cedula.ilike(f"%{search}%"))
     ).all()
 
     return [{"id": c.id_cliente, "nombre": c.nombre_cliente, "cedula": c.cedula} for c in clientes]

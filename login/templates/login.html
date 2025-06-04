@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Iniciar Sesión - DivenTraker</title>
+  <title>DivenTraker</title>
+  <link rel="icon" href="/static/img/faviconW.png" type="image/png">
   
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -18,16 +19,22 @@
   <div class="min-vh-100 d-flex">
     <!-- lado izquierdo - Login form -->
     <div class="flex-grow-1 d-flex align-items-center justify-content-center p-4 bg-white position-relative">
+
       <!-- Alertas con manejo de errores login -->
-      {% if request.query_params.get("error") == "1" %}
-          <div class="alert alert-warning d-flex text-center small fade show translate-middle-x shadow-lg msg" role="alert">
-              <i class="bi bi-exclamation-triangle-fill me-2"></i> ¡Correo o Contraseña Invalido!
-          </div>
-      {% elif request.query_params.get("error") == "2" %}
-          <div class="alert alert-warning d-flex text-center small fade show translate-middle-x shadow-lg msg" role="alert">
-              <i class="bi bi-exclamation-triangle-fill me-2"></i> ¡No has Iniciado Sessión!
-          </div>
-      {% endif %}        
+      <div id="alerta-warning" 
+          class="alert alert-warning text-center small fade position-fixed msg shadow-lg"
+          role="alert"
+          style="display: none;">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> <span>¡Mensaje por defecto!</span>
+      </div>
+      <div id="alerta-success"
+          class="alert alert-success text-center small fade position-fixed msg shadow-lg"
+          role="alert"
+          style="display: none;">
+        <i class="bi bi-check-circle-fill me-2"></i> <span>¡Mensaje por defecto!</span>
+      </div>
+
+      <!-- Lado izquierdo cards del login -->
       <div class="w-100" style="max-width: 450px;">
         <div class="d-flex align-items-center mb-4">
           <div class="d-flex align-items-center justify-content-center mx-2 " style="width: 40px; height: 40px;">
@@ -38,7 +45,12 @@
         <div class="card border-0 shadow-lg">
           <!-- Card para la opcion del login -->
           <div class="card-body p-4" id="login-card">
-            <h2 class="fs-3 fw-bold mb-1 text-dark">Iniciar Sesión</h2>
+            <div class="d-flex align-items-center">
+              <button class="btn btn-link text-muted p-0 me-1 mb-2" onclick="location.href='/'">
+                <i class="bi bi-arrow-bar-left fs-3"></i>
+              </button>
+              <h2 class="fs-3 fw-bold text-dark">Iniciar Sesión</h2>
+            </div>
             <p class="mb-4 text-teal-dark">
               Ingresa tus credenciales para acceder al sistema
             </p>
@@ -81,7 +93,7 @@
               
               <p class="text-center mt-4 mb-0 small text-teal-dark">
                 ¿No tienes una cuenta?
-                <a href="#" class="text-decoration-none text-primary">
+                <a href="/#contacto" class="text-decoration-none text-primary">
                   Contacta al administrador
                 </a>
               </p>
@@ -111,7 +123,7 @@
           <!-- body para el token -->
             <div class="card-body p-4 d-none" id="verify-code-card">
             <div class="d-flex align-items-center mb-3">
-              <button class="btn btn-link text-muted p-0 me-1 back-btn" data-target="login-card">
+              <button class="btn btn-link text-muted p-0 me-1 back-btn" data-target="forgot-email-card">
                 <i class="bi bi-arrow-bar-left fs-3"></i>
               </button>
               <h2 class="fs-3 fw-bold mb-0 text-dark">Verificar Código</h2>
@@ -130,7 +142,10 @@
               </div>
               
               <div class="text-center mt-3">
-                <a href="#" class="text-decoration-none small text-primary" id="resend-code">¿No recibiste el código? Reenviar</a>
+                <button id="resendCodeBtn" class="btn btn-outline-secondary" type="button">
+                  <span class="spinner-border spinner-border-sm me-2 d-none" role="status" aria-hidden="true"></span>
+                  <span class="btn-text">Reenviar código</span>
+                </button>
               </div>
             </form>
           </div>
@@ -180,7 +195,7 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/alertas.js"></script>
   <script src="/static/js/login/login.js"></script>
-  <script src="/static/js/funciones.js"></script>
 </body>
 </html>

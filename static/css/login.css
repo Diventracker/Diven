@@ -8,9 +8,8 @@
 
 
 .msg{
-    position: absolute;
-    top: 10%;
-    left: 50%;
+    top: 15%;
+    left: 25%;
     max-width: 400px;
     z-index: 1050;
 }

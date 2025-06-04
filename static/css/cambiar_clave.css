@@ -25,6 +25,12 @@ body {
     max-width: 500px;
     width: 100%;
     margin: 20px;
+    transition: all 0.3s;
+}
+
+
+.password-card:hover {
+    transform: translateY(-5px);
 }
 
 .card-header {
@@ -168,6 +174,14 @@ body {
     border-color: var(--color-teal);
     color: var(--color-teal);
     background: rgba(94, 145, 136, 0.05);
+}
+
+/* Alertas */
+.msg{
+    top: 10%;
+    left: 45%;
+    max-width: 400px;
+    z-index: 1050;
 }
 
 @media (max-width: 576px) {

@@ -1,3 +1,9 @@
+ //No Borrar-- Sirve en el sidebar
+ window.parent.postMessage({
+    tipo: "moduloActivo",
+    url: window.location.pathname
+  }, "*");
+  
 // Funcion  crud para eliminar datos 
 setupDeleteButtons({
     buttonSelector: '.btn-outline-danger',

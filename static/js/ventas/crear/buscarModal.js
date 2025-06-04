@@ -1,4 +1,17 @@
 let productosSeleccionados = {};
+let productosYaAgregados = new Set();
+
+function reconstruirProductosYaAgregados() {
+    productosYaAgregados.clear();
+
+    const filas = document.querySelectorAll("#tabla-productos tbody tr:not(.table-active)");
+    filas.forEach(fila => {
+        const codigo = fila.cells[0]?.textContent.trim();
+        if (codigo) productosYaAgregados.add(codigo);
+    });
+}
+
+
 
 async function cargarProductos(search = "", conStock = true) {
     try {
@@ -16,32 +29,41 @@ function cargarProductosDesdeUI() {
     cargarProductos(termino, conStock);
 }
 
+//ya esta funcion llena los productos en la tabla, segun si no fueron seleccionados ya
 function llenarTablaProductosModal(productos) {
     const cuerpoTabla = document.querySelector("#tabla-productos-modal tbody");
     cuerpoTabla.innerHTML = "";
 
     productos.forEach(producto => {
+        if (productosYaAgregados.has(producto.codigo)) return; // <-- Salta los ya agregados
+
         const fila = document.createElement("tr");
         const seleccionado = !!productosSeleccionados[producto.codigo];
+        const sinStock = producto.stock <= 0;
+
+        const botonHtml = sinStock
+            ? `<button class="btn btn-sm btn-secondary" disabled>
+                <i class="bi bi-x-circle"></i> Sin stock
+            </button>`
+            : `<button class="btn btn-sm ${seleccionado ? "btn-secondary" : "btn-enviar"}">
+                <i class="bi bi-${seleccionado ? "check" : "plus-circle"}"></i> ${seleccionado ? "Agregado" : "Agregar"}
+            </button>`;
 
         fila.innerHTML = `
             <td>${producto.codigo}</td>
-            <td>${producto.descripcion}</td>
+            <td>${producto.nombre}</td>
             <td>${producto.modelo || "-"}</td>
             <td>${producto.stock}</td>
             <td>$${producto.precio.toLocaleString("es-CO")}</td>
-            <td>
-                <button class="btn btn-sm ${seleccionado ? "btn-secondary" : "btn-enviar"}">
-                    <i class="bi bi-${seleccionado ? "check" : "plus-circle"}"></i> ${seleccionado ? "Agregado" : "Agregar"}
-                </button>
-            </td>
+            <td>${botonHtml}</td>
         `;
 
-        // Agregamos evento click al botón:
         const boton = fila.querySelector("button");
-        boton.addEventListener("click", () => {
-            seleccionarProductoDesdeModal(producto);
-        });
+        if (!sinStock) {
+            boton.addEventListener("click", () => {
+                seleccionarProductoDesdeModal(producto);
+            });
+        }
 
         cuerpoTabla.appendChild(fila);
     });
@@ -62,10 +84,13 @@ function agregarSeleccionadosATabla() {
     Object.values(productosSeleccionados).forEach(producto => {
         agregarFilaProducto({
             codigo: producto.codigo,
-            descripcion: `${producto.descripcion} ${producto.modelo}`,
+            nombre: `${producto.nombre} ${producto.modelo}`,
             precio: producto.precio,
             stock: producto.stock
         });
+
+        // 🚫 Marcar como ya agregado
+        productosYaAgregados.add(producto.codigo);
     });
 
     productosSeleccionados = {};
@@ -81,7 +106,10 @@ function agregarSeleccionadosATabla() {
 document.getElementById('filtro-stock')?.addEventListener('change', cargarProductosDesdeUI);
 
 // Cargar productos cuando el modal se muestre
-document.getElementById("productosModal")?.addEventListener('shown.bs.modal', cargarProductosDesdeUI);
+document.getElementById("productosModal")?.addEventListener('shown.bs.modal', () => {
+    reconstruirProductosYaAgregados(); // Actualiza lo que ya está en la tabla
+    cargarProductosDesdeUI();          // Vuelve a cargar el modal
+});
 
 // Cargar inicialmente al abrir página (por si quieres que algo se muestre antes)
 document.addEventListener('DOMContentLoaded', () => {

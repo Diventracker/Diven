@@ -15,24 +15,44 @@ templates = Jinja2Templates(directory="ventas/templates")
 
 #Ruta para mostrar todas las ventas
 @router.get("/ventas", response_class=HTMLResponse, tags=["Ventas"])
-def gestionventas_get(request: Request, search: str = "", db: Session = Depends(get_db)):
+def gestionventas_get(
+    request: Request,
+    search: str = "",
+    page: int = 1,
+    limit: int = 9,
+    db: Session = Depends(get_db)
+):
+    query = db.query(Venta).join(Venta.cliente).options(joinedload(Venta.cliente))
+
     if search:
-        ventas = (
-            db.query(Venta).join(Venta.cliente).filter(or_(
-                    Cliente.nombre_cliente.ilike(f"%{search}%"),
-                    Venta.id_venta.ilike(f"%{search}%")
-                )).options(joinedload(Venta.cliente)).all()
+        query = query.filter(
+            or_(
+                Cliente.nombre_cliente.ilike(f"%{search}%"),
+                Venta.id_venta.ilike(f"%{search}%")
+            )
         )
-    else:
-        ventas = (
-            db.query(Venta).options(joinedload(Venta.cliente))
-            .order_by(desc(Venta.fecha_venta)).all()
-        )
-    
+
+    total = query.count()
+    offset = (page - 1) * limit
+
+    ventas = (
+        query.order_by(desc(Venta.fecha_venta))
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
+
+    total_pages = (total + limit - 1) // limit
+
     return templates.TemplateResponse("ventas.html", {
         "request": request,
-        "ventas": ventas
+        "ventas": ventas,
+        "search": search,
+        "page": page,
+        "total_pages": total_pages,
+        "ruta_base": "/ventas"
     })
+
 
 #Ruta para mostrar la vista de crear una nueva venta
 @router.get("/crear_venta", response_class=HTMLResponse, tags=["Ventas"])

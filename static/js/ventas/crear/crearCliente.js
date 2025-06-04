@@ -7,6 +7,8 @@ async function manejarEnvioCliente(e) {
 
   const form = e.target;
   const formData = new FormData(form);
+  const submitBtn = form.querySelector("button[type='submit']");
+  submitBtn.disabled = true; // Evita reenvíos
 
   try {
     const response = await fetch("/clientes/crear", {
@@ -16,7 +18,7 @@ async function manejarEnvioCliente(e) {
 
     if (!response.ok) {
       const error = await response.json();
-      alert("Error al crear cliente: " + (error.error || "Error desconocido"));
+      mostrarAlerta("alerta-warning-modal", "Error al crear cliente: " + (error.error || "Error desconocido"));
       return;
     }
 
@@ -27,13 +29,17 @@ async function manejarEnvioCliente(e) {
     document.getElementById("cc-cliente").value = data.cedula;
     document.getElementById("direccion-cliente").value = data.direccion_cliente;
 
-    alert("Cliente creado exitosamente");
     modal.hide();
+    mostrarAlerta("alerta-exito", "Cliente Creado Correctamente");
+    form.reset(); // limpia el formulario después de crear
 
   } catch (error) {
     console.error("Error:", error);
-    alert("Hubo un error al enviar el formulario.");
+    mostrarAlerta("alerta-warning", "Hubo un error al enviar el formulario.");
+  } finally {
+    submitBtn.disabled = false; //  Reactiva el botón
   }
 }
 
-document.getElementById("form-cliente").addEventListener("submit", manejarEnvioCliente, { once: true });
+
+document.getElementById("form-cliente").addEventListener("submit", manejarEnvioCliente);

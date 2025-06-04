@@ -292,7 +292,7 @@ CREATE TRIGGER `crear_garantia_servicio` AFTER INSERT ON `servicio_tecnico` FOR 
     SET fecha_inicio = NEW.fecha_entrega_estimada;
     SET fecha_fin = DATE_ADD(fecha_inicio, INTERVAL NEW.mes_garantia MONTH);
 
-    INSERT INTO Garantia_Servicio (id_servicio, fecha_inicio, fecha_fin)
+    INSERT INTO garantia_servicio (id_servicio, fecha_inicio, fecha_fin)
     VALUES (NEW.id_servicio, fecha_inicio, fecha_fin);
 END
 $$

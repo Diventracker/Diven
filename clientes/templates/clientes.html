@@ -16,7 +16,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-            <div class="card mb-4 shadow-sm">
+            <div class="card shadow-sm">
               <div class="card-header bg-white py-3">
                 <h5 class="mb-0 text-teal-dark"><i class="bi bi-people me-2"></i>Gestión de Clientes</h5>
               </div>
@@ -43,7 +43,7 @@
                 <!-- Búsqueda y filtros -->
                 <div class="row mb-4">
                     <div class="col-12">
-                    <div class="card shadow-sm">
+                    <div class="card card-move shadow-sm">
                         <div class="card-header">
                         <h6 class="mb-0"><i class="bi bi-search me-2"></i>Buscar Clientes</h6>
                         </div>
@@ -58,11 +58,15 @@
                                 </form>
                             </div>
                             <div class="mb-2 col-md-3 col-lg-3">
-                            <select class="form-select">
-                                <option selected>Ordenar por</option>
-                                <option>Nombre (A-Z)</option>
-                                <option>Nombre (Z-A)</option>
-                            </select>
+                                <div class="input-group">
+                                    <select class="form-select ordenar-tabla" data-tabla="tablaClientes">
+                                        <option disabled selected>Ordenar por</option>
+                                        <option value="0-asc">Nombre (A-Z)</option>
+                                        <option value="0-desc">Nombre (Z-A)</option>
+                                    </select>
+                                    <button class="btn btn-outline-enviar" onclick="location.href='/clientes'">
+                                        <i class="bi bi-arrow-repeat"></i></button>
+                                </div>
                             </div>
                             <div class="col-md-1 col-lg-2 col-xl-3"></div>
                             <div class="col-md-4 col-lg-3 col-xl-2">
@@ -77,15 +81,15 @@
                 </div>
                 
                 <!-- Tabla de clientes -->
-                <div class="row mb-4">
+                <div class="row">
                     <div class="col-12">
-                    <div class="card shadow-sm">
+                    <div class="card card-move shadow-sm">
                         <div class="card-header">
                         <h6 class="mb-0"><i class="bi bi-grid me-2"></i>Lista de Clientes</h6>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body pb-0">
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover">
+                            <table class="table table-striped m-0 table-hover" id="tablaClientes">
                                 <thead>
                                     <tr>
                                         <th scope="col">Nombre</th>
@@ -136,17 +140,34 @@
                         </div>
                         
                         <!-- Paginación -->
-                        <nav aria-label="Paginación de productos">
+                        {# Macro para construir URLs de paginación con search opcional #}
+                        {% macro pagina_url(ruta, pagina, search) -%}
+                            {{ ruta }}?page={{ pagina }}{% if search %}&search={{ search }}{% endif %}
+                        {%- endmacro %}
+
+                        {# Paginación visual #}
+                        <nav aria-label="Paginación de Servicios">
                             <ul class="pagination justify-content-center mt-4">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">Siguiente</a>
-                            </li>
+                                <!-- Botón Anterior -->
+                                <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+                                    <a class="page-link" href="{% if page > 1 %}{{ pagina_url(ruta_base, page - 1, search) }}{% else %}#{% endif %}">
+                                        Anterior
+                                    </a>
+                                </li>
+
+                                <!-- Números de página -->
+                                {% for s in range(1, total_pages + 1) %}
+                                    <li class="page-item {% if s == page %}active{% endif %}">
+                                        <a class="page-link" href="{{ pagina_url(ruta_base, s, search) }}">{{ s }}</a>
+                                    </li>
+                                {% endfor %}
+
+                                <!-- Botón Siguiente -->
+                                <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
+                                    <a class="page-link" href="{% if page < total_pages %}{{ pagina_url(ruta_base, page + 1, search) }}{% else %}#{% endif %}">
+                                        Siguiente
+                                    </a>
+                                </li>
                             </ul>
                         </nav>
                         </div>

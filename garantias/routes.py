@@ -11,18 +11,40 @@ router = APIRouter()
 templates = Jinja2Templates(directory="garantias/templates")
 
 
-
+#Ruta que muestra todas las garantias en ventas
 @router.get("/garantias", response_class=HTMLResponse, tags=["garantias"])
-def obtener_garantias(request: Request, search: str = "", db: Session = Depends(get_db)):
+def obtener_garantias(
+    request: Request,
+    search: str = "",
+    page: int = 1,
+    limit: int = 9,
+    db: Session = Depends(get_db)
+):
+    query = db.query(Garantia).join(Garantia.servicio)
+
     if search:
-        garantias = db.query(Garantia).join(Garantia.servicio).filter(
+        query = query.filter(
             (Garantia.id_garantia.ilike(f"%{search}%")) |
             (ServicioTecnico.tipo_equipo.ilike(f"%{search}%"))
-        ).all()
-    else:
-        garantias = db.query(Garantia).join(Garantia.servicio).all()
-    
+        )
+
+    total = query.count()
+    offset = (page - 1) * limit
+
+    garantias = (
+        query.order_by(Garantia.id_garantia.desc())
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
+
+    total_pages = (total + limit - 1) // limit
+
     return templates.TemplateResponse("garantias.html", {
         "request": request,
-        "garantias": garantias
+        "garantias": garantias,
+        "search": search,
+        "page": page,
+        "total_pages": total_pages,
+        "ruta_base": "/garantias"
     })

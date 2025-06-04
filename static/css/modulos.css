@@ -79,6 +79,20 @@
 }
 
 /* Estilos de las cards */
+.card{
+    border: 1px solid rgba(94, 145, 136, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    height: 100%;
+}
+
+.card-move {
+    transition: all 0.3s;
+}
+
+.card-move:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(94, 145, 136, 0.2);
+}
 /* Card headers */
 .card-header {
     background-color: rgba(94, 145, 136, 0.1);
@@ -223,5 +237,53 @@ a {
 
 .border-acento {
     border: 2px solid var(--color2);
+}
+/* Contenedor principal */
+.select2-container--default .select2-selection--single {
+  height: 38px; /* altura similar a form-control */
+  padding: 6px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  background-color: white;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+/* Texto seleccionado */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  line-height: 25px; /* para centrar verticalmente */
+  color: #495057;
+}
+
+/* Flecha dropdown */
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+  height: 38px;
+  right: 10px;
+  width: 20px;
+}
+
+/* Estado focus - imitando tu estilo .form-control:focus */
+.select2-container--default.select2-container--focus .select2-selection--single {
+  border-color: var(--color2);
+  box-shadow: 0 0 0 0.25rem rgba(94, 145, 136, 0.25);
+  outline: 0;
+}
+
+/* Opciones del dropdown */
+.select2-container--default .select2-results > .select2-results__options {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Opciones resaltadas */
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background-color: var(--color2);
+  color: white;
+  cursor: pointer;
+}
+
+/* Opciones no seleccionadas */
+.select2-container--default .select2-results__option[aria-selected="false"] {
+  cursor: pointer;
 }
 

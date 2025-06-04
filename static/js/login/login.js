@@ -5,12 +5,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const verifyCodeCard = document.getElementById("verify-code-card")
   const forgotPasswordLink = document.getElementById("forgot-password-link")
   const recoveryEmailForm = document.getElementById("recovery-email-form")
-  const verificationCodeForm = document.getElementById("verification-code-form")
+  const verificationForm = document.getElementById("verification-code-form");
   const verificationCodeInput = document.getElementById("verification-code")
   const verifyBtn = document.getElementById("verify-btn")
   const emailSentTo = document.getElementById("email-sent-to")
-  const resendCodeBtn = document.getElementById("resend-code")
   const backButtons = document.querySelectorAll(".back-btn")
+  const resendCodeBtn = document.getElementById("resendCodeBtn");
+  const spinner = resendCodeBtn.querySelector(".spinner-border");
+  const btnText = resendCodeBtn.querySelector(".btn-text");
+  const enviarBtn = recoveryEmailForm.querySelector("button[type='submit']");
 
   // Evento para mostrar formulario de recuperación de contraseña
   forgotPasswordLink.addEventListener("click", (e) => {
@@ -18,41 +21,109 @@ document.addEventListener("DOMContentLoaded", () => {
     showCard(forgotEmailCard)
   })
 
-  // Evento para enviar correo de recuperación
-  recoveryEmailForm.addEventListener("submit", async (e) => {e.preventDefault();
-  
-    const correo = document.getElementById("recovery-email").value;
+  // Función reutilizable para enviar código
 
-    localStorage.setItem("recoveryEmail", correo)
+async function enviarCodigoRecuperacion(correo) {
+  try {
+    // Desactivar el botón y mostrar "Enviando..."
+    enviarBtn.disabled = true;
+    enviarBtn.textContent = "Enviando...";
 
-    if (correo) {
-      try {
-        const response = await fetch("/auth/recuperar", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ correo })
-        });
+    const response = await fetch("/auth/recuperar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ correo })
+    });
 
-        if (response.ok) {
-          // Éxito: mostrar mensaje y siguiente paso
-          emailSentTo.textContent = `Código enviado a: ${correo}`;
-          showCard(verifyCodeCard);  // Cambiar de tarjeta o pantalla
-        } else {
-          const data = await response.json();
-          alert(data.detail || "Ocurrió un error al enviar el código.");
-        }
-
-      } catch (error) {
-        console.error("Error de red:", error);
-        alert("Error al conectar con el servidor.");
-      }
+    if (response.ok) {
+      emailSentTo.textContent = `Código enviado a: ${correo}`;
+      showCard(verifyCodeCard);  // Cambiar pantalla
+    } else {
+      const data = await response.json();
+      mostrarAlerta("alerta-warning", data.detail || "Ocurrió un error al enviar el código.");
     }
-  });
 
-  const verificationForm = document.getElementById("verification-code-form");
+  } catch (error) {
+    console.error("Error de red:", error);
+    mostrarAlerta("alerta-warning", "Error al conectar con el servidor.");
+  } finally {
+    // Rehabilitar el botón
+    enviarBtn.disabled = false;
+    enviarBtn.textContent = "Enviar Código";
+  }
+}
 
+// Evento para enviar correo de recuperación
+recoveryEmailForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const correo = document.getElementById("recovery-email").value;
+  localStorage.setItem("recoveryEmail", correo);
+
+  if (correo) {
+    await enviarCodigoRecuperacion(correo);
+  }
+});
+
+// Evento para reenviar código
+resendCodeBtn.addEventListener("click", async (e) => {
+  e.preventDefault();
+
+  const correo = localStorage.getItem("recoveryEmail");
+  if (!correo) {
+    mostrarAlerta("alerta-warning", "No se encontró el correo para reenviar el código.");
+    return;
+  }
+
+  // Desactivar botón y mostrar spinner
+  resendCodeBtn.disabled = true;
+  spinner.classList.remove("d-none");
+  let seconds = 30;
+
+  const updateButtonText = () => {
+    btnText.textContent = `Reenviar en ${seconds}s`;
+  };
+
+  updateButtonText();
+
+  const interval = setInterval(() => {
+    seconds--;
+    updateButtonText();
+
+    if (seconds <= 0) {
+      clearInterval(interval);
+      resendCodeBtn.disabled = false;
+      btnText.textContent = "Reenviar código";
+      spinner.classList.add("d-none");
+    }
+  }, 3000);
+
+  // Reenviar código
+  try {
+    const response = await fetch("/auth/recuperar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ correo })
+    });
+
+    if (response.ok) {
+      mostrarAlerta("alerta-success", "Código reenviado");
+    } else {
+      const data = await response.json();
+      mostrarAlerta("alerta-warning", data.detail || "Ocurrió un error al reenviar el código.");
+    }
+  } catch (error) {
+    mostrarAlerta("alerta-warning", "Error de red");
+    console.error(error);
+  }
+});
+
+
+  //Evento para validar el token enviado
   verificationForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -60,7 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const correo = localStorage.getItem("recoveryEmail");
 
     if (!correo) {
-      alert("No se ha detectado un correo válido. Intenta desde el inicio.");
+      mostrarAlerta("alerta-warning", "No se ha detectado un correo válido. Intenta desde el inicio.");
       return;
     }
 
@@ -84,19 +155,13 @@ document.addEventListener("DOMContentLoaded", () => {
         sessionStorage.setItem("correo_recuperacion", data.correo);
         window.location.href = "/cambiar-clave";
       } else {
-        alert(data.detail || "Error al validar el token");
+        mostrarAlerta("alerta-warning", data.detail || "Error al validar el token");
       }
     } catch (error) {
       console.error("Error en la validación:", error);
-      alert("Error del servidor");
+      mostrarAlerta("alerta-warning", "Error del servidor");
     }
   });
-
-  // Evento para reenviar código
-  resendCodeBtn.addEventListener("click", (e) => {
-    e.preventDefault()
-    alert("Código reenviado")
-  })
 
   // Eventos para botones de regreso
   backButtons.forEach((button) => {
@@ -123,3 +188,13 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 })
+
+// Obtener los parámetros de la URL
+const params = new URLSearchParams(window.location.search);
+
+if (params.get("error") === "1") {
+  mostrarAlerta("alerta-warning", "¡Credenciales Incorrectos!");
+}
+if (params.get("error") === "2") {
+  mostrarAlerta("alerta-warning", "¡No has Iniciado Sessión!");
+}

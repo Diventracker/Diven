@@ -1,3 +1,10 @@
+ //No Borrar-- Sirve en el sidebar
+ window.parent.postMessage({
+    tipo: "moduloActivo",
+    url: window.location.pathname
+  }, "*");
+
+//Funcion para ver los detalles de cada venta 
 async function verDetalles(idVenta) {
   try {
     const res = await fetch(`/ventas/detalle/${idVenta}`);

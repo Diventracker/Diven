@@ -3,13 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cambio de Contraseña</title>
+  <title>DivenTracker</title>
+  <link rel="icon" href="/static/img/faviconW.png" type="image/png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/cambiar_clave.css">
+   <script>
+    (function () {
+      const tieneToken = sessionStorage.getItem("recuperacion_token");
+      const tieneUsuario = document.cookie.includes("usuario_id=");
+
+      if (!tieneToken && !tieneUsuario) {
+        window.location.href = "/login?error=2";
+      }
+    })();
+  </script>
 </head>
 <body>
 
+<!-- Alertas -->
+<div id="alerta-success"
+    class="alert alert-success text-center small fade position-fixed msg shadow-lg"
+    role="alert"
+    style="max-width: 400px; z-index: 1050; display: none;">
+  <i class="bi bi-check-circle-fill me-2"></i> <span>¡Mensaje por defecto!</span>
+</div>
+<div id="alerta-warning"
+    class="alert alert-warning text-center small fade position-fixed msg shadow-lg"
+    role="alert"
+    style="max-width: 400px; z-index: 1050; display: none;">
+  <i class="bi bi-exclamation-triangle-fill me-2"></i> <span>¡Mensaje por defecto!</span>
+</div>
+
+<!-- Card para cambio de contraseña -->
 <div class="password-card">
   <div class="card-header">
     <div class="icon">
@@ -68,6 +94,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/static/js/alertas.js"></script>
 <script src="/static/js/login/cambiar_clave.js"></script>
 
 </body>
