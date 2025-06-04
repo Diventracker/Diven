@@ -1,3 +1,9 @@
+ //No Borrar-- Sirve en el sidebar
+ window.parent.postMessage({
+    tipo: "moduloActivo",
+    url: window.location.pathname
+  }, "*");
+  
 async function buscarProducto() {
     const input = document.getElementById("buscador-producto");
     const termino = input.value.trim();
@@ -12,14 +18,14 @@ async function buscarProducto() {
 
         // Validar stock antes de agregar
         if (producto.stock <= 0) {
-            alert(`No hay stock disponible para ${producto.descripcion}`);
+            mostrarAlerta("alerta-warning", `No hay stock disponible para ${producto.nombre}`);
             return;
         }
 
         agregarFilaProducto(producto);
         input.value = "";
     } catch (err) {
-        alert("Producto no encontrado.");
+        mostrarAlerta("alerta-warning", "Producto no encontrado.");
     }
 }
 
@@ -35,10 +41,12 @@ function agregarFilaProducto(producto) {
             const inputCantidad = fila.querySelector(".cantidad-input");
             let cantidadActual = parseInt(inputCantidad.value) || 0;
 
-            if (cantidadActual + 1 > producto.stock) {
-                alert(`Solo hay ${producto.stock} unidades disponibles de ${producto.descripcion}`);
+            if (cantidadActual >= producto.stock) {
+                mostrarAlerta("alerta-warning", `Ya se agregó el máximo stock disponible (${producto.stock}) de ${producto.nombre}`);
+                productoYaAgregado = true;  // Esto evita que se cree una nueva fila
                 return;
             }
+
 
             cantidadActual += 1;
             inputCantidad.value = cantidadActual;
@@ -61,7 +69,7 @@ function agregarFilaProducto(producto) {
 
         fila.innerHTML = `
           <td>${producto.codigo}</td>
-          <td>${producto.descripcion}</td>
+          <td>${producto.nombre}</td>
           <td>${precioUnitario.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
           <td>
             <input type="number" value="1" min="1" class="form-control cantidad-input mx-auto" style="width: 70px;">
@@ -80,7 +88,7 @@ function agregarFilaProducto(producto) {
             let cantidad = parseInt(inputCantidad.value) || 1;
 
             if (cantidad > producto.stock) {
-                alert(`Solo hay ${producto.stock} unidades disponibles`);
+                mostrarAlerta("alerta-warning", `Solo hay ${producto.stock} unidades disponibles`);
                 cantidad = producto.stock;
                 inputCantidad.value = cantidad;
             }
@@ -120,3 +128,11 @@ function actualizarTotal() {
         maximumFractionDigits: 0
     });
 }
+
+//Esto ayuda para que si le dan enter tambien busque el producto
+document.getElementById("buscador-producto")?.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault(); // evita que recargue la página si está en un formulario
+        buscarProducto();
+    }
+});

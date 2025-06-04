@@ -90,8 +90,13 @@ background-color: rgba(0, 0, 0, 0.7);
 
 .btn-close:focus {
   outline: none;
-  color: var(--color4);
+  color: #253342;
   box-shadow: 0 0 0 0.25rem rgba(94, 145, 136, 0.25); /* verde suave */
+}
+
+.btn.btn-enviar{
+    background-color: #5e9188; /* Verde Claro */
+    color: white;
 }
 
 @media (max-width: 768px) {

@@ -1,3 +1,9 @@
+ //No Borrar-- Sirve en el sidebar
+ window.parent.postMessage({
+    tipo: "moduloActivo",
+    url: window.location.pathname
+  }, "*");
+  
 //Funcion para cuando se le da click al btn editar, y rellene los campos del form
 setupEditButtons({
     buttonSelector: '.edit-button',

@@ -1,3 +1,9 @@
+ //No Borrar-- Sirve en el sidebar
+ window.parent.postMessage({
+    tipo: "moduloActivo",
+    url: window.location.pathname
+  }, "*");
+  
 // Cargar gráficos al terminar de cargar el DOM
 document.addEventListener('DOMContentLoaded', function () {
     // === GRÁFICO DE VENTAS ===

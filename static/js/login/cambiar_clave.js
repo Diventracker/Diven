@@ -42,10 +42,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const token = sessionStorage.getItem("recuperacion_token");
     const correo = sessionStorage.getItem("correo_recuperacion");
 
-    // Si hay token, ocultar campo de contraseña actual
-    if (token && correo) {
-        currentPasswordDiv.style.display = "none";
+     // Validar acceso
+    const tieneToken = token && correo;
+    const tieneSesion = document.cookie.includes("usuario_id="); // Verifica cookie
+
+    if (!tieneToken && !tieneSesion) {
+        // Redirige si no hay sesión ni recuperación
+        window.location.href = "/login?error=2";
+        return;
     }
+    
+    // Si hay token, ocultar campo de contraseña actual
     if (token && correo) {
         currentPasswordDiv.style.display = "none";
         document.getElementById("currentPassword").required = false;
@@ -84,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const data = await response.json();
         if (response.ok) {
-            alert("Contraseña actualizada correctamente");
+            mostrarAlerta("alerta-success", "Contraseña actualizada correctamente");
 
             if (token) {
                 sessionStorage.removeItem("recuperacion_token");
@@ -96,17 +103,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     credentials: 'include'
                 })
                 .then(() => {
+                    localStorage.removeItem("iframeURL");
+                    localStorage.removeItem("activeMenu");
                     window.location.href = '/login';
                 })
                 .catch(() => {
-                    alert('Error al cerrar sesión');
+                    mostrarAlerta("alerta-warning", "Error al cerrar sesión");
                 });
                 }
         } else {
-            alert(data.detail || "Error al cambiar la contraseña");
+            mostrarAlerta("alerta-warning", data.detail || "Error al cambiar la contraseña");
         }
         } catch (err) {
-        alert("Error de red o del servidor");
+        mostrarAlerta("alerta-warning", "Error de red o del servidor");
         console.error(err);
         }
     });

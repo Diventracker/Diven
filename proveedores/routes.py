@@ -13,16 +13,35 @@ templates = Jinja2Templates(directory="proveedores/templates")  # Ruta donde est
 
 #Ruta principal para mostrar tabla Proveedores
 @router.get("/proveedores", response_class=HTMLResponse, tags=["Proveedores"])
-def listar_proveedores(request: Request, search: str = "", db: Session = Depends(get_db)):
+def listar_proveedores(
+    request: Request,
+    db: Session = Depends(get_db),
+    page: int = 1,
+    limit: int = 9,
+    search: str = ""
+):
+    query = db.query(Proveedor)
+
     if search:
-        proveedores = db.query(Proveedor).filter(
+        query = query.filter(
             (Proveedor.nombre_proveedor.ilike(f"%{search}%")) |
             (Proveedor.nit.ilike(f"%{search}%"))
-        ).all()
-    else:
-        proveedores = db.query(Proveedor).order_by(Proveedor.id_proveedor.desc()).all()
+        )
 
-    return templates.TemplateResponse("proveedores.html", {"request": request, "proveedores": proveedores, "search": search})
+    total = query.count()
+    offset = (page - 1) * limit
+    proveedores = query.offset(offset).limit(limit).all()
+
+    total_pages = (total + limit - 1) // limit
+
+    return templates.TemplateResponse("proveedores.html", {
+        "request": request,
+        "proveedores": proveedores,
+        "page": page,
+        "total_pages": total_pages,
+        "search": search,
+        "ruta_base": "/proveedores" 
+    })
 
 #Ruta para Crear un nuevo Proveedor
 @router.post("/proveedores/crear", tags=["Proveedores"])

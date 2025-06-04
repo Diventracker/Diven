@@ -16,7 +16,7 @@ async function generarVenta() {
 
     // Validar que hay al menos un producto
     if (productos.length === 0) {
-      alert("❌ Debes agregar al menos un producto antes de generar la venta.");
+      mostrarAlerta("alerta-warning", "Debes agregar al menos un producto antes de generar la venta.");
       return;
     }
   
@@ -40,6 +40,6 @@ async function generarVenta() {
       window.location.href = `/ventas/comprobante/${respuesta.id_venta}`; //Aqui enviar al formulario al momento de realizar la venta
       // Aquí podrías limpiar la tabla o redireccionar, según necesites.
     } catch (error) {
-      alert("❌ Error: " + error.message);
+      mostrarAlerta("alerta-warning", "Error: " + error.message);
     }
   }

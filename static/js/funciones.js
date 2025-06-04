@@ -1,67 +1,44 @@
-function crearBuscadorEntidad(config) {
-    const input = document.getElementById(config.inputId);
-    const select = document.getElementById(config.selectId);
-    const hiddenInput = document.getElementById(config.hiddenInputId);
+//Funcion para el select2 que maneja la busqueda de tin
+function initSelect2Modal({
+  selector,
+  placeholder = '',
+  url,
+  processResultsMapper,
+  minimumInputLength = 1,
+  parentModalSelector = null,  // Si está en modal, pasa el selector del modal, ej: '#modalProveedor'
+  allowClear = true,
+  width = '100%',
+  language = {}  
+}) {
+  const config = {
+    placeholder,
+    minimumInputLength,
+    allowClear,
+    width,
+    ajax: {
+      url: url,
+      dataType: 'json',
+      delay: 250,
+      data: function(params) {
+        return { search: params.term };
+      },
+      processResults: function(data) {
+        return {
+          results: data.map(processResultsMapper)
+        };
+      },
+      cache: true
+    },
+    // Agregamos language acá para personalizar mensajes
+    language: language
+  };
 
-    input.addEventListener("input", function () {
-        let query = this.value;
+  if (parentModalSelector) {
+    config.dropdownParent = $(parentModalSelector);
+  }
 
-        if (query.length < 2) {
-            select.style.display = "none";
-            return;
-        }
-
-        fetch(`${config.endpoint}?q=${encodeURIComponent(query)}`)
-            .then(response => response.json())
-            .then(data => {
-                select.innerHTML = config.placeholderOption ? `<option value="">${config.placeholderOption}</option>` : "";
-
-                data.forEach(entidad => {
-                    let option = document.createElement("option");
-                    option.value = entidad.id;
-                    option.textContent = config.format(entidad);
-                    select.appendChild(option);
-                });
-
-                if (data.length > 0) {
-                    select.style.display = "block";
-                    if (config.useSize) {
-                        select.setAttribute("size", Math.min(data.length, 5));
-                    }
-                } else {
-                    select.style.display = "none";
-                }
-            })
-            .catch(error => console.error("Error en la búsqueda:", error));
-    });
-
-    select.addEventListener("change", function () {
-        const selectedOption = this.options[this.selectedIndex];
-
-        if (selectedOption && selectedOption.value) {
-            input.value = selectedOption.textContent;
-            hiddenInput.value = selectedOption.value;
-        }
-
-        select.style.display = "none";
-        if (config.useSize) {
-            select.removeAttribute("size");
-        }
-    });
-
-    // Ocultar si se hace clic fuera
-    document.addEventListener("click", function (event) {
-        if (!select.contains(event.target) && event.target !== input) {
-            select.style.display = "none";
-            if (config.useSize) {
-                select.removeAttribute("size");
-            }
-        }
-    });
+  $(selector).select2(config);
 }
-
-// Exportar la función
-window.crearBuscadorEntidad = crearBuscadorEntidad;
 
 
 // Función para manejar la eliminación genérica
@@ -174,9 +151,6 @@ function setupEditForm(config) {
 // Exponer la función para usarla en otros archivos
 window.setupEditForm = setupEditForm;
 
-
-
-
 //Mostrar una alerta 
 document.addEventListener("DOMContentLoaded", function() {
     let alertBox = document.querySelector(".alert");
@@ -197,3 +171,45 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
+//Para el uso del select que ordena las cosas
+document.querySelectorAll('.ordenar-tabla').forEach(select => {
+        select.addEventListener('change', function () {
+            const [columnaStr, direccion] = this.value.split("-");
+            const columna = parseInt(columnaStr);
+            const descendente = direccion === "desc";
+
+            const tablaID = this.dataset.tabla;
+            const tabla = document.getElementById(tablaID);
+            const tbody = tabla.querySelector("tbody");
+            const filas = Array.from(tbody.querySelectorAll("tr"));
+
+            filas.sort((a, b) => {
+                let valorA = a.children[columna].getAttribute("data-valor") || a.children[columna].textContent.trim();
+                let valorB = b.children[columna].getAttribute("data-valor") || b.children[columna].textContent.trim();
+
+                // Verificar si es una fecha en formato YYYY-MM-DD
+                const esFormatoFecha = /^\d{4}-\d{2}-\d{2}$/;
+
+                if (esFormatoFecha.test(valorA) && esFormatoFecha.test(valorB)) {
+                    const fechaA = new Date(valorA);
+                    const fechaB = new Date(valorB);
+                    return descendente ? fechaB - fechaA : fechaA - fechaB;
+                }
+
+                // Intentar convertir a número
+                const numA = parseFloat(valorA.replace(/\./g, '').replace(/,/g, '.'));
+                const numB = parseFloat(valorB.replace(/\./g, '').replace(/,/g, '.'));
+
+                const esNumero = !isNaN(numA) && !isNaN(numB);
+                if (esNumero) {
+                    return descendente ? numB - numA : numA - numB;
+                }
+
+                // Comparación alfabética por defecto
+                return descendente ? valorB.localeCompare(valorA) : valorA.localeCompare(valorB);
+            });
+
+            // Reinsertar las filas ordenadas
+            filas.forEach(fila => tbody.appendChild(fila));
+        });
+    });

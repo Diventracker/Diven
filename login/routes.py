@@ -120,6 +120,8 @@ def cambiar_clave(request: Request, data: CambiarClaveSchema, db: Session = Depe
         # Validación normal con clave actual
         usuario_id = request.cookies.get("usuario_id")
         usuario = db.query(Usuario).filter(Usuario.id_usuario == usuario_id).first() # según tu lógica de sesión
+        if not usuario:
+            raise HTTPException(status_code=400, detail="Usuario no encontrado")
         if not pwd_context.verify(data.clave_actual, usuario.clave):
             raise HTTPException(status_code=400, detail="Clave actual incorrecta")
 

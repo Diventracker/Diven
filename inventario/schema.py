@@ -15,11 +15,28 @@ class ProductoCreate(BaseModel):
     fecha_compra: date
     precio_venta: int | None = None
 
+class ProductoUpdate(BaseModel):
+    nombre_producto: str
+    marca: str
+    modelo: str
+    descripcion: str
+    precio: int
+    id_proveedor: int
+    fecha_inicio_garantia: date | None = None
+    fecha_expiracion_garantia: date | None = None
+    fecha_compra: date
+    precio_venta: int | None = None
+
 #Para las consultas de las facturas
 class ProductoOut(BaseModel):
     codigo: str         # equivale a Producto.id_producto
+    nombre: str
     descripcion: str    # equivale a Producto.nombre_producto
     modelo: Optional[str] = None         # Producto.modelo
     precio: int
     stock: int
+    proveedor: Optional[str] = None
+
+class StockUpdate(BaseModel):
+    cantidad: int  # cantidad a sumar
     

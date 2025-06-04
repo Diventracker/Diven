@@ -12,21 +12,36 @@ templates = Jinja2Templates(directory="clientes/templates")  # Ruta donde están
 
 #Ruta principal para mostrar tabla clientes
 @router.get("/clientes", tags=["Clientes"])
-def listar_clientes(request: Request, search: str = "", db: Session = Depends(get_db)):
-    rol = request.cookies.get("rol")  # Obtener rol de la cookie
+def listar_clientes(
+    request: Request,
+    db: Session = Depends(get_db),
+    page: int = 1,
+    limit: int = 9,
+    search: str = ""
+):
+    rol = request.cookies.get("rol")
+
+    query = db.query(Cliente)
 
     if search:
-        clientes = db.query(Cliente).filter(
+        query = query.filter(
             (Cliente.nombre_cliente.ilike(f"%{search}%")) |
             (Cliente.cedula.ilike(f"%{search}%"))
-        ).all()
-    else:
-        clientes = db.query(Cliente).order_by(Cliente.id_cliente.desc()).all()
+        )
+
+    total = query.count()
+    offset = (page - 1) * limit
+    clientes = query.offset(offset).limit(limit).all()
+
+    total_pages = (total + limit - 1) // limit
 
     return templates.TemplateResponse("clientes.html", {
         "request": request,
         "clientes": clientes,
+        "page": page,
+        "total_pages": total_pages,
         "search": search,
+        "ruta_base": "/clientes",  
         "rol": rol
     })
 

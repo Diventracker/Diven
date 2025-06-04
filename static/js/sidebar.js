@@ -11,7 +11,6 @@ window.addEventListener('resize', function() {
 }
 });
 
-//esta funcion es la del active sidebar, y los iframes
 document.addEventListener("DOMContentLoaded", function () {
     const links = document.querySelectorAll(".list-group-item");
     const iframe = document.getElementById("modulosIframe");
@@ -25,7 +24,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (activeLink) {
         links.forEach(link => {
-            if (link.getAttribute("data-link") === activeLink) {
+            if (link.getAttribute("data-link") === activeLink ||
+                link.getAttribute("data-link2") === activeLink) {
                 link.classList.add("active");
                 found = true;
             }
@@ -43,10 +43,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (ultimaURL) {
         iframe.src = ultimaURL;
     } else if (found) {
-        // Si hay menú activo guardado pero no URL, puedes cargar esa URL en iframe
         iframe.src = activeLink;
     } else if (links.length > 0) {
-        // Si no hay nada guardado, cargar URL del primer link
         iframe.src = links[0].getAttribute("data-link");
         localStorage.setItem("iframeURL", iframe.src);
     }
@@ -64,11 +62,34 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// Escuchar mensajes desde el iframe para actualizar el sidebar
+window.addEventListener("message", function (event) {
+    // Opcional: validar event.origin para mayor seguridad
+    if (event.data?.tipo === "moduloActivo") {
+        const moduloActivo = event.data.url;
+        const links = document.querySelectorAll(".list-group-item");
+        localStorage.setItem("activeMenu", moduloActivo);
+        localStorage.setItem("iframeURL", moduloActivo);
+
+        // Actualizar visualmente el sidebar
+        links.forEach(link => {
+            if (link.getAttribute("data-link") === moduloActivo ||
+                link.getAttribute("data-link2") === moduloActivo) {
+                link.classList.add("active");
+            } else {
+                link.classList.remove("active");
+            }
+        });
+    }
+});
+
 
 // Cuando el usuario cambia de página dentro del iframe
 function cargarPagina(url) {
+    const iframe = document.getElementById("modulosIframe");
+    if (!iframe) return;  // Por si no está cargado aún
     iframe.src = url;
-    localStorage.setItem("iframeURL", url); // Guardar en localStorage
+    localStorage.setItem("iframeURL", url);
 }
 
 //fetch para cerrar session y eliminar todo el cache y esas mmadas
