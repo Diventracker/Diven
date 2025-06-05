@@ -4,28 +4,22 @@ from datetime import date
 
 class ProductoCreate(BaseModel):
     nombre_producto: str
-    marca: str
     modelo: str
     descripcion: str
     precio: int
+    precio_venta: int
     stock: int
     id_proveedor: int
-    fecha_inicio_garantia: date | None = None
-    fecha_expiracion_garantia: date | None = None
-    fecha_compra: date
-    precio_venta: int | None = None
+    meses_garantia: int | None = None  # Si se puede omitir
 
 class ProductoUpdate(BaseModel):
     nombre_producto: str
-    marca: str
     modelo: str
     descripcion: str
     precio: int
+    precio_venta: int
     id_proveedor: int
-    fecha_inicio_garantia: date | None = None
-    fecha_expiracion_garantia: date | None = None
-    fecha_compra: date
-    precio_venta: int | None = None
+    meses_garantia: int | None = None
 
 #Para las consultas de las facturas
 class ProductoOut(BaseModel):

@@ -165,16 +165,13 @@
                                     <button class="btn btn-sm btn-outline-secondary me-1 edit-button" data-bs-toggle="modal" data-bs-target="#modalEditar"
                                             data-id="{{ p.id_producto }}"
                                             data-nombre="{{ p.nombre_producto }}"
-                                            data-marca="{{ p.marca }}"
                                             data-modelo="{{ p.modelo }}"
                                             data-descripcion="{{ p.descripcion }}"
                                             data-precio="{{ p.precio }}"
                                             data-precioVenta="{{ p.precio_venta }}"
                                             data-nombreProveedor="{{ p.proveedor.nombre_proveedor }}"
                                             data-idProveedor="{{ p.proveedor.id_proveedor }}"                            
-                                            data-inicio="{{ p.fecha_inicio_garantia }}"
-                                            data-fin="{{ p.fecha_expiracion_garantia }}"
-                                            data-compra="{{ p.fecha_compra }}">
+                                            data-garantia="{{ p.meses_garantia }}">
                                         <i class="bi bi-pencil"></i>
                                     </button>
                                     <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar"
@@ -323,9 +320,9 @@
                   <input type="text" class="form-control" name="nombre_producto" required />
                 </div>
                 <div class="col-md-6 mb-3">
-                  <label class="form-label">Marca</label>
-                  <input type="text" class="form-control" name="marca" required />
-                </div>                
+                  <label class="form-label">Modelo</label>
+                  <input type="text" class="form-control" name="modelo" required />
+                </div>                               
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Descripción</label>
                   <input type="text" class="form-control" name="descripcion" required />
@@ -340,16 +337,12 @@
                 </div>
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Precio de venta</label>
-                  <input type="number" step="0.01" class="form-control" name="precio_venta" />
+                  <input type="number" step="0.01" class="form-control" name="precio_venta" required />
                 </div>
                 <div class="col-md-6 mb-3">
-                  <label class="form-label">Meses de Garantía</label>
-                  <input type="number" class="form-control" name="meses_garantia" min="0" value="0" />
+                  <label class="form-label">Meses de garantía</label>
+                  <input type="number" class="form-control" name="meses_garantia" min="0" value="0"  required/>
                 </div>                
-                <div class="col-md-6 mb-3">
-                  <label class="form-label">Fecha de Compra(auto)</label>
-                  <input type="date" class="form-control" name="fecha_compra" required />
-                </div>
               </div>
               <button type="submit" class="btn btn-enviar w-100">Guardar Producto</button>
             </form>              
@@ -381,10 +374,6 @@
                   <input type="text" class="form-control" id="editNombreProducto" name="nombre_producto" required />
                 </div>
                 <div class="col-md-6 mb-3">
-                  <label class="form-label">Marca</label>
-                  <input type="text" class="form-control" id="editMarca" name="marca" required />
-                </div>
-                <div class="col-md-6 mb-3">
                   <label class="form-label">Modelo</label>
                   <input type="text" class="form-control" id="editModelo" name="modelo" required />
                 </div>
@@ -398,20 +387,12 @@
                 </div>
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Precio de venta</label>
-                  <input type="number" step="0.01" class="form-control" id="editPrecioVenta" name="precio_venta" />
+                  <input type="number" step="0.01" class="form-control" id="editPrecioVenta" name="precio_venta"  required/>
                 </div>
                 
-                <div class="col-md-6 mb-3">
-                  <label class="form-label">Inicio Garantía</label>
-                  <input type="date" class="form-control" id="editFechaInicio" name="fecha_inicio_garantia" />
-                </div>
-                <div class="col-md-6 mb-3">
-                  <label class="form-label">Fin Garantía</label>
-                  <input type="date" class="form-control" id="editFechaExpiracion" name="fecha_expiracion_garantia" />
-                </div>
-                <div class="col-md-6 mb-3">
-                  <label class="form-label">Fecha de Compra</label>
-                  <input type="date" class="form-control" id="editFechaCompra" name="fecha_compra" required />
+                <div class="col-12 mb-3">
+                  <label class="form-label">Meses de garantía</label>
+                  <input type="number" class="form-control" id="editGarantia" name="meses_garantia" min="0" required />
                 </div>
               </div>
               <button type="submit" id="saveChanges" class="btn btn-enviar w-100">Actualizar Producto</button>

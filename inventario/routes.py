@@ -56,7 +56,6 @@ def vista_inventario(
     })
 
 
-
 #Obetener los proveedores para agregarlos al Select
 @router.get("/inventario/proveedores", response_class=JSONResponse, tags=["Productos"])
 def filtrar_proveedores(search: str = "", db: Session = Depends(get_db)):
@@ -68,42 +67,30 @@ def filtrar_proveedores(search: str = "", db: Session = Depends(get_db)):
     return [{"id": p.id_proveedor, "nombre": p.nombre_proveedor, "nit": p.nit} for p in proveedores]
 
 
-
-# Agregar producto formulario
+# Ruta que recibe el formulario de agregar Porducto
 @router.post("/inventario/crear", tags=["Productos"])
 def crear_producto(
     nombre_producto: str = Form(...),
-    marca: str = Form(...),
     modelo: str = Form(...),
     descripcion: str = Form(...),
     stock: int = Form(...),
     precio: int = Form(...),
     precio_venta: int = Form(None),
-    proveedor_id: int = Form(...),
-    fecha_inicio_garantia: str = Form(None),
-    fecha_expiracion_garantia: str = Form(None),
-    fecha_compra: str = Form(...),
+    id_proveedor: int = Form(...),
+    meses_garantia: int = Form(None),
     db: Session = Depends(get_db)
 ):
     try:
-        # Convertir las fechas a formato datetime
-        inicio = datetime.strptime(fecha_inicio_garantia, "%Y-%m-%d").date() if fecha_inicio_garantia else None
-        fin = datetime.strptime(fecha_expiracion_garantia, "%Y-%m-%d").date() if fecha_expiracion_garantia else None
-        compra = datetime.strptime(fecha_compra, "%Y-%m-%d").date()
-
         # Validar con Pydantic
         producto_data = ProductoCreate(
             nombre_producto=nombre_producto,
-            marca=marca,
             modelo=modelo,
             descripcion=descripcion,
             precio=precio,
             precio_venta=precio_venta,
             stock=stock,
-            id_proveedor=proveedor_id,
-            fecha_inicio_garantia=inicio,
-            fecha_expiracion_garantia=fin,
-            fecha_compra=compra
+            id_proveedor=id_proveedor,
+            meses_garantia=meses_garantia
         )
         
         nuevo_producto = Producto(**producto_data.model_dump())
@@ -125,15 +112,12 @@ def crear_producto(
 def editar_producto(
     productoId: int,
     nombre_producto: str = Form(...),
-    marca: str = Form(...),
     modelo: str = Form(...),
     descripcion: str = Form(...),
     precio: int = Form(...),
     precio_venta: int = Form(None),
     proveedor_id: int = Form(...),
-    fecha_inicio_garantia: str = Form(None),
-    fecha_expiracion_garantia: str = Form(None),
-    fecha_compra: str = Form(...),
+    meses_garantia: int = Form(None),
     db: Session = Depends(get_db)
 ):
     producto = db.query(Producto).filter(Producto.id_producto == productoId).first()
@@ -141,23 +125,15 @@ def editar_producto(
         return HTMLResponse(content="Producto no encontrado", status_code=404)
 
     try:        
-        # Convertir las fechas a formato datetime
-        inicio = datetime.strptime(fecha_inicio_garantia, "%Y-%m-%d").date() if fecha_inicio_garantia else None
-        fin = datetime.strptime(fecha_expiracion_garantia, "%Y-%m-%d").date() if fecha_expiracion_garantia else None
-        compra = datetime.strptime(fecha_compra, "%Y-%m-%d").date()
-
         # Validar con Pydantic
         producto_data = ProductoUpdate(
             nombre_producto=nombre_producto,
-            marca=marca,
             modelo=modelo,
             descripcion=descripcion,
             precio=precio,
             precio_venta=precio_venta,
             id_proveedor=proveedor_id,
-            fecha_inicio_garantia=inicio,
-            fecha_expiracion_garantia=fin,
-            fecha_compra=compra
+            meses_garantia=meses_garantia
         )
         for field, value in producto_data.model_dump(exclude_none=True).items():
             setattr(producto, field, value)
