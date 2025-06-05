@@ -71,14 +71,11 @@ setupEditButtons({
     modalFields: {
         id: 'productoId',
         nombre: 'editNombreProducto',
-        marca: 'editMarca',
         modelo: 'editModelo',
         descripcion: 'editDescripcion',
         precio: 'editPrecio',
         precioVenta: 'editPrecioVenta',
-        inicio: 'editFechaInicio',
-        fin: 'editFechaExpiracion',
-        compra: 'editFechaCompra'
+        garantia: 'editGarantia'
     }
 });
 

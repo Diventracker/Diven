@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 31-05-2025 a las 06:14:00
+-- Tiempo de generación: 05-06-2025 a las 07:19:05
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -71,7 +71,9 @@ INSERT INTO `cliente` (`id_cliente`, `nombre_cliente`, `cedula`, `direccion_clie
 (53, 'Joaquin Cañon', '1012443507', 'tv 77 i # 65 j 16 sur ', '3053970242', 'Danielcf97@hotmail.com'),
 (55, 'Cliente Mostrador ', '00000000', 'Direcion General', '0000000000', 'Cliente@cliente.com'),
 (56, 'Mario', '1548652458', 'tv 8 cll 123 x2 ', '3122015614', 'mariio@cliente.com'),
-(67, 'Carlos', '3126318236', 'Cra 90 A No 45 A 05 Sur  Casa 213', '3223295822', 'carlos74937@gmail.com');
+(67, 'Carlos', '6465645', 'Cra 90 A No 45 A 05 Sur ', '3223295822', 'carlos74937@gmail.com'),
+(68, 'Marcos', '3242342342', 'cra 90798', '3213123123', 'marcosq@gmail.com'),
+(83, 'MArcos', '3242342545', 'cra 98798689', '3123123123', 'marcosq22@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -139,7 +141,13 @@ INSERT INTO `detalle_venta` (`id_detalle`, `id_venta`, `id_producto`, `cantidad`
 (45, 30, 10, 4, 45000),
 (46, 30, 11, 1, 42000),
 (47, 31, 12, 1, 47000),
-(48, 31, 13, 1, 42000);
+(48, 31, 13, 1, 42000),
+(49, 32, 17, 5, 39000),
+(50, 33, 17, 2, 39000),
+(51, 33, 9, 18, 40000),
+(52, 33, 5, 18, 180000),
+(53, 34, 2, 14, 50000),
+(54, 34, 1, 11, 40000);
 
 -- --------------------------------------------------------
 
@@ -179,7 +187,31 @@ INSERT INTO `garantia_servicio` (`id_garantia`, `id_servicio`, `fecha_inicio`, `
 (6, 25, '2025-05-17', '2025-10-17'),
 (7, 26, '2025-06-02', '2025-09-02'),
 (8, 27, '2025-05-31', '2025-06-30'),
-(9, 28, '2025-05-28', '2025-10-28');
+(9, 28, '2025-05-28', '2025-10-28'),
+(10, 38, '2025-04-17', '2025-04-17'),
+(11, 39, '2025-05-17', '2025-07-17'),
+(12, 40, '2025-05-19', '2025-08-19'),
+(13, 41, '2025-05-18', '2025-07-18'),
+(14, 42, '2025-05-17', '2025-10-17'),
+(15, 43, '2025-06-02', '2025-09-02'),
+(16, 44, '2025-05-31', '2025-06-30'),
+(17, 45, '2025-05-28', '2025-10-28'),
+(18, 46, '2025-05-05', '2025-07-05'),
+(19, 47, '2025-05-06', '2025-06-06'),
+(20, 48, '2025-05-07', '2025-05-07'),
+(21, 49, '2025-05-08', '2025-08-08'),
+(22, 50, '2025-05-10', '2025-06-10'),
+(23, 51, '2025-05-09', '2025-07-09'),
+(24, 52, '2025-05-11', '2025-05-11'),
+(25, 53, '2025-05-13', '2025-09-13'),
+(26, 54, '2025-05-14', '2025-08-14'),
+(27, 55, '2025-05-15', '2025-06-15'),
+(28, 56, '2025-05-16', '2025-07-16'),
+(29, 57, '2025-05-17', '2025-10-17'),
+(30, 58, '2025-05-18', '2025-05-18'),
+(31, 59, '2025-05-19', '2025-07-19'),
+(32, 60, '2025-05-20', '2025-08-20'),
+(33, 61, '2025-06-03', '2025-06-03');
 
 -- --------------------------------------------------------
 
@@ -190,38 +222,37 @@ INSERT INTO `garantia_servicio` (`id_garantia`, `id_servicio`, `fecha_inicio`, `
 CREATE TABLE `producto` (
   `id_producto` int(11) NOT NULL,
   `nombre_producto` varchar(100) NOT NULL,
-  `marca` varchar(50) NOT NULL,
   `modelo` varchar(50) NOT NULL,
   `descripcion` text NOT NULL,
   `precio` int(10) NOT NULL,
   `stock` int(11) NOT NULL,
   `id_proveedor` int(11) NOT NULL,
-  `fecha_inicio_garantia` date DEFAULT NULL,
-  `fecha_expiracion_garantia` date DEFAULT NULL,
-  `fecha_compra` date NOT NULL,
-  `precio_venta` int(10) DEFAULT NULL
+  `meses_garantia` int(11) DEFAULT NULL,
+  `fecha_compra` timestamp NOT NULL DEFAULT current_timestamp(),
+  `precio_venta` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `producto`
 --
 
-INSERT INTO `producto` (`id_producto`, `nombre_producto`, `marca`, `modelo`, `descripcion`, `precio`, `stock`, `id_proveedor`, `fecha_inicio_garantia`, `fecha_expiracion_garantia`, `fecha_compra`, `precio_venta`) VALUES
-(1, 'Laptop Gamer', 'Asus', 'ROG Strix', 'Laptop de alto rendimiento para gaming', 4500000, 0, 1, NULL, NULL, '2024-01-01', 40000),
-(2, 'Laptop Gamer', 'Asus', 'ROG Strix', 'Laptop de alto rendimiento para gaming', 4400000, 0, 2, '2024-02-01', '2026-02-01', '2024-02-01', 50000),
-(4, 'USBB ', 'kingston', 'b876', '32gb', 5000, 0, 2, '2025-04-04', '2025-04-12', '2025-04-11', 10000),
-(5, 'Tecladinho', 'Redragon', 'K552', 'White', 100000, 18, 7, '2025-04-03', '2025-04-19', '2025-04-04', 180000),
-(8, 'Computador', 'hp', 'paser76', 'Amd, 16gb ram', 1000000, 0, 1, '2025-04-01', '2025-04-25', '2025-04-07', 1400000),
-(9, 'Cartucho Negro 664', 'HP', '664', 'Tinta negra original HP', 25000, 18, 7, '2025-05-01', '2025-11-01', '2025-05-01', 40000),
-(10, 'Cartucho Color 664', 'HP', '664 Color', 'Tinta color original HP', 28000, 8, 7, '2025-05-01', '2025-11-01', '2025-05-01', 45000),
-(11, 'Cartucho Negro 21', 'HP', '21', 'Cartucho tinta negra HP 21', 27000, 7, 7, '2025-05-02', '2025-11-02', '2025-05-02', 42000),
-(12, 'Cartucho Color 22', 'HP', '22', 'Cartucho tinta color HP 22', 30000, 6, 7, '2025-05-02', '2025-11-02', '2025-05-02', 47000),
-(13, 'Cartucho PG-145 Negro', 'Canon', 'PG-145', 'Tinta negra para Canon Pixma', 26000, 13, 7, '2025-05-03', '2025-11-03', '2025-05-03', 42000),
-(14, 'Cartucho CL-146 Color', 'Canon', 'CL-146', 'Tinta color Canon original', 32000, 7, 7, '2025-05-03', '2025-11-03', '2025-05-03', 49000),
-(15, 'Cartucho T664 Negro', 'Epson', 'T664', 'Botella tinta negra Epson EcoTank', 18000, 25, 2, '2025-05-04', '2025-11-04', '2025-05-04', 35000),
-(16, 'Cartucho T664 Color', 'Epson', 'T664 Color', 'Botella tinta color Epson EcoTank', 20000, 20, 2, '2025-05-04', '2025-11-04', '2025-05-04', 37000),
-(17, 'Cartucho LC103BK', 'Brother', 'LC103BK', 'Tinta negra original Brother', 23000, 7, 1, '2025-05-05', '2025-11-05', '2025-05-05', 39000),
-(18, 'Cartucho LC103CL', 'Brother', 'LC103CL', 'Tinta color original Brother', 26000, 10, 1, '2025-05-05', '2025-11-05', '2025-05-05', 43000);
+INSERT INTO `producto` (`id_producto`, `nombre_producto`, `modelo`, `descripcion`, `precio`, `stock`, `id_proveedor`, `meses_garantia`, `fecha_compra`, `precio_venta`) VALUES
+(1, 'Laptop Gamer', 'ROG Strix', 'Laptop de alto rendimiento para gaming', 4500000, 0, 1, 10, '2024-01-01 05:00:00', 40000),
+(2, 'Laptop Gamer', 'ROG Strix', 'Laptop de alto rendimiento para gaming', 4400000, 0, 2, 20, '2024-02-01 05:00:00', 50000),
+(4, 'Usb Kingston', '2TB', '2 terabytes de almacenamiento', 5000, 11, 2, 20, '2025-04-11 05:00:00', 10000),
+(5, 'Tecladinho', 'K552', 'White', 100000, 15, 7, 20, '2025-04-04 05:00:00', 180000),
+(8, 'Computador', 'paser76', 'Amd, 16gb ram', 1000000, 11, 1, 20, '2025-04-07 05:00:00', 1400000),
+(9, 'Cartucho Negro 664', '664', 'Tinta negra original HP', 25000, 11, 7, 20250501, '2025-05-01 05:00:00', 40000),
+(10, 'Cartucho Color 664', '664 Color', 'Tinta color original HP', 28000, 19, 7, 20, '2025-05-01 05:00:00', 45000),
+(11, 'Cartucho Negro 21', '21', 'Cartucho tinta negra HP 21', 27000, 21, 7, 20, '2025-05-02 05:00:00', 42000),
+(12, 'Cartucho Color 22', '22', 'Cartucho tinta color HP 22', 30000, 10, 7, 20, '2025-05-02 05:00:00', 47000),
+(13, 'Cartucho PG-145 Negro', 'PG-145', 'Tinta negra para Canon Pixma', 26000, 13, 7, 20, '2025-05-03 05:00:00', 42000),
+(14, 'Cartucho CL-146 Color', 'CL-146', 'Tinta color Canon original', 32000, 9, 7, 20, '2025-05-03 05:00:00', 49000),
+(16, 'Cartucho T664 Color', 'T664 Color', 'Botella tinta color Epson EcoTank', 20000, 20, 2, 20, '2025-05-04 05:00:00', 37000),
+(17, 'Cartucho LC103BK', 'LC103BK', 'Tinta negra original Brother', 23000, 1, 1, 20250505, '2025-05-05 05:00:00', 39000),
+(18, 'Cartucho LC103CL', 'LC103CL', 'Tinta color original Brother', 26000, 10, 1, 20, '2025-05-05 05:00:00', 43000),
+(20, 'Tarjetas Diitales', 'transmi', 'trajetas xd', 6000, 2, 14, 0, '2025-06-05 04:43:37', 10000),
+(21, 'Mouse Logitech', 'g879', 'Mouse negro y blanco xd', 50000, 7, 15, 0, '2025-06-05 05:06:32', 70000);
 
 -- --------------------------------------------------------
 
@@ -246,7 +277,27 @@ INSERT INTO `proveedor` (`id_proveedor`, `nit`, `nombre_proveedor`, `representan
 (1, '900123456', 'Proveedor Tech', 'Carlos López', '3112345678', 'Calle 123 #45-67, Ciudad'),
 (2, '900654321', 'Electro S.A.', 'Ana Gómez', '3223456789', 'Avenida 78 #12-34, Ciudad'),
 (7, '9001234561', 'Impresoras D', 'Carlos Quintero', '3223244343', 'cra 9789'),
-(10, '7321879361', 'Memorias USb', 'Joseeee', '4223244434', 'cra 98-98');
+(10, '7321879361', 'Memorias USb', 'Joseeee', '4223244434', 'cra 98-98'),
+(12, '901234567', 'Soluciones Tech', 'Laura Martínez', '3101234567', 'Calle 45 #23-10, Bogotá'),
+(13, '902345678', 'Insumos PC', 'Miguel Torres', '3139876543', 'Carrera 9 #12-45, Medellín'),
+(14, '903456789', 'Componentes S.A.S.', 'Andrés Gutiérrez', '3147654321', 'Transversal 33 #56-78, Cali'),
+(15, '904567890', 'Distribuciones Norte', 'Diana Ríos', '3112233445', 'Calle 12 #34-56, Bucaramanga'),
+(16, '905678901', 'TecnoPartes', 'Juan Ruiz', '3123344556', 'Av. Simón Bolívar #78-90, Barranquilla'),
+(17, '906789012', 'Electronix Plus', 'Patricia Peña', '3201239876', 'Cra 45A #67-89, Cartagena'),
+(18, '907890123', 'Mayoristas Bogotá', 'Camilo Paredes', '3156677889', 'Calle 80 #45-67, Bogotá'),
+(19, '908901234', 'Multiservicios Andes', 'Viviana Castro', '3167788990', 'Carrera 7 #98-76, Pasto'),
+(20, '909012345', 'Repuestos Express', 'Luis Rodríguez', '3178899001', 'Av. El Dorado #10-50, Bogotá'),
+(21, '910123456', 'Accesorios Tech', 'Natalia Velásquez', '3189900112', 'Cra 50 #60-30, Manizales'),
+(22, '911234567', 'TecnoMundo Ltda.', 'Esteban Parra', '3111109876', 'Carrera 15 #45-89, Neiva'),
+(23, '912345678', 'Suministros Globales', 'Carolina Méndez', '3122203344', 'Calle 100 #12-45, Bogotá'),
+(24, '913456789', 'Distribuidora Omega', 'Ricardo Luna', '3133304455', 'Cra 18 #25-60, Medellín'),
+(25, '914567890', 'Proveedora del Caribe', 'María Restrepo', '3144405566', 'Av. Circunvalar #89-20, Barranquilla'),
+(26, '915678901', 'ElectroHogar', 'David Gómez', '3155506677', 'Calle 10 #34-90, Bucaramanga'),
+(27, '916789012', 'Tech Parts Express', 'Daniela Vargas', '3166607788', 'Av. Roosevelt #56-78, Cali'),
+(28, '917890123', 'Logística y Suministros SAS', 'Santiago Páez', '3177708899', 'Calle 72 #23-56, Cúcuta'),
+(29, '918901234', 'Corporación Digital', 'Mónica Acosta', '3188809900', 'Cra 24 #70-80, Ibagué'),
+(30, '919012345', 'Red Solutions', 'Felipe Hernández', '3199900111', 'Carrera 50 #10-45, Pereira'),
+(31, '920123456', 'Zona Computadores', 'Sandra León', '3200011223', 'Calle 30 #40-50, Montería');
 
 -- --------------------------------------------------------
 
@@ -279,7 +330,31 @@ INSERT INTO `servicio_tecnico` (`id_servicio`, `id_cliente`, `id_usuario`, `tipo
 (25, 45, 1, 'PC', '2093', 'No prende', '2025-05-16', '2025-05-17', 'En Progreso', 5),
 (26, 15, 1, 'lenovo', 'asus rog', 'no prende', '2025-05-26', '2025-06-02', 'En Progreso', 3),
 (27, 15, 1, 'Impresora termica', 'samsung', 'no imprime', '2025-05-26', '2025-05-31', 'En Progreso', 1),
-(28, 15, 1, 'Impresora de tinta', 'epson l3290', 'no imprime', '2025-05-26', '2025-05-28', 'En Progreso', 5);
+(28, 15, 1, 'Impresora de tinta', 'epson l3290', 'no imprime', '2025-05-26', '2025-05-28', 'En Progreso', 5),
+(38, 18, 1, 'sdasda', 'asus rog', 'se calienta mucho', '2025-04-01', '2025-04-17', 'Pendiente', 0),
+(39, 45, 1, 'HP', 'Samsung', 'No prende', '2025-05-16', '2025-05-17', 'Finalizado', 2),
+(40, 15, 1, 'Celular', 'S24', 'No tiene volumen', '2025-05-16', '2025-05-19', 'Finalizado', 3),
+(41, 8, 1, 'Reloj de mano', 'reloj rojo', 'sin manilla', '2025-05-16', '2025-05-18', 'En Progreso', 2),
+(42, 45, 1, 'PC', '2093', 'No prende', '2025-05-16', '2025-05-17', 'En Progreso', 5),
+(43, 15, 1, 'lenovo', 'asus rog', 'no prende', '2025-05-26', '2025-06-02', 'En Progreso', 3),
+(44, 15, 1, 'Impresora termica', 'samsung', 'no imprime', '2025-05-26', '2025-05-31', 'En Progreso', 1),
+(45, 15, 1, 'Impresora de tinta', 'epson l3290', 'no imprime', '2025-05-26', '2025-05-28', 'En Progreso', 5),
+(46, 10, 1, 'Laptop', 'Dell XPS 13', 'Pantalla parpadea', '2025-05-01', '2025-05-05', 'Pendiente', 2),
+(47, 12, 1, 'Tablet', 'iPad Pro', 'No carga', '2025-05-02', '2025-05-06', 'En Progreso', 1),
+(48, 13, 1, 'Smartphone', 'iPhone 13', 'Batería se descarga rápido', '2025-05-03', '2025-05-07', 'Pendiente', 0),
+(49, 9, 1, 'PC', 'Ryzen 7', 'No da video', '2025-05-04', '2025-05-08', 'Finalizado', 3),
+(50, 20, 1, 'Impresora', 'Canon G3110', 'Manchas al imprimir', '2025-05-05', '2025-05-10', 'Finalizado', 1),
+(51, 11, 1, 'Monitor', 'LG 24MK430H', 'No prende', '2025-05-06', '2025-05-09', 'En Progreso', 2),
+(52, 22, 1, 'Celular', 'Motorola G60', 'No vibra', '2025-05-07', '2025-05-11', 'Pendiente', 0),
+(53, 18, 1, 'Laptop', 'Acer Nitro 5', 'Teclado no funciona', '2025-05-08', '2025-05-13', 'En Progreso', 4),
+(54, 14, 1, 'PC', 'Intel i5', 'Reinicios constantes', '2025-05-09', '2025-05-14', 'Finalizado', 3),
+(55, 17, 1, 'Smartwatch', 'Huawei GT2', 'Pantalla congelada', '2025-05-10', '2025-05-15', 'Pendiente', 1),
+(56, 21, 1, 'Router', 'TP-Link Archer C6', 'Sin señal WiFi', '2025-05-11', '2025-05-16', 'En Progreso', 2),
+(57, 16, 1, 'Notebook', 'MacBook Air', 'Trackpad dañado', '2025-05-12', '2025-05-17', 'Finalizado', 5),
+(58, 19, 1, 'Tablet', 'Samsung Tab A7', 'No se conecta a internet', '2025-05-13', '2025-05-18', 'Pendiente', 0),
+(59, 15, 1, 'Celular', 'Redmi Note 12', 'Micrófono no sirve', '2025-05-14', '2025-05-19', 'Finalizado', 2),
+(60, 23, 1, 'PC', 'HP Pavilion', 'Ventilador ruidoso', '2025-05-15', '2025-05-20', 'En Progreso', 3),
+(61, 45, 1, 'Computador portatil', 'Acer', 'No enicendeeeee', '2025-06-02', '2025-06-03', 'En Progreso', 0);
 
 --
 -- Disparadores `servicio_tecnico`
@@ -320,7 +395,27 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nombre_usuario`, `correo`, `telefono_usuario`, `clave`, `rol`, `token_recuperacion`, `token_expiracion`) VALUES
-(1, 'Administrador', 'admin@tienda.com', '3102399888', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Administrador', NULL, NULL);
+(1, 'The Main', 'admin@tienda.com', '3102399888', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Administrador', NULL, NULL),
+(12, 'Carlos Gómez', 'carlos.gomez@tienda.com', '3101112233', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Vendedor', NULL, NULL),
+(13, 'Laura Pérez', 'laura.perez@tienda.com', '3112223344', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Técnico', NULL, NULL),
+(14, 'Andrés Rodríguez', 'andres.rod@tienda.com', '3123334455', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Vendedor', NULL, NULL),
+(15, 'Sofía Martínez', 'sofia.martinez@tienda.com', '3134445566', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Técnico', NULL, NULL),
+(16, 'Daniel Torres', 'daniel.torres@tienda.com', '3145556677', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Vendedor', NULL, NULL),
+(17, 'Mariana Ruiz', 'mariana.ruiz@tienda.com', '3156667788', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Técnico', NULL, NULL),
+(18, 'Camilo Vargas', 'camilo.vargas@tienda.com', '3167778899', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Vendedor', NULL, NULL),
+(19, 'Valentina Acosta', 'valentina.acosta@tienda.com', '3178889900', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Técnico', NULL, NULL),
+(20, 'Luis Fernández', 'luis.fernandez@tienda.com', '3189990011', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Vendedor', NULL, NULL),
+(21, 'Natalia Ríos', 'natalia.rios@tienda.com', '3190001122', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Técnico', NULL, NULL),
+(22, 'Julián Castro', 'julian.castro@tienda.com', '3201112233', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Vendedor', NULL, NULL),
+(23, 'Isabela Romero', 'isabela.romero@tienda.com', '3212223344', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Técnico', NULL, NULL),
+(24, 'Tomás Navarro', 'tomas.navarro@tienda.com', '3223334455', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Vendedor', NULL, NULL),
+(25, 'Gabriela Pardo', 'gabriela.pardo@tienda.com', '3234445566', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Técnico', NULL, NULL),
+(26, 'Sebastián León', 'sebastian.leon@tienda.com', '3245556677', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Vendedor', NULL, NULL),
+(27, 'Emma Salazar', 'emma.salazar@tienda.com', '3256667788', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Técnico', NULL, NULL),
+(28, 'Mateo Niño', 'mateo.nino@tienda.com', '3267778899', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Vendedor', NULL, NULL),
+(29, 'Lucía Peña', 'lucia.pena@tienda.com', '3278889900', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Técnico', NULL, NULL),
+(30, 'Simón Garzón', 'simon.garzon@tienda.com', '3289990011', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Vendedor', NULL, NULL),
+(31, 'Daniela Mora', 'daniela.mora@tienda.com', '3290001122', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Técnico', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -369,7 +464,10 @@ INSERT INTO `venta` (`id_venta`, `id_cliente`, `id_usuario`, `fecha_venta`, `tot
 (28, 55, 1, '2025-05-30', 42000),
 (29, 55, 1, '2025-05-30', 273000),
 (30, 55, 1, '2025-05-30', 222000),
-(31, 55, 1, '2025-05-30', 89000);
+(31, 55, 1, '2025-05-30', 89000),
+(32, 55, 1, '2025-06-01', 195000),
+(33, 55, 1, '2025-06-01', 4038000),
+(34, 5, 1, '2025-06-04', 1140000);
 
 --
 -- Índices para tablas volcadas
@@ -450,13 +548,13 @@ ALTER TABLE `venta`
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT de la tabla `garantia_producto`
@@ -468,37 +566,37 @@ ALTER TABLE `garantia_producto`
 -- AUTO_INCREMENT de la tabla `garantia_servicio`
 --
 ALTER TABLE `garantia_servicio`
-  MODIFY `id_garantia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_garantia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `proveedor`
 --
 ALTER TABLE `proveedor`
-  MODIFY `id_proveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_proveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT de la tabla `servicio_tecnico`
 --
 ALTER TABLE `servicio_tecnico`
-  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT de la tabla `venta`
 --
 ALTER TABLE `venta`
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- Restricciones para tablas volcadas
