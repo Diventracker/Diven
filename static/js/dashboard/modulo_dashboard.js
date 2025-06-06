@@ -138,3 +138,67 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+
+//generar infrome
+document.getElementById('form-informe').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData.entries());
+
+                const response = await fetch('/api/generar-informe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = "informe.pdf";
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                }
+            });
+
+
+//codigo de las cards ventas mes actual
+
+document.addEventListener('DOMContentLoaded', function () {
+        fetch('/api/ventas-totales')
+            .then(response => response.json())
+            .then(data => updateStats(data))
+            .catch(error => console.error('Error al obtener los datos:', error));
+
+        function updateStats(data) {
+            const statValue = document.getElementById('stat-value');
+            const statChange = document.getElementById('stat-change');
+
+            statValue.textContent = `$${data.ventasTotales.toLocaleString()}`;
+            statChange.innerHTML = `<i class="bi ${data.cambioPositivo ? 'bi-arrow-up' : 'bi-arrow-down'}"></i> ${data.cambioPorcentaje}% vs mes anterior`;
+        }
+    ;
+});
+
+
+//codigo cards de ventas nuevas al mes
+
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('/api/numero-ventas')
+        .then(response => response.json())
+        .then(data => updateNumeroVentas(data))
+        .catch(error => console.error('Error al obtener número de ventas:', error));
+
+    function updateNumeroVentas(data) {
+        const statValue = document.getElementById('numeroVentas');
+        const statChange = document.getElementById('cambio_ventas');
+
+        statValue.textContent = data.ventasNumeros;
+        statChange.innerHTML = `<i class="bi ${data.cambioPositivoNumero ? 'bi-arrow-up' : 'bi-arrow-down'}"></i> ${data.cambioPorcentajeNumero}% vs mes anterior`;
+        statChange.classList.remove('positive', 'negative');
+        statChange.classList.add(data.cambioPositivoNumero ? 'positive' : 'negative');
+    }
+});

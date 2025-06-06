@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request, Form, Depends, Response , FastAPI
-from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse 
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session 
 from database.database import get_db 
@@ -159,4 +159,51 @@ def get_ventas_por_mes(db: Session = Depends(get_db)):
             "borderColor": '#5e9188',
             "borderWidth": 2
         }]
+    }
+
+#crear conexion dashboard
+
+@router.get("/api/ventas-totales")
+def obtener_ventas_totales(db: Session = Depends(get_db)):
+    ventas_mes_actual = db.query(func.sum(Venta.total_venta)).filter(
+        extract('month', Venta.fecha_venta) == datetime.now().month
+    ).scalar() or 0
+
+    ventas_mes_anterior = db.query(func.sum(Venta.total_venta)).filter(
+        extract('month', Venta.fecha_venta) == (datetime.now().month - 1)
+    ).scalar() or 0
+
+    if ventas_mes_anterior > 0:
+        cambio_porcentaje = ((ventas_mes_actual - ventas_mes_anterior) / ventas_mes_anterior) * 100
+    else:
+        cambio_porcentaje = 0
+
+    return {
+        "ventasTotales": round(ventas_mes_actual, 2),
+        "cambioPorcentaje": round(cambio_porcentaje, 2),
+        "cambioPositivo": cambio_porcentaje >= 0
+    }
+
+
+#card numero de ventas
+
+@router.get("/api/numero-ventas")
+def obtener_numero_ventas(db: Session = Depends(get_db)):
+    numero_ventas = db.query(func.count(Venta)).filter(
+        extract('month', Venta.fecha_venta) == datetime.now().month
+    ).scalar() or 0
+
+    numero_ventas_anterior = db.query(func.count(Venta.total_venta)).filter(
+        extract('month', Venta.fecha_venta) == (datetime.now().month - 1)
+    ).scalar() or 0
+
+    if numero_ventas_anterior > 0:
+        cambio_porcentaje_numero = ((numero_ventas - numero_ventas_anterior) / numero_ventas_anterior) * 100
+    else:
+        cambio_porcentaje_numero = 0
+
+    return {
+        "ventasNumeros": round(numero_ventas, 2),
+        "cambioPorcentajeNumero": round(cambio_porcentaje_numero, 2),
+        "cambioPositivoNumero": cambio_porcentaje_numero >= 0
     }
