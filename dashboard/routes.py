@@ -15,6 +15,7 @@ from ventas.model import Venta
 from servicios.model import ServicioTecnico
 from inventario.model import Producto
 from inventario.schema import ProductoOut
+from sqlalchemy import text
 
 router = APIRouter()
 
@@ -151,5 +152,114 @@ def productos_bajo_stock(db: Session = Depends(get_db)):
         for prod in productos
     ]
 
+#ruta para llamar la informacion de la base de datos a las cards
 
+@router.get("/api/dashboard/stats")
+def get_dashboard_stats(db=Depends(get_db)):
+    ventas_totales = db.execute(text("""
+        SELECT COALESCE(SUM(total_venta), 0) 
+        FROM venta 
+        WHERE MONTH(fecha_venta) = MONTH(CURDATE()) 
+        AND YEAR(fecha_venta) = YEAR(CURDATE())
+    """)).scalar()
 
+    numero_ventas = db.execute(text("""
+        SELECT COUNT(*) 
+        FROM venta 
+        WHERE MONTH(fecha_venta) = MONTH(CURDATE()) 
+        AND YEAR(fecha_venta) = YEAR(CURDATE())
+    """)).scalar()
+
+    nuevos_clientes = db.execute(text("""
+        SELECT COUNT(DISTINCT id_cliente) 
+        FROM venta 
+        WHERE MONTH(fecha_venta) = MONTH(CURDATE()) 
+        AND YEAR(fecha_venta) = YEAR(CURDATE())
+    """)).scalar()
+
+    return {
+        "ventas_totales": ventas_totales,
+        "numero_ventas": numero_ventas,
+        "nuevos_clientes": nuevos_clientes
+    }
+
+#ruta para boton diario
+@router.get("/api/dashboard/stats/today")
+def get_today_stats(db=Depends(get_db)):
+    ventas_totales = db.execute(text("""
+        SELECT COALESCE(SUM(total_venta), 0) 
+        FROM venta 
+        WHERE DATE(fecha_venta) = CURDATE()
+    """)).scalar()
+
+    numero_ventas = db.execute(text("""
+        SELECT COUNT(*) 
+        FROM venta 
+        WHERE DATE(fecha_venta) = CURDATE()
+    """)).scalar()
+
+    nuevos_clientes = db.execute(text("""
+        SELECT COUNT(DISTINCT id_cliente) 
+        FROM venta 
+        WHERE DATE(fecha_venta) = CURDATE()
+    """)).scalar()
+
+    return {
+        "ventas_totales": ventas_totales,
+        "numero_ventas": numero_ventas,
+        "nuevos_clientes": nuevos_clientes
+    }
+
+#ruta para boton semanal
+@router.get("/api/dashboard/stats/week")
+def get_week_stats(db=Depends(get_db)):
+    ventas_totales = db.execute(text("""
+        SELECT COALESCE(SUM(total_venta), 0)
+        FROM venta
+        WHERE YEARWEEK(fecha_venta, 1) = YEARWEEK(CURDATE(), 1)
+    """)).scalar()
+
+    numero_ventas = db.execute(text("""
+        SELECT COUNT(*) 
+        FROM venta
+        WHERE YEARWEEK(fecha_venta, 1) = YEARWEEK(CURDATE(), 1)
+    """)).scalar()
+
+    nuevos_clientes = db.execute(text("""
+        SELECT COUNT(DISTINCT id_cliente)
+        FROM venta
+        WHERE YEARWEEK(fecha_venta, 1) = YEARWEEK(CURDATE(), 1)
+    """)).scalar()
+
+    return {
+        "ventas_totales": ventas_totales,
+        "numero_ventas": numero_ventas,
+        "nuevos_clientes": nuevos_clientes
+    }
+
+#ruta para boton anual
+@router.get("/api/dashboard/stats/year")
+def get_year_stats(db=Depends(get_db)):
+    ventas_totales = db.execute(text("""
+        SELECT COALESCE(SUM(total_venta), 0)
+        FROM venta
+        WHERE YEAR(fecha_venta) = YEAR(CURDATE())
+    """)).scalar()
+
+    numero_ventas = db.execute(text("""
+        SELECT COUNT(*) 
+        FROM venta
+        WHERE YEAR(fecha_venta) = YEAR(CURDATE())
+    """)).scalar()
+
+    nuevos_clientes = db.execute(text("""
+        SELECT COUNT(DISTINCT id_cliente)
+        FROM venta
+        WHERE YEAR(fecha_venta) = YEAR(CURDATE())
+    """)).scalar()
+
+    return {
+        "ventas_totales": ventas_totales,
+        "numero_ventas": numero_ventas,
+        "nuevos_clientes": nuevos_clientes
+    }
