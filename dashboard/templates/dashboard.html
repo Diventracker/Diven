@@ -203,35 +203,21 @@
                             </div>
                             <div class="card-body p-0">
                                 <div class="list-group list-group-flush">
-                                    <a href="#" class="list-group-item list-group-item-action py-3">
+                                    {% for prod in alertas_inventario %}
+                                    <a href="/inventario" class="list-group-item list-group-item-action py-3">
                                         <div class="d-flex w-100 justify-content-between">
-                                            <h6 class="mb-1">Smartphone Galaxy S23</h6>
-                                            <span class="badge bg-danger">Stock bajo</span>
+                                            <h6 class="mb-1">{{ prod.nombre_producto }}</h6>
+                                            <span
+                                                class="badge {% if prod.stock < 5 %}bg-danger{% else %}bg-warning text-dark{% endif %}">Stock
+                                                bajo</span>
                                         </div>
-                                        <p class="mb-1 small text-muted">Quedan 3 unidades (mínimo: 5)</p>
+                                        <p class="mb-1 small text-muted">Quedan {{ prod.stock }} unidades</p>
                                     </a>
-                                    <a href="#" class="list-group-item list-group-item-action py-3">
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <h6 class="mb-1">Audífonos Bluetooth JBL</h6>
-                                            <span class="badge bg-warning text-dark">Stock bajo</span>
-                                        </div>
-                                        <p class="mb-1 small text-muted">Quedan 4 unidades (mínimo: 5)</p>
-                                    </a>
-                                    <a href="#" class="list-group-item list-group-item-action py-3">
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <h6 class="mb-1">Smartwatch Garmin</h6>
-                                            <span class="badge bg-danger">Stock bajo</span>
-                                        </div>
-                                        <p class="mb-1 small text-muted">Quedan 2 unidades (mínimo: 5)</p>
-                                    </a>
-                                    <a href="#" class="list-group-item list-group-item-action py-3">
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <h6 class="mb-1">Cargador rápido USB-C</h6>
-                                            <span class="badge bg-warning text-dark">Stock bajo</span>
-                                        </div>
-                                        <p class="mb-1 small text-muted">Quedan 6 unidades (mínimo: 10)</p>
-                                    </a>
+                                    {% else %}
+                                    <div class="text-center text-muted py-3">Sin alertas de inventario.</div>
+                                    {% endfor %}
                                 </div>
+
                             </div>
                         </div>
                     </div>
