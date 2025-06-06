@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-06-2025 a las 07:46:09
+-- Tiempo de generación: 07-06-2025 a las 00:29:18
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -71,7 +71,8 @@ INSERT INTO `cliente` (`id_cliente`, `nombre_cliente`, `cedula`, `direccion_clie
 (53, 'Joaquin Cañon', '1012443507', 'tv 77 i # 65 j 16 sur ', '3053970242', 'Danielcf97@hotmail.com'),
 (55, 'Cliente Mostrador ', '00000000', 'Direcion General', '0000000000', 'Cliente@cliente.com'),
 (56, 'Mario', '1548652458', 'tv 8 cll 123 x2 ', '3122015614', 'mariio@cliente.com'),
-(67, 'Carlos', '3126318236', 'Cra 90 A No 45 A 05 Sur  Casa 213', '3223295822', 'carlos74937@gmail.com');
+(67, 'Carlos', '3126318236', 'Cra 90 A No 45 A 05 Sur  Casa 213', '3223295822', 'carlos74937@gmail.com'),
+(68, 'deivit', '1012328726', 'dg 74 sur i 57 64', '1234567894', 'deivit@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -142,7 +143,11 @@ INSERT INTO `detalle_venta` (`id_detalle`, `id_venta`, `id_producto`, `cantidad`
 (48, 31, 13, 1, 42000),
 (49, 32, 5, 1, 180000),
 (50, 32, 11, 1, 42000),
-(51, 32, 13, 1, 42000);
+(51, 32, 13, 1, 42000),
+(52, 33, 13, 1, 42000),
+(53, 33, 15, 1, 35000),
+(54, 34, 5, 1, 180000),
+(55, 34, 18, 1, 43000);
 
 -- --------------------------------------------------------
 
@@ -213,18 +218,18 @@ INSERT INTO `producto` (`id_producto`, `nombre_producto`, `marca`, `modelo`, `de
 (1, 'Laptop Gamer', 'Asus', 'ROG Strix', 'Laptop de alto rendimiento para gaming', 4500000, 0, 1, NULL, NULL, '2024-01-01', 40000),
 (2, 'Laptop Gamer', 'Asus', 'ROG Strix', 'Laptop de alto rendimiento para gaming', 4400000, 0, 2, '2024-02-01', '2026-02-01', '2024-02-01', 50000),
 (4, 'USBB ', 'kingston', 'b876', '32gb', 5000, 0, 2, '2025-04-04', '2025-04-12', '2025-04-11', 10000),
-(5, 'Tecladinho', 'Redragon', 'K552', 'White', 100000, 17, 7, '2025-04-03', '2025-04-19', '2025-04-04', 180000),
+(5, 'Tecladinho', 'Redragon', 'K552', 'White', 100000, 16, 7, '2025-04-03', '2025-04-19', '2025-04-04', 180000),
 (8, 'Computador', 'hp', 'paser76', 'Amd, 16gb ram', 1000000, 0, 1, '2025-04-01', '2025-04-25', '2025-04-07', 1400000),
 (9, 'Cartucho Negro 664', 'HP', '664', 'Tinta negra original HP', 25000, 18, 7, '2025-05-01', '2025-11-01', '2025-05-01', 40000),
 (10, 'Cartucho Color 664', 'HP', '664 Color', 'Tinta color original HP', 28000, 8, 7, '2025-05-01', '2025-11-01', '2025-05-01', 45000),
 (11, 'Cartucho Negro 21', 'HP', '21', 'Cartucho tinta negra HP 21', 27000, 6, 7, '2025-05-02', '2025-11-02', '2025-05-02', 42000),
 (12, 'Cartucho Color 22', 'HP', '22', 'Cartucho tinta color HP 22', 30000, 6, 7, '2025-05-02', '2025-11-02', '2025-05-02', 47000),
-(13, 'Cartucho PG-145 Negro', 'Canon', 'PG-145', 'Tinta negra para Canon Pixma', 26000, 12, 7, '2025-05-03', '2025-11-03', '2025-05-03', 42000),
+(13, 'Cartucho PG-145 Negro', 'Canon', 'PG-145', 'Tinta negra para Canon Pixma', 26000, 11, 7, '2025-05-03', '2025-11-03', '2025-05-03', 42000),
 (14, 'Cartucho CL-146 Color', 'Canon', 'CL-146', 'Tinta color Canon original', 32000, 7, 7, '2025-05-03', '2025-11-03', '2025-05-03', 49000),
-(15, 'Cartucho T664 Negro', 'Epson', 'T664', 'Botella tinta negra Epson EcoTank', 18000, 25, 2, '2025-05-04', '2025-11-04', '2025-05-04', 35000),
+(15, 'Cartucho T664 Negro', 'Epson', 'T664', 'Botella tinta negra Epson EcoTank', 18000, 24, 2, '2025-05-04', '2025-11-04', '2025-05-04', 35000),
 (16, 'Cartucho T664 Color', 'Epson', 'T664 Color', 'Botella tinta color Epson EcoTank', 20000, 20, 2, '2025-05-04', '2025-11-04', '2025-05-04', 37000),
 (17, 'Cartucho LC103BK', 'Brother', 'LC103BK', 'Tinta negra original Brother', 23000, 7, 1, '2025-05-05', '2025-11-05', '2025-05-05', 39000),
-(18, 'Cartucho LC103CL', 'Brother', 'LC103CL', 'Tinta color original Brother', 26000, 10, 1, '2025-05-05', '2025-11-05', '2025-05-05', 43000);
+(18, 'Cartucho LC103CL', 'Brother', 'LC103CL', 'Tinta color original Brother', 26000, 9, 1, '2025-05-05', '2025-11-05', '2025-05-05', 43000);
 
 -- --------------------------------------------------------
 
@@ -353,10 +358,10 @@ INSERT INTO `venta` (`id_venta`, `id_cliente`, `id_usuario`, `fecha_venta`, `tot
 (7, 53, 1, '2025-05-28', 10000),
 (8, 55, 1, '2025-05-28', 43000),
 (9, 5, 1, '2025-12-20', 1450000),
-(10, 14, 1, '2025-05-28', 49000),
+(10, 14, 1, '2025-07-15', 49000),
 (11, 55, 1, '2025-05-28', 1580000),
 (12, 53, 1, '2025-05-29', 180000),
-(13, 53, 1, '2025-05-29', 1400000),
+(13, 53, 1, '2025-06-04', 1400000),
 (14, 55, 1, '2025-01-13', 40000),
 (15, 55, 1, '2025-05-29', 180000),
 (16, 53, 1, '2025-03-18', 507000),
@@ -373,7 +378,9 @@ INSERT INTO `venta` (`id_venta`, `id_cliente`, `id_usuario`, `fecha_venta`, `tot
 (29, 55, 1, '2025-05-30', 273000),
 (30, 55, 1, '2025-05-30', 222000),
 (31, 55, 1, '2025-05-30', 89000),
-(32, 55, 1, '2025-06-04', 264000);
+(32, 55, 1, '2025-06-04', 264000),
+(33, 68, 1, '2025-06-06', 77000),
+(34, 68, 1, '2025-06-06', 223000);
 
 --
 -- Índices para tablas volcadas
@@ -454,13 +461,13 @@ ALTER TABLE `venta`
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT de la tabla `garantia_producto`
@@ -502,7 +509,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `venta`
 --
 ALTER TABLE `venta`
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- Restricciones para tablas volcadas
