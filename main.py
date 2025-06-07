@@ -12,8 +12,11 @@ from ventas import routes as ventas_router
 from garantias import routes as garantias_router
 from dashboard import routes as dashboard_router
 
-app = FastAPI()
 
+
+
+app = FastAPI()
+app.include_router(dashboard_router.router)
 
 # Middleware para evitar caché
 @app.middleware("http")

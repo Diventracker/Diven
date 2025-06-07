@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/static/css/dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -28,10 +29,10 @@
                                         <span class="text-teal-dark">Mayo 2025</span>
                                     </div>
                                     <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-outline-teal active">Hoy</button>
-                                        <button type="button" class="btn btn-outline-teal">Semana</button>
-                                        <button type="button" class="btn btn-outline-teal">Mes</button>
-                                        <button type="button" class="btn btn-outline-teal">Año</button>
+                                        <button class="btn btn-outline-teal" data-periodo="hoy">Hoy</button>
+                                        <button class="btn btn-outline-teal" data-periodo="semana">Semana</button>
+                                        <button class="btn btn-outline-teal" data-periodo="mes">Mes</button>
+                                        <button class="btn btn-outline-teal" data-periodo="anio">Año</button>
                                         <button type="button" class="btn btn-outline-teal">
                                             <i class="bi bi-calendar3"></i> Personalizado
                                         </button>
@@ -57,7 +58,7 @@
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div>
                                         <div class="stat-label">Ventas Totales</div>
-                                        <div class="stat-value">$24,580</div>
+                                        <div class="stat-value" id="ventasTotales">$0</div>
                                         <div class="stat-change positive">
                                             <i class="bi bi-arrow-up"></i> 12.5% vs mes anterior
                                         </div>
@@ -75,7 +76,7 @@
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div>
                                         <div class="stat-label">Número de Ventas</div>
-                                        <div class="stat-value">142</div>
+                                        <div class="stat-value" id="numeroVentas">0</div>
                                         <div class="stat-change positive">
                                             <i class="bi bi-arrow-up"></i> 8.3% vs mes anterior
                                         </div>
@@ -93,7 +94,7 @@
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div>
                                         <div class="stat-label">Nuevos Clientes</div>
-                                        <div class="stat-value">28</div>
+                                        <div class="stat-value" id="nuevosClientes">0</div>
                                         <div class="stat-change positive">
                                             <i class="bi bi-arrow-up"></i> 5.2% vs mes anterior
                                         </div>
@@ -388,6 +389,8 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="/static/js/modulo_dashboard.js"></script>
+        <script src="/static/js/dashboard/cards.js"></script>
+        <script src="/static/js/dashboard/fecha_semana.js"></script>
         <script>
             document.getElementById('form-informe').addEventListener('submit', async function (e) {
                 e.preventDefault();

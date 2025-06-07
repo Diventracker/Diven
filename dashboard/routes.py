@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Form, Depends, Response
+from fastapi import APIRouter, Request, Form, Depends, Response, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -15,6 +15,7 @@ from ventas.model import Venta
 from servicios.model import ServicioTecnico
 from inventario.model import Producto
 from inventario.schema import ProductoOut
+from sqlalchemy import text
 
 router = APIRouter()
 
@@ -150,6 +151,66 @@ def productos_bajo_stock(db: Session = Depends(get_db)):
         )
         for prod in productos
     ]
+#ruta para la informacion de cards en el dia
+@router.get("/api/dashboard/stats/hoy")
+def get_stats_hoy(db=Depends(get_db)):
+    ventas_totales = db.execute(text("""
+        SELECT COALESCE(SUM(total_venta), 0)
+        FROM venta
+        WHERE DATE(fecha_venta) = CURDATE()
+    """)).scalar()
 
+    numero_ventas = db.execute(text("""
+        SELECT COUNT(*)
+        FROM venta
+        WHERE DATE(fecha_venta) = CURDATE()
+    """)).scalar()
 
+    nuevos_clientes = db.execute(text("""
+        SELECT COUNT(DISTINCT id_cliente)
+        FROM venta
+        WHERE DATE(fecha_venta) = CURDATE()
+    """)).scalar()
 
+    return {
+        "ventas_totales": ventas_totales,
+        "numero_ventas": numero_ventas,
+        "nuevos_clientes": nuevos_clientes
+    }
+#ruta para la informacion de cards en el periodo seleccionado
+@router.get("/api/dashboard/stats/{periodo}")
+def get_dashboard_stats(periodo: str, db=Depends(get_db)):
+    if periodo == "hoy":
+        filtro = "DATE(fecha_venta) = CURDATE()"
+    elif periodo == "semana":
+        filtro = "YEARWEEK(fecha_venta, 1) = YEARWEEK(CURDATE(), 1)"
+    elif periodo == "mes":
+        filtro = "MONTH(fecha_venta) = MONTH(CURDATE()) AND YEAR(fecha_venta) = YEAR(CURDATE())"
+    elif periodo == "anio":
+        filtro = "YEAR(fecha_venta) = YEAR(CURDATE())"
+    else:
+        raise HTTPException(status_code=400, detail="Periodo inválido")
+
+    ventas_totales = db.execute(text(f"""
+        SELECT COALESCE(SUM(total_venta), 0)
+        FROM venta
+        WHERE {filtro}
+    """)).scalar()
+
+    numero_ventas = db.execute(text(f"""
+        SELECT COUNT(*) 
+        FROM venta
+        WHERE {filtro}
+    """)).scalar()
+
+    nuevos_clientes = db.execute(text(f"""
+        SELECT COUNT(DISTINCT id_cliente)
+        FROM venta
+        WHERE {filtro}
+    """)).scalar()
+
+    return {
+        "ventas_totales": ventas_totales,
+        "numero_ventas": numero_ventas,
+        "nuevos_clientes": nuevos_clientes
+    }
