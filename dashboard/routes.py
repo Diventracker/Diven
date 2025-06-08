@@ -151,32 +151,70 @@ def productos_bajo_stock(db: Session = Depends(get_db)):
         )
         for prod in productos
     ]
-#ruta para la informacion de cards en el dia
-@router.get("/api/dashboard/stats/hoy")
-def get_stats_hoy(db=Depends(get_db)):
-    ventas_totales = db.execute(text("""
+
+# Ruta para obtener las estadisticas del dashboard
+@router.get("/api/dashboard/stats/{periodo}")
+def get_dashboard_stats(periodo: str, db=Depends(get_db)):
+    print("🧠 Periodo recibido:", periodo)
+    if periodo == "hoy":
+        filtro_actual = "DATE(fecha_venta) = CURDATE()"
+        filtro_anterior = "DATE(fecha_venta) = CURDATE() - INTERVAL 1 DAY"
+    elif periodo == "semana":
+        filtro_actual = "YEARWEEK(fecha_venta, 1) = YEARWEEK(CURDATE(), 1)"
+        filtro_anterior = "YEARWEEK(fecha_venta, 1) = YEARWEEK(CURDATE() - INTERVAL 1 WEEK, 1)"
+    elif periodo == "mes":
+        filtro_actual = "MONTH(fecha_venta) = MONTH(CURDATE()) AND YEAR(fecha_venta) = YEAR(CURDATE())"
+        filtro_anterior = "MONTH(fecha_venta) = MONTH(CURDATE() - INTERVAL 1 MONTH) AND YEAR(fecha_venta) = YEAR(CURDATE() - INTERVAL 1 MONTH)"
+    elif periodo == "anio":
+        filtro_actual = "YEAR(fecha_venta) = YEAR(CURDATE())"
+        filtro_anterior = "YEAR(fecha_venta) = YEAR(CURDATE() - INTERVAL 1 YEAR)"
+    else:
+        raise HTTPException(status_code=400, detail="Periodo inválido")
+
+    # Valores actuales
+    total_actual = db.execute(text(f"""
         SELECT COALESCE(SUM(total_venta), 0)
-        FROM venta
-        WHERE DATE(fecha_venta) = CURDATE()
+        FROM venta WHERE {filtro_actual}
     """)).scalar()
 
-    numero_ventas = db.execute(text("""
-        SELECT COUNT(*)
-        FROM venta
-        WHERE DATE(fecha_venta) = CURDATE()
+    ventas_actual = db.execute(text(f"""
+        SELECT COUNT(*) FROM venta WHERE {filtro_actual}
     """)).scalar()
 
-    nuevos_clientes = db.execute(text("""
-        SELECT COUNT(DISTINCT id_cliente)
-        FROM venta
-        WHERE DATE(fecha_venta) = CURDATE()
+    clientes_actual = db.execute(text(f"""
+        SELECT COUNT(DISTINCT id_cliente) FROM venta WHERE {filtro_actual}
     """)).scalar()
+
+    # Valores anteriores
+    total_anterior = db.execute(text(f"""
+        SELECT COALESCE(SUM(total_venta), 0)
+        FROM venta WHERE {filtro_anterior}
+    """)).scalar()
+
+    ventas_anterior = db.execute(text(f"""
+        SELECT COUNT(*) FROM venta WHERE {filtro_anterior}
+    """)).scalar()
+
+    clientes_anterior = db.execute(text(f"""
+        SELECT COUNT(DISTINCT id_cliente) FROM venta WHERE {filtro_anterior}
+    """)).scalar()
+    #calcular la variacion porcentual
+    def calcular_variacion(actual, anterior):
+        if anterior == 0:
+            return 100 if actual > 0 else 0
+        return round(((actual - anterior) / anterior) * 100, 1)
 
     return {
-        "ventas_totales": ventas_totales,
-        "numero_ventas": numero_ventas,
-        "nuevos_clientes": nuevos_clientes
+        "ventas_totales": total_actual,
+        "numero_ventas": ventas_actual,
+        "nuevos_clientes": clientes_actual,
+        "var_ventas_totales": calcular_variacion(total_actual, total_anterior),
+        "var_numero_ventas": calcular_variacion(ventas_actual, ventas_anterior),
+        "var_nuevos_clientes": calcular_variacion(clientes_actual, clientes_anterior)
     }
+
+
+
 #ruta para la informacion de cards en el periodo seleccionado
 @router.get("/api/dashboard/stats/{periodo}")
 def get_dashboard_stats(periodo: str, db=Depends(get_db)):
@@ -214,3 +252,5 @@ def get_dashboard_stats(periodo: str, db=Depends(get_db)):
         "numero_ventas": numero_ventas,
         "nuevos_clientes": nuevos_clientes
     }
+
+
