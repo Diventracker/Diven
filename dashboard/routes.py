@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Form, Depends, Response, HTTPException
+from fastapi import APIRouter, Request, Form, Depends, Response, HTTPException , Query
 from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -10,12 +10,11 @@ from usuarios.model import Usuario
 from proveedores.model import Proveedor
 from servicios.model import  ServicioTecnico
 from garantias.model import Garantia
-from datetime import datetime
+from datetime import datetime 
 from ventas.model import Venta
-from servicios.model import ServicioTecnico
 from inventario.model import Producto
 from inventario.schema import ProductoOut
-from sqlalchemy import text
+from sqlalchemy import text , extract, func
 
 router = APIRouter()
 
@@ -152,6 +151,52 @@ def productos_bajo_stock(db: Session = Depends(get_db)):
         for prod in productos
     ]
 
+
+#ruta de fecha personalizada
+@router.get("/api/dashboard/stats")
+def get_stats_personalizado(
+    fecha_inicio: str = Query(...),
+    fecha_fin: str = Query(...),
+    db=Depends(get_db)
+):
+    try:
+        inicio = datetime.strptime(fecha_inicio, "%Y-%m-%d").date()
+        fin = datetime.strptime(fecha_fin, "%Y-%m-%d").date()
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Formato de fecha inválido (debe ser AAAA-MM-DD)")
+
+    if inicio > fin:
+        raise HTTPException(status_code=400, detail="La fecha de inicio no puede ser mayor que la fecha final")
+
+    filtro = f"DATE(fecha_venta) BETWEEN '{inicio}' AND '{fin}'"
+
+    ventas_totales = db.execute(text(f"""
+        SELECT COALESCE(SUM(total_venta), 0)
+        FROM venta
+        WHERE {filtro}
+    """)).scalar()
+
+    numero_ventas = db.execute(text(f"""
+        SELECT COUNT(*) 
+        FROM venta
+        WHERE {filtro}
+    """)).scalar()
+
+    nuevos_clientes = db.execute(text(f"""
+        SELECT COUNT(DISTINCT id_cliente)
+        FROM venta
+        WHERE {filtro}
+    """)).scalar()
+
+    return {
+        "fecha_inicio": str(inicio),
+        "fecha_fin": str(fin),
+        "ventas_totales": ventas_totales,
+        "numero_ventas": numero_ventas,
+        "nuevos_clientes": nuevos_clientes
+    }
+
+
 # Ruta para obtener las estadisticas del dashboard
 @router.get("/api/dashboard/stats/{periodo}")
 def get_dashboard_stats(periodo: str, db=Depends(get_db)):
@@ -205,6 +250,7 @@ def get_dashboard_stats(periodo: str, db=Depends(get_db)):
         return round(((actual - anterior) / anterior) * 100, 1)
 
     return {
+        "periodo": periodo,
         "ventas_totales": total_actual,
         "numero_ventas": ventas_actual,
         "nuevos_clientes": clientes_actual,
@@ -253,4 +299,32 @@ def get_dashboard_stats(periodo: str, db=Depends(get_db)):
         "nuevos_clientes": nuevos_clientes
     }
 
+#llamada de datos para la grafica 1
+@router.post("/api/datos")
+def get_ventas_por_mes(db: Session = Depends(get_db)):
+    resultados = db.query(
+        extract('month', Venta.fecha_venta).label("mes"),
+        func.sum(Venta.total_venta).label("total")
+    ).group_by("mes").order_by("mes").all()
 
+    meses_nombres = [
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ]
+
+    datos_por_mes = {mes: total for mes, total in resultados}
+
+    labels = meses_nombres
+    datos = [datos_por_mes.get(i + 1, 0) for i in range(12)]
+
+    return {
+        "labels": labels,
+        "datasets": [{
+            "label": "Total Ventas por Mes",
+            "data": datos,
+            "backgroundColor": '#5e9188',
+            "borderColor": '#5e9188',
+            "borderWidth": 2
+        }]
+    }
+    
