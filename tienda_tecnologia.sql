@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost
--- Tiempo de generación: 05-06-2025 a las 07:19:05
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 10-06-2025 a las 07:36:38
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -73,7 +73,8 @@ INSERT INTO `cliente` (`id_cliente`, `nombre_cliente`, `cedula`, `direccion_clie
 (56, 'Mario', '1548652458', 'tv 8 cll 123 x2 ', '3122015614', 'mariio@cliente.com'),
 (67, 'Carlos', '6465645', 'Cra 90 A No 45 A 05 Sur ', '3223295822', 'carlos74937@gmail.com'),
 (68, 'Marcos', '3242342342', 'cra 90798', '3213123123', 'marcosq@gmail.com'),
-(83, 'MArcos', '3242342545', 'cra 98798689', '3123123123', 'marcosq22@gmail.com');
+(83, 'MArcos', '3242342545', 'cra 98798689', '3123123123', 'marcosq22@gmail.com'),
+(85, 'deivit', '1012328726', 'Dg 73 sur # 58 I 74', '1234567981', 'deivit@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -147,7 +148,9 @@ INSERT INTO `detalle_venta` (`id_detalle`, `id_venta`, `id_producto`, `cantidad`
 (51, 33, 9, 18, 40000),
 (52, 33, 5, 18, 180000),
 (53, 34, 2, 14, 50000),
-(54, 34, 1, 11, 40000);
+(54, 34, 1, 11, 40000),
+(55, 35, 8, 1, 1400000),
+(56, 36, 20, 1, 10000);
 
 -- --------------------------------------------------------
 
@@ -241,7 +244,7 @@ INSERT INTO `producto` (`id_producto`, `nombre_producto`, `modelo`, `descripcion
 (2, 'Laptop Gamer', 'ROG Strix', 'Laptop de alto rendimiento para gaming', 4400000, 0, 2, 20, '2024-02-01 05:00:00', 50000),
 (4, 'Usb Kingston', '2TB', '2 terabytes de almacenamiento', 5000, 11, 2, 20, '2025-04-11 05:00:00', 10000),
 (5, 'Tecladinho', 'K552', 'White', 100000, 15, 7, 20, '2025-04-04 05:00:00', 180000),
-(8, 'Computador', 'paser76', 'Amd, 16gb ram', 1000000, 11, 1, 20, '2025-04-07 05:00:00', 1400000),
+(8, 'Computador', 'paser76', 'Amd, 16gb ram', 1000000, 10, 1, 20, '2025-04-07 05:00:00', 1400000),
 (9, 'Cartucho Negro 664', '664', 'Tinta negra original HP', 25000, 11, 7, 20250501, '2025-05-01 05:00:00', 40000),
 (10, 'Cartucho Color 664', '664 Color', 'Tinta color original HP', 28000, 19, 7, 20, '2025-05-01 05:00:00', 45000),
 (11, 'Cartucho Negro 21', '21', 'Cartucho tinta negra HP 21', 27000, 21, 7, 20, '2025-05-02 05:00:00', 42000),
@@ -251,7 +254,7 @@ INSERT INTO `producto` (`id_producto`, `nombre_producto`, `modelo`, `descripcion
 (16, 'Cartucho T664 Color', 'T664 Color', 'Botella tinta color Epson EcoTank', 20000, 20, 2, 20, '2025-05-04 05:00:00', 37000),
 (17, 'Cartucho LC103BK', 'LC103BK', 'Tinta negra original Brother', 23000, 1, 1, 20250505, '2025-05-05 05:00:00', 39000),
 (18, 'Cartucho LC103CL', 'LC103CL', 'Tinta color original Brother', 26000, 10, 1, 20, '2025-05-05 05:00:00', 43000),
-(20, 'Tarjetas Diitales', 'transmi', 'trajetas xd', 6000, 2, 14, 0, '2025-06-05 04:43:37', 10000),
+(20, 'Tarjetas Diitales', 'transmi', 'trajetas xd', 6000, 1, 14, 0, '2025-06-05 04:43:37', 10000),
 (21, 'Mouse Logitech', 'g879', 'Mouse negro y blanco xd', 50000, 7, 15, 0, '2025-06-05 05:06:32', 70000);
 
 -- --------------------------------------------------------
@@ -467,7 +470,9 @@ INSERT INTO `venta` (`id_venta`, `id_cliente`, `id_usuario`, `fecha_venta`, `tot
 (31, 55, 1, '2025-05-30', 89000),
 (32, 55, 1, '2025-06-01', 195000),
 (33, 55, 1, '2025-06-01', 4038000),
-(34, 5, 1, '2025-06-04', 1140000);
+(34, 5, 1, '2025-06-04', 1140000),
+(35, 85, 1, '2025-06-10', 1400000),
+(36, 55, 1, '2025-06-10', 10000);
 
 --
 -- Índices para tablas volcadas
@@ -548,13 +553,13 @@ ALTER TABLE `venta`
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT de la tabla `garantia_producto`
@@ -596,7 +601,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `venta`
 --
 ALTER TABLE `venta`
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- Restricciones para tablas volcadas
