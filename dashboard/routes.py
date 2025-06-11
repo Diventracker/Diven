@@ -127,6 +127,19 @@ async def generar_informe(request: Request, db: Session = Depends(get_db)):
             "Fin": g.fecha_fin.strftime("%d/%m/%Y")
         } for g in garantias]
 
+    elif tipo == "ventas":
+        ventas = db.query(Venta).filter(
+            Venta.fecha_venta >= fecha_inicio,
+            Venta.fecha_venta <= fecha_fin
+        ).all()
+        columnas = ["ID Venta" , "Fecha de venta" , "Cliente" , "Total"]
+        datos = [{
+            "ID Venta": v.id_venta,
+            "Fecha de venta": v.fecha_venta.strftime("%d/%m/%y"),
+            "Cliente" : v.id_cliente,
+            "Total" : v.total_venta
+        } for v in ventas]
+
     else:
         return {"error": "Tipo de informe no soportado aún."}
 

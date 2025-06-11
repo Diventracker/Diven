@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-06-2025 a las 07:36:38
+-- Tiempo de generación: 11-06-2025 a las 22:27:15
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -150,7 +150,10 @@ INSERT INTO `detalle_venta` (`id_detalle`, `id_venta`, `id_producto`, `cantidad`
 (53, 34, 2, 14, 50000),
 (54, 34, 1, 11, 40000),
 (55, 35, 8, 1, 1400000),
-(56, 36, 20, 1, 10000);
+(56, 36, 20, 1, 10000),
+(57, 37, 9, 1, 40000),
+(58, 38, 16, 1, 37000),
+(59, 38, 21, 1, 70000);
 
 -- --------------------------------------------------------
 
@@ -245,17 +248,17 @@ INSERT INTO `producto` (`id_producto`, `nombre_producto`, `modelo`, `descripcion
 (4, 'Usb Kingston', '2TB', '2 terabytes de almacenamiento', 5000, 11, 2, 20, '2025-04-11 05:00:00', 10000),
 (5, 'Tecladinho', 'K552', 'White', 100000, 15, 7, 20, '2025-04-04 05:00:00', 180000),
 (8, 'Computador', 'paser76', 'Amd, 16gb ram', 1000000, 10, 1, 20, '2025-04-07 05:00:00', 1400000),
-(9, 'Cartucho Negro 664', '664', 'Tinta negra original HP', 25000, 11, 7, 20250501, '2025-05-01 05:00:00', 40000),
+(9, 'Cartucho Negro 664', '664', 'Tinta negra original HP', 25000, 10, 7, 20250501, '2025-05-01 05:00:00', 40000),
 (10, 'Cartucho Color 664', '664 Color', 'Tinta color original HP', 28000, 19, 7, 20, '2025-05-01 05:00:00', 45000),
 (11, 'Cartucho Negro 21', '21', 'Cartucho tinta negra HP 21', 27000, 21, 7, 20, '2025-05-02 05:00:00', 42000),
 (12, 'Cartucho Color 22', '22', 'Cartucho tinta color HP 22', 30000, 10, 7, 20, '2025-05-02 05:00:00', 47000),
 (13, 'Cartucho PG-145 Negro', 'PG-145', 'Tinta negra para Canon Pixma', 26000, 13, 7, 20, '2025-05-03 05:00:00', 42000),
 (14, 'Cartucho CL-146 Color', 'CL-146', 'Tinta color Canon original', 32000, 9, 7, 20, '2025-05-03 05:00:00', 49000),
-(16, 'Cartucho T664 Color', 'T664 Color', 'Botella tinta color Epson EcoTank', 20000, 20, 2, 20, '2025-05-04 05:00:00', 37000),
+(16, 'Cartucho T664 Color', 'T664 Color', 'Botella tinta color Epson EcoTank', 20000, 19, 2, 20, '2025-05-04 05:00:00', 37000),
 (17, 'Cartucho LC103BK', 'LC103BK', 'Tinta negra original Brother', 23000, 1, 1, 20250505, '2025-05-05 05:00:00', 39000),
 (18, 'Cartucho LC103CL', 'LC103CL', 'Tinta color original Brother', 26000, 10, 1, 20, '2025-05-05 05:00:00', 43000),
 (20, 'Tarjetas Diitales', 'transmi', 'trajetas xd', 6000, 1, 14, 0, '2025-06-05 04:43:37', 10000),
-(21, 'Mouse Logitech', 'g879', 'Mouse negro y blanco xd', 50000, 7, 15, 0, '2025-06-05 05:06:32', 70000);
+(21, 'Mouse Logitech', 'g879', 'Mouse negro y blanco xd', 50000, 6, 15, 0, '2025-06-05 05:06:32', 70000);
 
 -- --------------------------------------------------------
 
@@ -472,7 +475,9 @@ INSERT INTO `venta` (`id_venta`, `id_cliente`, `id_usuario`, `fecha_venta`, `tot
 (33, 55, 1, '2025-06-01', 4038000),
 (34, 5, 1, '2025-06-04', 1140000),
 (35, 85, 1, '2025-06-10', 1400000),
-(36, 55, 1, '2025-06-10', 10000);
+(36, 55, 1, '2025-06-10', 10000),
+(37, 55, 1, '2025-06-11', 40000),
+(38, 55, 1, '2025-06-11', 107000);
 
 --
 -- Índices para tablas volcadas
@@ -559,7 +564,7 @@ ALTER TABLE `cliente`
 -- AUTO_INCREMENT de la tabla `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT de la tabla `garantia_producto`
@@ -601,7 +606,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `venta`
 --
 ALTER TABLE `venta`
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- Restricciones para tablas volcadas
