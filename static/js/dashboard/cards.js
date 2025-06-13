@@ -4,7 +4,7 @@ function mostrarPorcentaje(idElemento, valor) {
     //toma los valores de los porcentajes y los muestra en las cards del dashboard
     const signo = valor > 0 ? "+" : valor < 0 ? "" : "";
     const clase = valor > 0 ? "positive" : valor < 0 ? "negative" : "neutral";
-    const icono = valor > 0 ? "bi-arrow-up" : valor < 0 ? "bi-arrow-down" : "bi-dash"; 
+    const icono = valor > 0 ? "bi-arrow-up" : valor < 0 ? "bi-arrow-down" : "bi-dash";
 
     elem.innerHTML = `
         <i class="bi ${icono}"></i> ${signo}${Math.abs(valor)}% vs período anterior
@@ -20,15 +20,15 @@ function cargarEstadisticas(periodo) {
         })
         .then(data => {
             // valores
-            document.getElementById("ventasTotales").innerText = 
+            document.getElementById("ventasTotales").innerText =
                 data.ventas_totales.toLocaleString("es-CO", {
                     style: "currency",
                     currency: "COP",
                     minimumFractionDigits: 0
                 });
-            document.getElementById("numeroVentas").innerText = 
+            document.getElementById("numeroVentas").innerText =
                 data.numero_ventas.toLocaleString("es-CO");
-            document.getElementById("nuevosClientes").innerText = 
+            document.getElementById("nuevosClientes").innerText =
                 data.nuevos_clientes.toLocaleString("es-CO");
 
             // variaciones
@@ -67,3 +67,41 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+//click en personalizado
+document.getElementById('form-control-fecha').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const fechaInicio = this.querySelector('input[name="fecha_inicio"]').value;
+    const fechaFin = this.querySelector('input[name="fecha_fin"]').value;
+
+    // Validar fechas
+    if (!fechaInicio || !fechaFin || fechaInicio > fechaFin) {
+        alert('Selecciona un rango de fechas válido.');
+        return;
+    }
+
+    fetch(`/api/dashboard/stats?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`)
+        .then(response => {
+            if (!response.ok) throw new Error("Error en la solicitud");
+            return response.json();
+        })
+        .then(data => {
+            console.log("Datos personalizados:", data);
+
+            document.getElementById("ventasTotales").innerText =
+                data.ventas_totales.toLocaleString("es-CO", {
+                    style: "currency",
+                    currency: "COP",
+                    minimumFractionDigits: 0
+                })
+                document.getElementById("numeroVentas").innerText = data.numero_ventas;
+                document.getElementById("nuevosClientes").innerText = data.nuevos_clientes;
+
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalFechaPersonalizada'));
+                    modal.hide();
+                })
+                    .catch(err => {
+                        console.error(err);
+                        alert('Ocurrió un error al obtener los datos.');
+                    });
+        });
