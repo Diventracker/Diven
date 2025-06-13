@@ -22,7 +22,8 @@ setupEditButtons({
     modalFields: {
         id: 'editClienteId',
         nombre: 'editNombre',
-        cedula: 'editCedula',
+        tipodocumento: 'editTipo',
+        numerodocumento: 'editDocumento',
         direccion: 'editDireccion',
         telefono: 'editTelefono',
         email: 'editEmail'
