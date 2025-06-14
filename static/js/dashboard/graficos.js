@@ -138,3 +138,133 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+// === GRÁFICO DE PRODUCTOS MÁS VENDIDOS ===
+function cargarProductosMasVendidos() {
+  fetch("/api/dashboard/productos-mas-vendidos")
+    .then(res => res.json())
+    .then(data => {
+      const contenedor = document.getElementById("productosMasVendidos");
+      contenedor.innerHTML = "";
+
+      if (data.length === 0) {
+        contenedor.innerHTML = `<div class="text-center text-muted">No hay productos vendidos aún.</div>`;
+        return;
+      }
+
+      const maxCantidad = data[0].cantidad;
+
+      data.forEach(prod => {
+        const item = document.createElement("div");
+        const logMax = Math.log10(maxCantidad + 1);
+        const escala = Math.log10(prod.cantidad + 1) / logMax;
+        const ancho = Math.round(escala * 100);
+
+        
+
+        item.className = "product-item";
+        item.innerHTML = `
+          <div class="product-name">${prod.producto}</div>
+          <div class="product-bar" style="width: ${ancho}%;"></div>
+          <div class="product-value">${prod.cantidad}</div>
+        `;
+        contenedor.appendChild(item);
+      });
+
+      // Botón "ver todos"
+      const verMas = document.createElement("div");
+      verMas.className = "mt-3 text-center";
+      verMas.innerHTML = `<a class="btn btn-outline-teal" href="/inventario">ver todos los productos</a>`;
+      contenedor.appendChild(verMas);
+    })
+    .catch(err => {
+      console.error("Error al cargar productos más vendidos:", err);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", cargarProductosMasVendidos);
+
+// === TOTAL POR VENDEDOR ===
+function cargarGraficoVentasPorVendedor() {
+  fetch("/api/dashboard/ventas-vendedor")
+    .then(res => res.json())
+    .then(data => {
+      const nombres = data.map(d => d.vendedor);
+      const totales = data.map(d => d.total);
+
+      const ctx = document.getElementById("graficoVentasVendedor").getContext("2d");
+
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: nombres,
+          datasets: [{
+            label: "Total vendido (COP)",
+            data: totales,
+            backgroundColor: "#5e9188"
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return new Intl.NumberFormat('es-CO', {
+                    style: 'currency',
+                    currency: 'COP',
+                    minimumFractionDigits: 0
+                  }).format(value);
+                }
+              }
+            }
+          }
+        }
+      });
+    })
+    .catch(err => console.error("Error al cargar gráfico de vendedores:", err));
+}
+
+document.addEventListener("DOMContentLoaded", cargarGraficoVentasPorVendedor);
+
+// === TOTAL POR CATEGORÍA ===
+function cargarGraficoTipoEquipo() {
+  fetch("/api/dashboard/servicios-por-equipo")
+    .then(res => res.json())
+    .then(data => {
+      const etiquetas = data.map(item => item.equipo);
+      const valores = data.map(item => item.total);
+
+      const colores = [
+        "#0a516d", "#018790", "#7dad93", "#bacca4", "#ffc107",
+        "#fd7e14", "#dc3545", "#6f42c1", "#20c997", "#17a2b8"
+      ];
+
+      const ctx = document.getElementById("graficoTipoEquipo").getContext("2d");
+      new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels: etiquetas,
+          datasets: [{
+            data: valores,
+            backgroundColor: colores.slice(0, valores.length),
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: "bottom"
+            }
+          }
+        }
+      });
+    })
+    .catch(err => console.error("Error al cargar gráfico tipo equipo:", err));
+}
+
+document.addEventListener("DOMContentLoaded", cargarGraficoTipoEquipo);
+
+
