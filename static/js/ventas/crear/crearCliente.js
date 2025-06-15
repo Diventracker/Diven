@@ -26,7 +26,8 @@ async function manejarEnvioCliente(e) {
 
     document.getElementById("id-cliente").value = data.id;
     document.getElementById("nombre-cliente").value = data.nombre_cliente;
-    document.getElementById("cc-cliente").value = data.cedula;
+    document.getElementById("tipo-documento-cliente").value = data.tipo_documento;
+    document.getElementById("numero-documento-cliente").value = data.numero_documento;
     document.getElementById("direccion-cliente").value = data.direccion_cliente;
 
     modal.hide();
