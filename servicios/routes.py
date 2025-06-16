@@ -51,10 +51,10 @@ def listar_servicios(
 def filtrar_clientes(search: str = "", db: Session = Depends(get_db)):
     clientes = db.query(Cliente).filter(
         (Cliente.nombre_cliente.ilike(f"%{search}%")) |
-        (Cliente.cedula.ilike(f"%{search}%"))
+        (Cliente.numero_documento.ilike(f"%{search}%"))
     ).all()
 
-    return [{"id": c.id_cliente, "nombre": c.nombre_cliente, "cedula": c.cedula} for c in clientes]
+    return [{"id": c.id_cliente, "nombre": c.nombre_cliente, "cedula": c.numero_documento} for c in clientes]
 
 
 #Ruta para crear un nuevo servicio tecnico

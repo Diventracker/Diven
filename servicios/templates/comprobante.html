@@ -282,11 +282,6 @@
         background: var(--color-white);
       }
     }
-        @media print {
-      .no-print {
-        display: none !important;
-      }
-    }
 
     .garantia-info {
       background: linear-gradient(135deg, rgba(94, 145, 136, 0.1) 0%, rgba(62, 89, 84, 0.1) 100%);
@@ -396,6 +391,12 @@
                 {% if servicio.estado_servicio == "En Progreso" %} 
                   <span class="status-badge status-proceso">
                     <i class="bi bi-gear-fill"></i>
+                    {{ servicio.estado_servicio }}
+                  </span>      
+                {% endif %}
+                {% if servicio.estado_servicio == "En Revisión" %}
+                <span class="status-badge status-revision">
+                    <i class="bi bi-search"></i>
                     {{ servicio.estado_servicio }}
                   </span>      
                 {% endif %}
@@ -638,7 +639,7 @@
     }
 
    function descargarPDF() {
-      const original = document.querySelector(".comprobante-container");
+      const original = document.querySelector(".comprobante-body");
 
       // Clonar el contenido a imprimir
       const clon = original.cloneNode(true);

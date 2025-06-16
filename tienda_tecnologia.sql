@@ -407,14 +407,14 @@ ALTER TABLE `cliente`
 -- AUTO_INCREMENT de la tabla `detalle_servicio`
 --
 ALTER TABLE `detalle_servicio`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
 
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `garantia_producto`
@@ -426,7 +426,7 @@ ALTER TABLE `garantia_producto`
 -- AUTO_INCREMENT de la tabla `garantia_servicio`
 --
 ALTER TABLE `garantia_servicio`
-  MODIFY `id_garantia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id_garantia` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
@@ -444,7 +444,7 @@ ALTER TABLE `proveedor`
 -- AUTO_INCREMENT de la tabla `servicio_tecnico`
 --
 ALTER TABLE `servicio_tecnico`
-  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT;
+  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT;
 
 
 --
@@ -458,7 +458,7 @@ ALTER TABLE `usuario`
 --
 ALTER TABLE `venta`
 
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT;
 
 
 --

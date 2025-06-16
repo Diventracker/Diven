@@ -39,12 +39,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 switch (estadoLower) {
                     case 'en progreso':
-                        estadoDisplay.classList.add('text-bg-secondary');
-                        estadoDisplay.classList.add('fs-6');
+                        estadoDisplay.classList.add('text-bg-secondary','fs-6');
                         estadoDisplay.innerHTML = '<i class="bi bi-gear-fill"></i> En Progreso';
                         break;
-                    case 'finalizado':
-                        estadoDisplay.classList.add('status-finalizado');
+                    case 'en revisión':
+                        estadoDisplay.classList.add('text-bg-warning','fs-6');
+                        estadoDisplay.innerHTML = '<i class="bi bi-search"></i> En Revisión';
                         break;
                     case 'cancelado':
                         estadoDisplay.classList.add('status-cancelado');

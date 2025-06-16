@@ -153,8 +153,10 @@
                                                                 {% if rol == "Administrador" %}
                                                                     {% if s.estado_servicio == "En Revisión" %}
                                                                         <button
-                                                                            onclick="location.href='/servicios/comprobante/{{ s.id_servicio }}'"
-                                                                            class="btn btn-sm btn-outline-enviar me-1 check-button">
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#modalAprobar"
+                                                                            data-id="{{ s.id_servicio }}"
+                                                                            class="btn btn-sm btn-outline-enviar me-1 aprob-button">
                                                                             <i class="bi bi-check-circle"></i>
                                                                         </button>
                                                                     {% endif %}
@@ -519,6 +521,35 @@
         </div>
     </div>
 
+    <!-- Modal Aprobar el Servicio -->
+    <div class="modal fade" id="modalAprobar" tabindex="-1" aria-labelledby="modalAprobarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalAprobarLabel">
+                <i class="bi bi-check2-square me-2"></i>
+                Aprobar Servicio Tecnico
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+            <p>¿Está seguro de que desea aprobar el servicio técnico?</p>
+            <small class="text-muted">Una vez aprobado, no podrá modificar el estado del servicio técnico.</small>
+            <a href="" id="verServicioLink" class="btn btn-outline-enviar btn-sm mt-3">
+                <i class="bi bi-eye me-1"></i> Ver servicio técnico
+            </a>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-enviar">
+                <i class="bi bi-check-circle me-2"></i>
+                Confirmar
+            </button>
+            </div>
+        </div>
+        </div>
+    </div>
+
     <!-- Modal Registro -->
     <div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -590,8 +621,10 @@
     <script src="/static/js/servicios//modales/actualizar.js"></script>
     <script src="/static/js/servicios/modales/registrar.js"></script>
     <script src="/static/js/servicios/modales/revision.js"></script>
+    <script src="/static/js/servicios/modales/aprobar.js"></script>
     <script src="/static/js/modulo_servicios.js"></script>
     <script src="/static/js/servicios/fetch/checkServicio.js"></script>
+
     
 </body>
 
