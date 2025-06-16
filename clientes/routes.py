@@ -76,6 +76,7 @@ def crear_cliente(
             return JSONResponse(content={
                 "id": nuevo.id_cliente,
                 "nombre_cliente": nuevo.nombre_cliente,
+                "tipo_documento": nuevo.tipo_documento,
                 "numero_documento": nuevo.numero_documento,
                 "direccion_cliente": nuevo.direccion_cliente
             })
@@ -143,7 +144,7 @@ def eliminar_cliente(
 #Ruta para obtener el cliente
 @router.get("/clientes/buscar/{documento}", response_class=JSONResponse)
 def buscar_cliente_por_documento(documento: str, db: Session = Depends(get_db)):
-    cliente = db.query(Cliente).filter(Cliente.numero_documento == document).first()
+    cliente = db.query(Cliente).filter(Cliente.numero_documento == documento).first()
 
 
     if not cliente:

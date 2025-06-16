@@ -54,14 +54,14 @@ async def generar_informe(request: Request, db: Session = Depends(get_db)):
 
     if tipo == "inventario":
         productos = db.query(Producto).filter(
-            Producto.fecha_compra >= fecha_inicio,
-            Producto.fecha_compra <= fecha_fin
+        Producto.fecha_compra != None,
+        Producto.fecha_compra >= fecha_inicio,
+        Producto.fecha_compra <= fecha_fin
         ).all()
-        columnas = ["ID", "Nombre", "Marca", "Modelo", "Stock", "Precio"]
+        columnas = ["ID", "Nombre", "Modelo", "Stock", "Precio"]
         datos = [{
             "ID": p.id_producto,
             "Nombre": p.nombre_producto,
-            "Marca": p.marca,
             "Modelo": p.modelo,
             "Stock": p.stock,
             "Precio": f"${p.precio_venta:.2f}" if p.precio_venta else "-"
@@ -115,17 +115,42 @@ async def generar_informe(request: Request, db: Session = Depends(get_db)):
         } for s in servicios]
 
     elif tipo == "garantias":
-        garantias = db.query(Garantia).filter(
-            Garantia.fecha_inicio >= fecha_inicio,
-            Garantia.fecha_inicio <= fecha_fin
-        ).all()
-        columnas = ["ID Garantía", "Servicio", "Inicio", "Fin"]
+        resultados = db.execute(text("""
+            SELECT 
+                gs.id_garantia, 
+                gs.fecha_inicio, 
+                gs.fecha_fin,
+                c.nombre_cliente,
+                st.tipo_equipo
+            FROM garantia_servicio gs
+            JOIN servicio_tecnico st ON gs.id_servicio = st.id_servicio
+            JOIN cliente c ON st.id_cliente = c.id_cliente
+            WHERE gs.fecha_inicio BETWEEN :inicio AND :fin
+        """), {"inicio": fecha_inicio, "fin": fecha_fin}).fetchall()
+
+        columnas = ["ID Garantía", "Cliente", "Tipo de Equipo", "Inicio", "Fin"]
         datos = [{
-            "ID Garantía": g.id_garantia,
-            "Servicio": g.id_servicio,
-            "Inicio": g.fecha_inicio.strftime("%d/%m/%Y"),
-            "Fin": g.fecha_fin.strftime("%d/%m/%Y")
-        } for g in garantias]
+            "ID Garantía": r[0],
+            "Cliente": r[3],
+            "Tipo de Equipo": r[4],
+            "Inicio": r[1].strftime("%d/%m/%Y"),
+            "Fin": r[2].strftime("%d/%m/%Y")
+        } for r in resultados]
+
+
+    elif tipo == "ventas":
+        ventas = db.query(Venta).filter(
+            Venta.fecha_venta >= fecha_inicio,
+            Venta.fecha_venta <= fecha_fin
+        ).all()
+        columnas = ["ID Venta", "Fecha de venta", "Cliente", "Total"]
+        datos = [{
+            "ID Venta": v.id_venta,
+            "Fecha de venta": v.fecha_venta.strftime("%d/%m/%y"),
+            "Cliente": v.cliente.nombre_cliente if v.cliente else "Desconocido",
+            "Total": f"${v.total_venta:.2f}"
+        } for v in ventas]
+    
 
     else:
         return {"error": "Tipo de informe no soportado aún."}

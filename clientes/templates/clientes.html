@@ -305,10 +305,11 @@
                         </div>
                         <div class="mb-3">
                             <label for="tipo_documento" class="form-label">Tipo de documento:</label>
-                            <select id="tipo_documento" name="tipo_documento">
-                                <option value="CC">CC</option>
-                                <option value="TI">TI</option>
-                                <option value="CE">CE</option>
+                            <select id="tipo_documento" name="tipo_documento" class="form-select" required>
+                                <option value="">Seleccione tipo</option>
+                                <option value="CC">Cédula de Ciudadanía (CC)</option>
+                                <option value="TI">Tarjeta de Identidad (TI)</option>
+                                <option value="CE">Cédula de Extranjería (CE)</option>
                                 <option value="Pasaporte">Pasaporte</option>
                             </select>
                         </div>

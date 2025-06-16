@@ -54,7 +54,8 @@ def filtrar_clientes(search: str = "", db: Session = Depends(get_db)):
         (Cliente.numero_documento.ilike(f"%{search}%"))
     ).all()
 
-    return [{"id": c.id_cliente, "nombre": c.nombre_cliente, "cedula": c.numero_documento} for c in clientes]
+Ventasfix
+    return [{"id": c.id_cliente, "nombre": c.nombre_cliente, "documento": c.numero_documento} for c in clientes]
 
 
 #Ruta para crear un nuevo servicio tecnico
