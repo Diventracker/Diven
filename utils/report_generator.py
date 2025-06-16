@@ -31,24 +31,50 @@ def generar_pdf_informe(tipo, fecha_inicio, fecha_fin, datos, columnas):
     y = 730
     if datos:
         c.setFont("Helvetica-Bold", 10)
-        for i, col in enumerate(columnas):
-            c.drawString(50 + i * 90, y, col[:12])  # Truncar encabezados largos
+        col_width = 100  # Puedes ampliar si quieres más espacio
+        max_font_size = 10
+        min_font_size = 6
+        x_start = 50
 
+        # 🟩 1. Dibujar encabezados de columnas
+        for i, col in enumerate(columnas):
+            x_pos = x_start + i * col_width
+            text_width = c.stringWidth(col, "Helvetica-Bold", max_font_size)
+            if text_width > col_width:
+                font_size = max(min_font_size, max_font_size * (col_width / text_width))
+            else:
+                font_size = max_font_size
+            c.setFont("Helvetica-Bold", font_size)
+            c.drawString(x_pos, y, col)
         y -= 20
+
+        # 🟦 2. Dibujar datos fila por fila
         c.setFont("Helvetica", 10)
         for fila in datos:
             for i, col in enumerate(columnas):
                 valor = str(fila.get(col, ""))
-                c.drawString(50 + i * 90, y, valor[:20])  # Truncar valores largos
+                x_pos = x_start + i * col_width
+                max_width = col_width - 5
+
+                text_width = c.stringWidth(valor, "Helvetica", max_font_size)
+                if text_width > max_width:
+                    font_size = max(min_font_size, max_font_size * (max_width / text_width))
+                else:
+                    font_size = max_font_size
+                c.setFont("Helvetica", font_size)
+                c.drawString(x_pos, y, valor)
             y -= 20
+
+            # 🟥 Salto de página si se acaba el espacio
             if y < 100:
                 c.showPage()
                 y = 800
-                c.setFont("Helvetica-Bold", 10)
+                # Reimprimir encabezados en la nueva página
                 for i, col in enumerate(columnas):
-                    c.drawString(50 + i * 90, y, col[:12])
+                    x_pos = x_start + i * col_width
+                    c.setFont("Helvetica-Bold", 10)
+                    c.drawString(x_pos, y, col)
                 y -= 20
-                c.setFont("Helvetica", 10)
     else:
         c.drawString(50, y, "No hay datos disponibles para mostrar.")
 
