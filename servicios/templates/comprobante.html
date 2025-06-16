@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comprobante de Servicio Técnico</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  
+  <style>
+    :root {
+      /* Colores personalizados */
+      --color-white: #ffffff;
+      --color-teal: #5e9188;
+      --color-teal-dark: #3e5954;
+      --color-blue-dark: #253342;
+      --color-almost-black: #232226;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+      --danger-color: #dc3545;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e8f4f2 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .comprobante-container {
+      max-width: 900px;
+      margin: 20px auto;
+      background: var(--color-white);
+      border-radius: 15px;
+      box-shadow: 0 20px 40px rgba(35, 34, 38, 0.1);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .btn-close2 {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      z-index: 10;
+      background: rgba(255,255,255,0.9);
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      border: none;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      color: var(--color-almost-black);
+    }
+
+    .btn-close2:hover {
+      background: rgba(220, 53, 69, 0.1);
+      color: var(--danger-color);
+      transform: scale(1.1);
+    }
+
+    .comprobante-header {
+      background: linear-gradient(135deg, var(--color-teal) 0%, var(--color-teal-dark) 100%);
+      color: var(--color-white);
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .comprobante-header h3 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 1.8rem;
+    }
+
+    .comprobante-header p {
+      margin: 0.5rem 0 0 0;
+      opacity: 0.9;
+    }
+
+    .comprobante-body {
+      padding: 2rem;
+    }
+
+    .info-section {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--color-teal);
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: var(--color-teal-dark);
+      min-width: 150px;
+    }
+
+    .info-value {
+      flex: 1;
+      text-align: right;
+      font-weight: 500;
+      color: var(--color-almost-black);
+    }
+
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .status-completado {
+      background: linear-gradient(135deg, var(--color-teal), var(--color-teal-dark));
+      color: var(--color-white);
+    }
+
+    .status-proceso {
+      background: linear-gradient(135deg, #ffc107, #fd7e14);
+      color: var(--color-white);
+    }
+
+    .status-revision {
+      background: linear-gradient(135deg, var(--color-blue-dark), var(--color-almost-black));
+      color: var(--color-white);
+    }
+
+    .descripcion-section {
+      background: rgba(94, 145, 136, 0.05);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border: 1px solid rgba(94, 145, 136, 0.2);
+    }
+
+    .table-custom {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(35, 34, 38, 0.1);
+    }
+
+    .table-custom thead {
+      background: linear-gradient(135deg, var(--color-teal), var(--color-teal-dark));
+      color: var(--color-white);
+    }
+
+    .table-custom tbody tr:hover {
+      background-color: rgba(94, 145, 136, 0.05);
+    }
+
+    .totals-section {
+      background: linear-gradient(135deg, rgba(94, 145, 136, 0.1) 0%, rgba(62, 89, 84, 0.1) 100%);
+      border-radius: 10px;
+      padding: 1.5rem;
+      border: 2px solid rgba(94, 145, 136, 0.2);
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      color: var(--color-almost-black);
+    }
+
+    .total-row:last-child {
+      border-bottom: none;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--color-teal-dark);
+      border-top: 2px solid var(--color-teal);
+      padding-top: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .comprobante-footer {
+      background: #f8f9fa;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      border-top: 1px solid #dee2e6;
+    }
+
+    .btn-custom {
+      border-radius: 25px;
+      padding: 10px 20px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .btn-print {
+      background: linear-gradient(135deg, var(--color-blue-dark), var(--color-almost-black));
+      color: var(--color-white);
+      border-color: var(--color-blue-dark);
+    }
+
+    .btn-print:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(37, 51, 66, 0.4);
+      color: var(--color-white);
+    }
+
+    .btn-download {
+      background: linear-gradient(135deg, var(--color-teal), var(--color-teal-dark));
+      color: var(--color-white);
+      border-color: var(--color-teal);
+    }
+
+    .btn-download:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(94, 145, 136, 0.4);
+      color: var(--color-white);
+    }
+
+    .btn-email {
+      background: linear-gradient(135deg, var(--color-teal-dark), var(--color-blue-dark));
+      color: var(--color-white);
+      border-color: var(--color-teal-dark);
+    }
+
+    .btn-email:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(62, 89, 84, 0.4);
+      color: var(--color-white);
+    }
+
+    .company-info {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: rgba(94, 145, 136, 0.05);
+      border-radius: 10px;
+    }
+
+    .company-info h4 {
+      color: var(--color-teal-dark);
+    }
+
+    .company-info p {
+      color: var(--color-almost-black);
+    }
+
+    .service-number {
+      background: linear-gradient(135deg, var(--color-teal), var(--color-teal-dark));
+      color: var(--color-white);
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    @media print {
+      .comprobante-footer,
+      .btn-close {
+        display: none !important;
+      }
+      
+      .comprobante-container {
+        box-shadow: none;
+        margin: 0;
+        max-width: none;
+      }
+      
+      body {
+        background: var(--color-white);
+      }
+    }
+        @media print {
+      .no-print {
+        display: none !important;
+      }
+    }
+
+    .garantia-info {
+      background: linear-gradient(135deg, rgba(94, 145, 136, 0.1) 0%, rgba(62, 89, 84, 0.1) 100%);
+      border-radius: 10px;
+      padding: 1rem;
+      border-left: 4px solid var(--color-teal);
+      margin: 1rem 0;
+    }
+
+    .garantia-info h6 {
+      color: var(--color-teal-dark);
+    }
+
+    .descripcion-section h5 {
+      color: var(--color-teal-dark);
+    }
+
+    .info-section h5 {
+      color: var(--color-teal-dark);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="comprobante-container">
+    <!-- Botón de cerrar -->
+    <button type="button" class="btn-close2" aria-label="Close" data-bs-toggle="modal" data-bs-target="#modalCerrar">
+      <i class="bi bi-x"></i>
+    </button>
+
+    <!-- Header -->
+    <div class="comprobante-header">
+      <h3><i class="bi bi-tools me-2"></i>COMPROBANTE DE SERVICIO TÉCNICO</h3>
+      {% if servicio.estado_servicio == "En Revisión" %} 
+      <p>Servicio actualmente en revisión</p>
+      {% endif %}
+      {% if servicio.estado_servicio == "En Progreso" %} 
+      <p>Servicio actualmente en progreso</p>
+      {% endif %}
+    </div>
+
+    <!-- Body -->
+    <div class="comprobante-body">
+      <!-- Información de la empresa -->
+      <div class="company-info">
+        <h4 class="fw-bold mb-2">Diventracker</h4>
+        <p class="mb-1">Servicios Técnicos Especializados</p>
+        <p class="mb-1">NIT: 900.123.456-7</p>
+        <p class="mb-0">Avenida Siempre Viva, Bogotá, Colombia | Tel: (601) 234-5678</p>
+      </div>
+
+      <!-- Número de servicio -->
+      <div class="service-number">
+        <h4 class="mb-1">SERVICIO No. {{ servicio.id_servicio }}</h4>
+        <p class="mb-0">Fecha de emisión: {{ fecha_hoy }}</p>
+      </div>
+
+      <!-- Información del servicio -->
+      <div class="row">
+        <!-- informacon del cliente -->
+        <div class="col-md-6">
+          <div class="info-section">
+            <h5 class="mb-3">
+              <i class="bi bi-person-circle me-2"></i>
+              Información del Cliente
+            </h5>
+            <div class="info-row">
+              <span class="info-label">Cliente:</span>
+              <span class="info-value">{{ cliente.nombre_cliente }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Documento:</span>
+              <span class="info-value">CC {{ cliente.cedula }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Teléfono:</span>
+              <span class="info-value">{{ cliente.telefono_cliente }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Email:</span>
+              <span class="info-value">{{ cliente.email_cliente }}</span>
+            </div>
+          </div>
+        </div>
+        <!-- informacion del servicio -->
+        <div class="col-md-6">
+          <div class="info-section">
+            <h5 class="mb-3">
+              <i class="bi bi-wrench me-2"></i>
+              Información del Servicio
+            </h5>
+            <div class="info-row">
+              <span class="info-label">Tipo de Servicio:</span>
+              <span class="info-value">{{ servicio.tipo_servicio }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Fecha Recepción:</span>
+              <span class="info-value">{{ servicio.fecha_recepcion }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Fecha Entrega:</span>
+              <span class="info-value">{{ servicio.fecha_entrega if servicio.fecha_entrega else "Sin entregar" }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Estado:</span>
+              <span class="info-value">
+                {% if servicio.estado_servicio == "En Progreso" %} 
+                  <span class="status-badge status-proceso">
+                    <i class="bi bi-gear-fill"></i>
+                    {{ servicio.estado_servicio }}
+                  </span>      
+                {% endif %}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información del equipo y servicio -->
+      <div class="row">
+        <!-- informacion del equipo -->
+        <div class="col-md-6">
+          <div class="info-section">
+            <h5 class="mb-3">
+              <i class="bi bi-laptop me-2"></i>
+              Información del Equipo
+            </h5>
+            <div class="info-row">
+              <span class="info-label">Tipo de Equipo:</span>
+              <span class="info-value">{{ servicio.tipo_equipo }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Modelo:</span>
+              <span class="info-value">{{ servicio.modelo_equipo }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="info-section">
+            <h5 class="mb-3">
+              <i class="bi bi-person-gear me-2"></i>
+              Información del Técnico
+            </h5>
+            <div class="info-row">
+              <span class="info-label">Técnico:</span>
+              <span class="info-value">{{ servicio.usuario.nombre_usuario }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">ID Técnico:</span>
+              <span class="info-value">TEC-{{ servicio.usuario.id_usuario }}</span>
+            </div>
+          </div>
+        </div>        
+      </div>
+
+      <!-- Descripción del problema -->
+      <div class="descripcion-section">
+        <h5 class="mb-3">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          Descripción del Problema
+        </h5>
+        <p class="mb-0">
+          {{ servicio.descripcion_problema }}
+        </p>
+      </div>
+
+    {% if servicio.estado_servicio != "En Progreso" %} 
+
+      <!-- Descripción del trabajo -->
+      <div class="descripcion-section">
+        <h5 class="mb-3">
+          <i class="bi bi-clipboard-check me-2"></i>
+          Descripción del Trabajo Realizado
+        </h5>
+        <p class="mb-0">
+          {{ servicio.descripcion_trabajo }}
+        </p>
+      </div>
+
+      <!-- Garantía -->
+      {% if servicio.meses_garantia > 0 %} 
+      <div class="garantia-info">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <h6 class="mb-1">
+              <i class="bi bi-shield-check me-2"></i>
+              Garantía del Servicio
+            </h6>
+            <p class="mb-0">Este servicio cuenta con garantía por defectos en mano de obra</p>
+          </div>
+          <div class="col-md-4 text-end">
+            <span class="badge fs-6" style="background: var(--color-teal); color: var(--color-white);">{{ servicio.meses_garantia }} Meses</span>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Detalle de costos adicionales -->
+      <div class="mb-4">
+        <h5 class="mb-3" style="color: var(--color-teal-dark);">
+          <i class="bi bi-list-ul me-2"></i>
+          Detalle de Valores Adicionales
+        </h5>
+        <div class="table-responsive">
+          <table class="table table-custom">
+            <thead>
+              <tr>                
+                <th>Motivo/Descripción</th>
+                <th class="text-end">Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for d in detalles %}
+              <tr>                
+                <td>{{ d.motivo }}</td>
+                <td class="text-end">${{ "{:,.0f}".format(d.valor_adicional or 0) | replace(",", ".") }}</td>
+              </tr> 
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Totales -->
+      <div class="row justify-content-end">
+        <div class="col-md-6">
+          <div class="totals-section">
+            <div class="total-row">
+              <span>Precio Base del Servicio:</span>
+              <span>${{ "{:,.0f}".format(servicio.precio_servicio or 0) | replace(",", ".") }}</span>
+            </div>
+            <div class="total-row">
+              <span>Valores Adicionales:</span>
+              <span>$125.000</span>
+            </div>
+            <div class="total-row">
+              <span>Subtotal:</span>
+              <span>$325.000</span>
+            </div>
+            <div class="total-row">
+              <span>IVA (19%):</span>
+              <span>$61.750</span>
+            </div>
+            <div class="total-row">
+              <span>Retención en la Fuente (3.5%):</span>
+              <span>-$11.375</span>
+            </div>
+            <div class="total-row">
+              <span>TOTAL A PAGAR:</span>
+              <span>$375.375</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información adicional -->
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <div class="info-section">
+            <h6 class="mb-2">
+              <i class="bi bi-info-circle me-2"></i>
+              Información Importante
+            </h6>
+            <ul class="mb-0 small">
+              <li>La garantía cubre únicamente defectos en mano de obra</li>
+              <li>No incluye daños por mal uso o accidentes</li>
+              <li>Conserve este comprobante para hacer efectiva la garantía</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="info-section">
+            <h6 class="mb-2">
+              <i class="bi bi-telephone me-2"></i>
+              Soporte Post-Servicio
+            </h6>
+            <p class="mb-1 small">Para soporte técnico contacte:</p>
+            <p class="mb-1 small"><strong>Tel:</strong> (601) 234-5678</p>
+            <p class="mb-0 small"><strong>Email:</strong> soporte@diventracker.com</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <p class="mb-0 text-muted">
+          <i class="bi bi-check-circle me-2"></i>
+          ¡Gracias por confiar en nuestros servicios técnicos!
+        </p>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Footer -->
+    <div class="comprobante-footer no-print">
+      <button type="button" class="btn btn-custom btn-print" onclick="imprimirComprobante()">
+        <i class="bi bi-printer me-2"></i>Imprimir
+      </button>
+      {% if servicio.estado_servicio != "En Progreso" %} 
+        <button type="button" class="btn btn-custom btn-email" onclick="enviarEmail()">
+          <i class="bi bi-envelope me-2"></i>Enviar Email
+        </button>
+      {% endif %}
+      <button type="button" class="btn btn-custom btn-download" onclick="descargarPDF()">
+        <i class="bi bi-download me-2"></i>Descargar PDF
+      </button>
+    </div>
+  </div>
+  
+
+  <!-- Modal Cerrar Comprobante -->
+  <div class="modal fade" id="modalCerrar" tabindex="-1" aria-labelledby="modalCerrarLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="background: var(--color-teal); color: var(--color-white);">
+          <h5 class="modal-title" id="modalCerrarLabel">
+            <i class="bi bi-question-circle me-2"></i>
+            Cerrar Comprobante
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body text-center">
+          <p>¿Está seguro que desea cerrar el comprobante?</p>
+          <small class="text-muted">Podrá acceder nuevamente desde el historial de servicios</small>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn" style="background: var(--color-teal); color: var(--color-white);" onclick="location.href='/servicios'">
+            <i class="bi bi-check-circle me-2"></i>
+            Confirmar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  
+  <script>
+    function imprimirComprobante() {
+      window.print();
+    }
+
+    function enviarEmail() {
+      // Simular envío de email
+      alert('Comprobante enviado por email a: maria.garcia@email.com');
+    }
+
+   function descargarPDF() {
+      const original = document.querySelector(".comprobante-container");
+
+      // Clonar el contenido a imprimir
+      const clon = original.cloneNode(true);
+
+      // Eliminar manualmente elementos no imprimibles
+      clon.querySelectorAll('.no-print, .comprobante-footer, .btn-close').forEach(el => el.remove());
+
+      // Crear un contenedor temporal oculto
+      const temp = document.createElement('div');
+      temp.style.position = 'fixed';
+      temp.style.left = '-9999px';
+      temp.appendChild(clon);
+      document.body.appendChild(temp);
+
+      html2pdf().set({
+        margin: 0,
+        filename: 'comprobante-servicio.pdf',
+        html2canvas: { scale: 2, scrollY: 0 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      }).from(clon).save().then(() => {
+        // Limpiar el clon del DOM
+        document.body.removeChild(temp);
+      });
+    }  
+
+    // Calcular totales automáticamente (ejemplo con JavaScript)
+    function calcularTotales() {
+      const precioBase = 200000;
+      const valoresAdicionales = 125000;
+      const subtotal = precioBase + valoresAdicionales;
+      const iva = subtotal * 0.19;
+      const retencion = subtotal * 0.035;
+      const total = subtotal + iva - retencion;
+      
+      console.log('Cálculo de totales:', {
+        precioBase,
+        valoresAdicionales,
+        subtotal,
+        iva,
+        retencion,
+        total
+      });
+    }
+    // Ejecutar cálculo al cargar la página
+    document.addEventListener('DOMContentLoaded', calcularTotales);
+  </script>
+</body>
+</html>

@@ -16,3 +16,4 @@ class Usuario(Base):
     token_expiracion = Column(DateTime, nullable=True)    # Fecha de expiración del token
 
     ventas = relationship("Venta", back_populates="usuario")
+    detalles_realizados = relationship('DetalleServicio', back_populates='usuario', passive_deletes=True)

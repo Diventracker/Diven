@@ -3,10 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
-
 -- Tiempo de generación: 12-06-2025 a las 21:19:26
-
-
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -80,6 +77,20 @@ INSERT INTO `cliente` (`id_cliente`, `nombre_cliente`, `numero_documento`, `dire
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `detalle_servicio`
+--
+
+CREATE TABLE `detalle_servicio` (
+  `id_detalle` int(11) NOT NULL,
+  `id_servicio` int(11) NOT NULL,
+  `id_usuario` int(11) DEFAULT NULL,
+  `valor_adicional` int(10) NOT NULL DEFAULT 0,
+  `motivo` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `detalle_venta`
 --
 
@@ -90,51 +101,6 @@ CREATE TABLE `detalle_venta` (
   `cantidad` int(11) NOT NULL,
   `precio_unitario` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `detalle_venta`
---
-
-INSERT INTO `detalle_venta` (`id_detalle`, `id_venta`, `id_producto`, `cantidad`, `precio_unitario`) VALUES
-
-(1, 1, 22, 1, 58000),
-(2, 2, 1, 1, 45000),
-(3, 2, 2, 1, 50000),
-(4, 3, 22, 1, 58000),
-(5, 4, 5, 1, 100000),
-(6, 4, 11, 1, 8000),
-(7, 5, 22, 1, 58000),
-(8, 6, 4, 1, 45000),
-(9, 6, 8, 1, 40000),
-(10, 7, 26, 1, 48000),
-(11, 8, 9, 1, 130000),
-(12, 9, 7, 2, 27000),
-(13, 10, 14, 1, 110000),
-(14, 11, 10, 1, 95000),
-(15, 11, 7, 1, 7000),
-(16, 12, 9, 1, 130000),
-(17, 13, 17, 1, 85000),
-(18, 14, 6, 1, 96000),
-(19, 15, 15, 1, 130000),
-(20, 16, 22, 1, 58000),
-(21, 17, 4, 1, 45000),
-(22, 17, 8, 1, 48000),
-(23, 18, 10, 1, 95000),
-(24, 19, 5, 1, 100000),
-(25, 20, 4, 2, 54000),
-(26, 21, 1, 1, 45000),
-(27, 22, 22, 1, 58000),
-(28, 23, 3, 1, 33000),
-(29, 23, 10, 1, 64000),
-(30, 24, 16, 2, 33000),
-(31, 25, 14, 1, 110000),
-(32, 26, 22, 1, 58000),
-(33, 27, 13, 1, 89000),
-(34, 28, 8, 1, 48000),
-(35, 28, 12, 1, 44000),
-(36, 29, 17, 1, 85000),
-(37, 30, 23, 1, 60000);
-
 
 -- --------------------------------------------------------
 
@@ -163,37 +129,6 @@ CREATE TABLE `garantia_servicio` (
   `fecha_fin` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `garantia_servicio`
---
-
-INSERT INTO `garantia_servicio` (`id_garantia`, `id_servicio`, `fecha_inicio`, `fecha_fin`) VALUES
-(1, 1, '2025-01-15', '2025-03-15'),
-(2, 2, '2025-01-29', '2025-02-28'),
-(3, 3, '2025-02-05', '2025-05-05'),
-(4, 4, '2025-02-13', '2025-04-13'),
-(5, 5, '2025-02-18', '2025-03-18'),
-(6, 6, '2025-02-27', '2025-05-27'),
-(7, 7, '2025-03-05', '2025-05-05'),
-(8, 8, '2025-03-10', '2025-04-10'),
-(9, 9, '2025-03-16', '2025-06-16'),
-(10, 10, '2025-03-25', '2025-05-25'),
-(11, 11, '2025-04-01', '2025-05-01'),
-(12, 12, '2025-04-07', '2025-06-07'),
-(13, 13, '2025-04-15', '2025-07-15'),
-(14, 14, '2025-04-22', '2025-06-22'),
-(15, 15, '2025-04-30', '2025-05-30'),
-(16, 16, '2025-05-08', '2025-07-08'),
-(17, 17, '2025-05-15', '2025-06-15'),
-(18, 18, '2025-05-22', '2025-08-22'),
-(19, 19, '2025-05-30', '2025-07-30'),
-(20, 20, '2025-06-03', '2025-07-03'),
-(21, 21, '2025-06-07', '2025-08-07'),
-(22, 22, '2025-06-10', '2025-07-10'),
-(23, 23, '2025-06-12', '2025-09-12'),
-(24, 24, '2025-06-14', '2025-08-14'),
-(25, 25, '2025-06-17', '2025-07-17');
-
 -- --------------------------------------------------------
 
 --
@@ -218,7 +153,6 @@ CREATE TABLE `producto` (
 --
 
 INSERT INTO `producto` (`id_producto`, `nombre_producto`, `modelo`, `descripcion`, `precio`, `stock`, `id_proveedor`, `meses_garantia`, `fecha_compra`, `precio_venta`) VALUES
-
 (1, 'Teclado USB', 'KB-100', 'Teclado básico alámbrico USB', 30000, 25, 1, 12, '2025-01-10 05:00:00', 45000),
 (2, 'Cable HDMI 2m', 'HDMI-2M', 'Cable HDMI de 2 metros', 15000, 40, 2, 6, '2025-01-17 05:00:00', 25000),
 (3, 'Adaptador HDMI a VGA', 'AD-HDVGA', 'Convertidor HDMI a VGA con audio', 18000, 35, 13, 6, '2025-02-03 05:00:00', 28000),
@@ -311,59 +245,14 @@ CREATE TABLE `servicio_tecnico` (
   `tipo_equipo` varchar(50) NOT NULL,
   `modelo_equipo` varchar(50) NOT NULL,
   `descripcion_problema` text NOT NULL,
-  `fecha_recepcion` date NOT NULL,
-  `fecha_entrega_estimada` date NOT NULL,
-  `estado_servicio` varchar(50) NOT NULL,
-  `mes_garantia` int(11) DEFAULT NULL
+  `fecha_recepcion` timestamp NOT NULL DEFAULT current_timestamp(),
+  `fecha_entrega` date DEFAULT NULL,
+  `estado_servicio` varchar(50) NOT NULL DEFAULT 'En Progreso',
+  `meses_garantia` int(11) DEFAULT 0,
+  `tipo_servicio` varchar(50) NOT NULL,
+  `precio_servicio` int(10) NOT NULL,
+  `descripcion_trabajo` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `servicio_tecnico`
---
-
-INSERT INTO `servicio_tecnico` (`id_servicio`, `id_cliente`, `id_usuario`, `tipo_equipo`, `modelo_equipo`, `descripcion_problema`, `fecha_recepcion`, `fecha_entrega_estimada`, `estado_servicio`, `mes_garantia`) VALUES
-(1, 1, 1, 'Computador de mesa', 'HP ProDesk', 'No enciende, posible daño en fuente.', '2025-01-10', '2025-01-15', 'Finalizado', 2),
-(2, 2, 1, 'Computador portátil', 'Lenovo ThinkPad', 'Pantalla parpadea.', '2025-01-22', '2025-01-29', 'Finalizado', 1),
-(3, 3, 1, 'Impresora láser', 'Brother HL-1200', 'Atascos frecuentes de papel.', '2025-01-30', '2025-02-05', 'Finalizado', 3),
-(4, 4, 1, 'Impresora de tinta', 'Canon PIXMA G2100', 'No imprime a color.', '2025-02-06', '2025-02-13', 'Finalizado', 2),
-(5, 5, 1, 'Impresora térmica', 'Zebra TLP2844', 'Impresión borrosa.', '2025-02-12', '2025-02-18', 'Finalizado', 1),
-(6, 6, 1, 'Computador de mesa', 'Dell OptiPlex 3080', 'Reinicios aleatorios.', '2025-02-20', '2025-02-27', 'Finalizado', 3),
-(7, 7, 1, 'Computador portátil', 'HP Pavilion', 'Se apaga al desconectar el cargador.', '2025-02-28', '2025-03-05', 'Finalizado', 2),
-(8, 8, 1, 'Impresora láser', 'Samsung Xpress M2020', 'Tóner nuevo no reconocido.', '2025-03-04', '2025-03-10', 'Finalizado', 1),
-(9, 9, 1, 'Impresora de tinta', 'Epson L3150', 'Fugas de tinta.', '2025-03-09', '2025-03-16', 'Finalizado', 3),
-(10, 10, 1, 'Impresora térmica', 'Xprinter XP-58IIH', 'No imprime nada.', '2025-03-18', '2025-03-25', 'Finalizado', 2),
-(11, 11, 1, 'Computador de mesa', 'Asus VivoPC', 'Se congela al iniciar.', '2025-03-25', '2025-04-01', 'Finalizado', 1),
-(12, 12, 1, 'Computador portátil', 'Acer Aspire 5', 'Teclado no responde.', '2025-04-01', '2025-04-07', 'Finalizado', 2),
-(13, 13, 1, 'Impresora láser', 'HP LaserJet 1020', 'Líneas negras al imprimir.', '2025-04-09', '2025-04-15', 'Finalizado', 3),
-(14, 14, 1, 'Impresora de tinta', 'Canon MG3510', 'Impresión muy lenta.', '2025-04-15', '2025-04-22', 'Finalizado', 2),
-(15, 15, 1, 'Impresora térmica', 'Epson TM-T20II', 'No alimenta el papel.', '2025-04-23', '2025-04-30', 'Finalizado', 1),
-(16, 16, 1, 'Computador de mesa', 'Lenovo ThinkCentre', 'No detecta disco duro.', '2025-05-02', '2025-05-08', 'Finalizado', 2),
-(17, 17, 1, 'Computador portátil', 'Dell Inspiron 15', 'Batería no carga.', '2025-05-09', '2025-05-15', 'Finalizado', 1),
-(18, 18, 1, 'Impresora láser', 'Brother DCP-L2540DW', 'Pantalla muestra error general.', '2025-05-17', '2025-05-22', 'Finalizado', 3),
-(19, 19, 1, 'Impresora de tinta', 'Epson EcoTank L3250', 'Cabezal tapado.', '2025-05-24', '2025-05-30', 'Finalizado', 2),
-(20, 20, 1, 'Impresora térmica', 'Bixolon SRP-350', 'Luces intermitentes, no imprime.', '2025-05-28', '2025-06-03', 'Finalizado', 1),
-(21, 21, 1, 'Computador de mesa', 'HP All-in-One', 'Lentitud extrema.', '2025-06-01', '2025-06-07', 'Pendiente', 2),
-(22, 22, 1, 'Computador portátil', 'Lenovo IdeaPad', 'Ruido de ventilador.', '2025-06-03', '2025-06-10', 'Pendiente', 1),
-(23, 23, 1, 'Impresora láser', 'Canon LBP6030', 'No imprime desde red.', '2025-06-06', '2025-06-12', 'Pendiente', 3),
-(24, 24, 1, 'Impresora de tinta', 'HP DeskJet 2720', 'Se desconecta sola.', '2025-06-08', '2025-06-14', 'Pendiente', 2),
-(25, 25, 1, 'Impresora térmica', 'Xprinter XP-C260H', 'No corta papel automáticamente.', '2025-06-10', '2025-06-17', 'Pendiente', 1);
-
---
--- Disparadores `servicio_tecnico`
---
-DELIMITER $$
-CREATE TRIGGER `crear_garantia_servicio` AFTER INSERT ON `servicio_tecnico` FOR EACH ROW BEGIN
-    DECLARE fecha_inicio DATE;
-    DECLARE fecha_fin DATE;
-
-    SET fecha_inicio = NEW.fecha_entrega_estimada;
-    SET fecha_fin = DATE_ADD(fecha_inicio, INTERVAL NEW.mes_garantia MONTH);
-
-    INSERT INTO garantia_servicio (id_servicio, fecha_inicio, fecha_fin)
-    VALUES (NEW.id_servicio, fecha_inicio, fecha_fin);
-END
-$$
-DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -407,7 +296,8 @@ INSERT INTO `usuario` (`id_usuario`, `nombre_usuario`, `correo`, `telefono_usuar
 (28, 'Mateo Niño', 'mateo.nino@tienda.com', '3267778899', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Vendedor', NULL, NULL),
 (29, 'Lucía Peña', 'lucia.pena@tienda.com', '3278889900', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Técnico', NULL, NULL),
 (30, 'Simón Garzón', 'simon.garzon@tienda.com', '3289990011', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Vendedor', NULL, NULL),
-(31, 'Daniela Mora', 'daniela.mora@tienda.com', '3290001122', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Técnico', NULL, NULL);
+(31, 'Daniela Mora', 'daniela.mora@tienda.com', '3290001122', '$2b$12$JzamhaLIewvcMWRU3qq6r.lngMaMp7BhaacgLBRJoktjDfftpaJle', 'Técnico', NULL, NULL),
+(36, 'Andres', 'ortiz.andw@gmail.com', '3223295822', '$2b$12$xvrPtPOpbi1d2c4N5ou8Bu8DBLCOQLJWzYTQpZT1sEYDDHaA/RycK', 'Tecnico', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -424,44 +314,6 @@ CREATE TABLE `venta` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `venta`
---
-
-INSERT INTO `venta` (`id_venta`, `id_cliente`, `id_usuario`, `fecha_venta`, `total_venta`) VALUES
-
-(1, 1, 1, '2025-01-05', 58000),
-(2, 2, 1, '2025-01-15', 95000),
-(3, 3, 1, '2025-01-28', 58000),
-(4, 4, 1, '2025-02-06', 108000),
-(5, 5, 1, '2025-02-12', 58000),
-(6, 6, 1, '2025-02-20', 85000),
-(7, 7, 1, '2025-02-28', 48000),
-(8, 8, 1, '2025-03-04', 130000),
-(9, 9, 1, '2025-03-10', 54000),
-(10, 10, 1, '2025-03-15', 110000),
-(11, 11, 1, '2025-03-20', 92000),
-(12, 12, 1, '2025-03-30', 130000),
-(13, 13, 1, '2025-04-05', 85000),
-(14, 14, 1, '2025-04-12', 96000),
-(15, 15, 1, '2025-04-18', 130000),
-(16, 16, 1, '2025-04-25', 58000),
-(17, 17, 1, '2025-05-02', 93000),
-(18, 18, 1, '2025-05-08', 95000),
-(19, 19, 1, '2025-05-15', 100000),
-(20, 20, 1, '2025-05-22', 108000),
-(21, 21, 1, '2025-05-28', 45000),
-(22, 22, 1, '2025-06-01', 58000),
-(23, 23, 1, '2025-06-05', 97000),
-(24, 24, 1, '2025-06-10', 66000),
-(25, 25, 1, '2025-06-12', 110000),
-(26, 26, 1, '2025-06-15', 58000),
-(27, 27, 1, '2025-06-18', 89000),
-(28, 28, 1, '2025-06-22', 92000),
-(29, 29, 1, '2025-06-26', 85000),
-(30, 30, 1, '2025-06-30', 60000);
-
-
---
 -- Índices para tablas volcadas
 --
 
@@ -472,6 +324,14 @@ ALTER TABLE `cliente`
   ADD PRIMARY KEY (`id_cliente`),
   ADD UNIQUE KEY `cedula` (`numero_documento`),
   ADD UNIQUE KEY `email_cliente` (`email_cliente`);
+
+--
+-- Indices de la tabla `detalle_servicio`
+--
+ALTER TABLE `detalle_servicio`
+  ADD PRIMARY KEY (`id_detalle`),
+  ADD KEY `id_servicio` (`id_servicio`),
+  ADD KEY `id_usuario` (`id_usuario`);
 
 --
 -- Indices de la tabla `detalle_venta`
@@ -544,6 +404,12 @@ ALTER TABLE `cliente`
   MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
+-- AUTO_INCREMENT de la tabla `detalle_servicio`
+--
+ALTER TABLE `detalle_servicio`
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
@@ -578,25 +444,33 @@ ALTER TABLE `proveedor`
 -- AUTO_INCREMENT de la tabla `servicio_tecnico`
 --
 ALTER TABLE `servicio_tecnico`
-  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT;
+
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT de la tabla `venta`
 --
 ALTER TABLE `venta`
 
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT;
 
 
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `detalle_servicio`
+--
+ALTER TABLE `detalle_servicio`
+  ADD CONSTRAINT `detalle_servicio_ibfk_1` FOREIGN KEY (`id_servicio`) REFERENCES `servicio_tecnico` (`id_servicio`) ON DELETE CASCADE,
+  ADD CONSTRAINT `detalle_servicio_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE SET NULL;
 
 --
 -- Filtros para la tabla `detalle_venta`

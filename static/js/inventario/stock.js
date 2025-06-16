@@ -71,12 +71,21 @@ function obtenerProductosBajoStock() {
     });
 }
 
+let currentActiveItem = null; // Variable para guardar el item activo
+
 //Hace que al darle click a los productos se setteen a la izquierda los datos
 document.querySelector('.list-group.list-group-flush').addEventListener('click', function(e) {
   const target = e.target.closest('a.list-group-item');
   if (!target) return;
 
   e.preventDefault();
+
+   // Quitar clase active del anterior y agregar al nuevo
+  if (currentActiveItem) {
+    currentActiveItem.classList.remove('active');
+  }
+  target.classList.add('active');
+  currentActiveItem = target;
 
   // Setear select2 con el producto seleccionado
   const selectProducto = $('#selectProducto');
@@ -88,6 +97,30 @@ document.querySelector('.list-group.list-group-flush').addEventListener('click',
   document.getElementById('stockQuantity').value = target.dataset.stock;
   document.getElementById('productoDescripcion').value = target.dataset.descripcion;
   actualizarPreview(); 
+});
+
+// Validar cambio manual en select2 y remover clase active si ya no coincide
+$('#selectProducto').on('change', function(e) {
+  const selectedValue = $(this).val();
+
+  // Si hay un item activo y ya no coincide, se le quita el active
+  if (currentActiveItem && currentActiveItem.dataset.id !== selectedValue) {
+    currentActiveItem.classList.remove('active');
+    currentActiveItem = null;
+  }
+
+  // Buscar en la lista un item que coincida con el valor seleccionado
+  const matchingItem = document.querySelector(`.list-group.list-group-flush a.list-group-item[data-id="${selectedValue}"]`);
+  if (matchingItem) {
+    // Quitar el active anterior si existe
+    if (currentActiveItem && currentActiveItem !== matchingItem) {
+      currentActiveItem.classList.remove('active');
+    }
+
+    // Agregar active al nuevo matching item
+    matchingItem.classList.add('active');
+    currentActiveItem = matchingItem;
+  }
 });
 
 //Esta funcion lo que hace es manejar el card amarillo del warning segun el stock
