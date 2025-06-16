@@ -196,3 +196,59 @@ body {
     margin-top: 5px;
     margin-left: 80px;
 }
+/* Notficaciones de los servicios pendientes */
+.notification-badge {
+    position: relative;
+    z-index: 1050;
+    display: inline-block;
+}
+
+.notification-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff4757;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    animation: pulse 2s infinite;
+}
+.notification-dropdown {
+    position: absolute;
+    z-index: 1060;
+    max-height: 400px;
+    overflow-y: auto;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.notification-item {
+    padding: 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.notification-item:hover {
+    background-color: rgba(102, 126, 234, 0.1);
+}
+
+.notification-item.unread {
+    background-color: rgba(255, 193, 7, 0.1);
+    border-left: 4px solid #ffc107;
+}
+.btn-outline-enviar{
+    border-color: var(--color-teal-dark);  /* Color del borde */
+    color: var(--color-teal-dark); /* Color del texto */
+}
+
+.btn.btn-outline-enviar:hover{
+    background-color: var(--color-teal); /* Color de fondo */
+    color: white; /* Color del texto */
+}

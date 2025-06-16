@@ -29,6 +29,12 @@
                             </div>
                             <div class="card-body">
                                 <!-- Alertas -->
+                                 <div id="alerta-exito"
+                                        class="alert alert-success text-center small fade position-fixed start-50 translate-middle-x shadow-lg"
+                                        role="alert"
+                                        style="max-width: 400px; z-index: 1050; display: none;">
+                                    <i class="bi bi-check-circle-fill me-2"></i> <span>¡Mensaje por defecto!</span>
+                                </div>
                                 {% if request.query_params.get("success") == "1" %}
                                 <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg"
                                     role="alert" style="max-width: 400px; z-index: 1050;">
@@ -113,10 +119,8 @@
                                                                 <th>Descripción</th>
                                                                 <th>Fecha recepción</th>
                                                                 <th>Fecha entrega</th>
-                                                                <th>Estado</th>
-                                                                {% if rol == "Administrador" %}
-                                                                <th>Acciones</th>
-                                                                {% endif %}
+                                                                <th>Estado</th>                                                                
+                                                                <th>Acciones</th>                                                                
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -126,32 +130,60 @@
                                                                 <td>{{ s.tipo_equipo }}</td>
                                                                 <td>{{ s.modelo_equipo }}</td>
                                                                 <td>{{ s.descripcion_problema }}</td>
-                                                                <td data-valor="{{ s.fecha_recepcion.strftime('%Y-%m-%d') }}">{{ s.fecha_recepcion }}</td>
-                                                                <td data-valor="{{ s.fecha_entrega_estimada.strftime('%Y-%m-%d') }}">{{ s.fecha_entrega_estimada }}</td>
-                                                                <td>{{ s.estado_servicio }}</td>
-                                                                {% if rol == "Administrador" %}
+                                                                <td data-valor="{{ s.fecha_recepcion.strftime('%Y-%m-%d') }}">{{ s.fecha_recepcion.strftime('%Y-%m-%d') }}</td>
+                                                                <td data-valor="{{ s.fecha_entrega.strftime('%Y-%m-%d') if s.fecha_entrega else '' }}">
+                                                                    {% if s.fecha_entrega %}
+                                                                        {{ s.fecha_entrega.strftime('%d/%m/%Y') }}
+                                                                    {% else %}
+                                                                        <span class="text-muted">Sin entregar</span>
+                                                                    {% endif %}
+                                                                </td>
+                                                                <td>{{ s.estado_servicio }}</td>                                                                
                                                                 <td>
+                                                                {% if s.estado_servicio == "En Progreso" %}
+                                                                    <button
+                                                                        class="btn btn-sm btn-outline-enviar me-1 check-button"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#modalCheck"
+                                                                        data-id="{{ s.id_servicio }}"                                                                                                                                                
+                                                                        data-modelo="{{ s.modelo_equipo }}">                                                                        
+                                                                        <i class="bi bi-clipboard2-check"></i>
+                                                                    </button>
+                                                                {% endif %}
+                                                                {% if rol == "Administrador" %}
+                                                                    {% if s.estado_servicio == "En Revisión" %}
+                                                                        <button
+                                                                            onclick="location.href='/servicios/comprobante/{{ s.id_servicio }}'"
+                                                                            class="btn btn-sm btn-outline-enviar me-1 check-button">
+                                                                            <i class="bi bi-check-circle"></i>
+                                                                        </button>
+                                                                    {% endif %}
                                                                     <button
                                                                         class="btn btn-sm btn-outline-secondary me-1 edit-button"
                                                                         data-bs-toggle="modal"
                                                                         data-bs-target="#modalEditar"
                                                                         data-id="{{ s.id_servicio }}"
-                                                                        data-tipo="{{ s.tipo_equipo }}"
+                                                                        data-tipoEquipo="{{ s.tipo_equipo }}"
+                                                                        data-tipoServicio="{{ s.tipo_servicio }}"
                                                                         data-modelo="{{ s.modelo_equipo }}"
                                                                         data-descripcion="{{ s.descripcion_problema }}"
-                                                                        data-fechaRecepcion="{{ s.fecha_recepcion }}"
-                                                                        data-fechaEntrega="{{ s.fecha_entrega_estimada }}"
-                                                                        data-estado="{{ s.estado_servicio }}">
+                                                                        data-tecnico="{{ s.usuario.nombre_usuario }}"                                                                                                    
+                                                                        data-estado="{{ s.estado_servicio }}">                                                                        
                                                                         <i class="bi bi-pencil"></i>
                                                                     </button>
                                                                     <button data-id="{{ s.id_servicio }}"
-                                                                        class="btn btn-sm btn-outline-danger"
+                                                                        class="btn btn-sm btn-outline-danger me-1"
                                                                         data-bs-toggle="modal"
                                                                         data-bs-target="#modalEliminar">
                                                                         <i class="bi bi-trash"></i>
                                                                     </button>
+                                                                    {% endif %}
+                                                                    <button 
+                                                                        onclick="location.href='/servicios/comprobante/{{ s.id_servicio }}'"
+                                                                        class="btn btn-sm btn-outline-secondary me-1">
+                                                                        <i class="bi bi-eye"></i>
+                                                                    </button> 
                                                                 </td>
-                                                                {% endif %}
                                                             </tr>
                                                             {% endfor %}
                                                         </tbody>
@@ -201,55 +233,107 @@
 
     <!-- Modal Editar -->
     <div class="modal fade" id="modalEditar" aria-labelledby="modalEditarLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalEditarLabel">Actualizar Servicio</h5>
+                    <h5 class="modal-title" id="modalEditarLabel"><i class="bi bi-pencil me-2"></i>Actualizar Servicio</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body">                    
                     <form id="editServicioForm">
                         <input type="hidden" id="serviceId" name="serviceId">
-                        <!-- campos a editar -->
-                        <div class="mb-3">
-                            <label for="tipo_equipo" class="form-label">Tipo de equipos</label>
-                            <select class="form-control" id="tipo_equipo" name="tipo_equipo" required
-                                pattern="[A-Za-z\s]+" maxlength="50">
-                                <option value="Computador de mesa">Computador de mesa</option>
-                                <option value="Computador portatil">Computador portatil</option>
-                                <option value="Impresora laser">Impresora laser</option>
-                                <option value="Impresora de tinta">Impresora de tinta</option>
-                                <option value="Impresora termica">Impresora termica</option>
-                            </select>
+                        <!-- cards superiores -->
+                        <div class="row">                            
+                            <div class="col-md-6 mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body card-move text-center">
+                                        <h6 class="card-title">
+                                            <i class="bi bi-info-circle me-2"></i>
+                                            Servicio ID
+                                        </h6>
+                                        <h4 class="text-verde" id="servicioId"></h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body card-move text-center">
+                                        <h6 class="card-title">
+                                            <i class="bi bi-flag me-2"></i>
+                                            Estado Actual
+                                        </h6>
+                                        <span id="estadoActual" class="fs-6 badge"><i class="bi bi-gear-fill"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <hr class="section-divider">
+                            </div>                                                                            
+                            <!-- campos a editar -->
+                             <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="bi bi-laptop me-2"></i>Técnico</label>
+                                <input type="text" id="editTecnico" class="form-control" disabled>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="bi bi-person me-2"></i>Modelo del equipo</label>
+                                <input type="text" id="editModeloEquipo" class="form-control" name="modelo_equipo" required maxlength="20">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editTipoEquipo" class="form-label"><i class="bi bi-list me-2"></i>Tipo de equipo</label>
+                                <select class="form-control" id="editTipoEquipo" name="tipo_equipo" required>
+                                    <option value="" disabled selected hidden>Seleccionar tipo de equipo...</option>
+                                    <option value="Computador de mesa">Computador de mesa</option>
+                                    <option value="Computador portatil">Computador portatil</option>
+                                    <option value="Impresora laser">Impresora laser</option>
+                                    <option value="Impresora de tinta">Impresora de tinta</option>
+                                    <option value="Impresora termica">Impresora termica</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editTipoServicio" class="form-label"><i class="bi bi-wrench me-2"></i>Tipo de servicio</label>
+                                <select class="form-control" id="editTipoServicio" name="tipo_servicio" required>
+                                    <option value="" disabled selected hidden>Seleccionar tipo de servicio...</option>
+                                    <option value="Mantenimiento">Mantenimiento - $150.000</option>
+                                    <option value="Reparación">Reparación - $250.000</option>
+                                    <option value="Diagnóstico">Diagnóstico - $50.000</option>
+                                    <option value="Instalación">Instalación - $90.000</option>                                    
+                                </select>
+                            </div>                            
+                            <div class="mb-3">
+                                <label class="form-label"><i class="bi bi-file-text me-2"></i>Descripción del problema</label>
+                                <textarea class="form-control" id="editDescripcion" name="descripcion" placeholder="Descripción inicial del problema..." style="height: 100px" required maxlength="100"></textarea>                                
+                            </div>
+                            <div class="mb-3">
+                                <div class="card card-totales">
+                                    <div class="card-body text-center">
+                                        <div class="row text-center">
+                                            <div class="col-md-4">
+                                                <div>
+                                                    <i class="bi bi-tag me-2"></i>
+                                                    <strong>Precio Base</strong>
+                                                </div>
+                                                <div class="h5 text-primary mb-0">$150.00</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div>
+                                                    <i class="bi bi-plus-circle me-2"></i>
+                                                    <strong>Adicionales</strong>
+                                                </div>
+                                                <div class="h5 text-warning mb-0" id="totalAdicionales">$0.00</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div>
+                                                    <i class="bi bi-calculator me-2"></i>
+                                                    <strong>Total</strong>
+                                                </div>
+                                                <div class="h4 text-success mb-0" id="totalFinal">$150.00</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                            
+                            </div>
+                            <button type="submit" class="btn btn-enviar w-100" id="saveChanges">Guardar Cambios</button>
                         </div>
-                        <div class="mb-3">
-                            <label for="modelo_equipo" class="form-label">Modelo del equipo:</label>
-                            <input type="text" id="editModeloEquipo" class="form-control" name="modelo_equipo" required
-                                maxlength="20">
-                        </div>
-                        <div class="mb-3">
-                            <label for="descripcion" class="form-label">Descripción del problema:</label>
-                            <input type="text" id="editDescripcion" class="form-control" name="descripcion" required
-                                maxlength="100">
-                        </div>
-                        <div class="mb-3">
-                            <label for="fecha_recepcion" class="form-label">Fecha de recepción:</label>
-                            <input type="date" id="editFechaRecepcion" class="form-control" name="fecha_recepcion"
-                                required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="fecha_entrega" class="form-label">Fecha de entrega:</label>
-                            <input type="date" id="editFechaEntrega" class="form-control" name="fecha_entrega" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editEstado" class="form-label">Estado del Servicio</label>
-                            <select class="form-control" id="editEstado" name="estado" required>
-                                <option value="En Progreso">En Progreso</option>
-                                <option value="Finalizado">Finalizado</option>
-                                <option value="Pendiente">Pendiente</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-enviar w-100" id="saveChanges">Guardar Cambios</button>
                     </form>
                 </div>
             </div>
@@ -276,62 +360,222 @@
         </div>
     </div>
 
+    <!-- Modal Check Pendiente -->
+    <div class="modal fade" id="modalCheck" aria-labelledby="modalCheckLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCheckLabel"><i class="bi bi-pencil me-2"></i>Solicitar Revisión Servicio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">                    
+                    <form id="checkServicioForm">
+                        <input type="hidden" id="serviceIdCheck" name="serviceId">
+                        <!-- cards superiores -->
+                        <div class="row">                            
+                            <div class="col-md-6 mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body card-move text-center">
+                                        <h6 class="card-title">
+                                            <i class="bi bi-info-circle me-2"></i>
+                                            Servicio ID
+                                        </h6>
+                                        <h4 class="text-verde" id="servicioIdCheck"></h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body card-move text-center">
+                                        <h6 class="card-title"><i class="bi bi-laptop me-2"></i>Modelo del equipo</h6>
+                                        <h4 class="text-verde" id="idModeloCheck"></h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <hr class="section-divider">
+                            </div>                                                                          
+                            <!-- campos a editar -->
+                             <div class="mb-3">
+                                <h6 class="mb-3"><i class="bi bi-clipboard-check me-2"></i>Descripción del Trabajo Realizado</h6>
+                                <div class="form-floating">
+                                    <textarea class="form-control" id="descripcionTrabajo" style="height: 100px" placeholder="Describe detalladamente el trabajo realizado..."></textarea>
+                                    <label for="descripcionTrabajo">
+                                        <i class="bi bi-pencil me-2"></i>
+                                        Detalla el trabajo realizado, problemas encontrados y soluciones aplicadas
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label"><i class="bi bi-shield-check me-2"></i>Meses de garantia</label>
+                                <input type="text" class="form-control" name="meses_garantia" required min="0" value="0">
+                            </div>
+                            <div class="mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                       <div class="d-flex align-items-center justify-content-between">
+                                            <div>
+                                                <h6 class="mb-1">
+                                                    <i class="bi bi-cash-stack me-2"></i>
+                                                    ¿Hubo gastos adicionales en este servicio?
+                                                </h6>
+                                                <small class="text-muted">Materiales, transporte, horas extra, etc.</small>
+                                            </div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="toggleCostos" style="transform: scale(1.5);">
+                                                <label class="form-check-label fw-bold ms-2" for="toggleCostos">
+                                                    Agregar Costos
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                            
+                            </div>
+                            <div class="mb-3 fade" id="costosAdicionales">
+                                 <div class="card">
+                                <div class="card-header">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0">
+                                            <i class="bi bi-calculator me-2"></i>
+                                            Detalle de Costos Adicionales
+                                        </h6>
+                                        <button type="button" class="btn btn-outline-enviar btn-sm" id="agregarCosto">
+                                            <i class="bi bi-plus-circle me-1"></i> Agregar otro costo
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">                                    
+                                   <div id="grupoCostos">
+                                        <!-- Primer grupo de costos (siempre visible) -->
+                                        <div class="costo-item mb-3" data-index="1">
+                                            <div class="row g-2 align-items-end">
+                                                <div class="col-md-5">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-success text-white">
+                                                            <i class="bi bi-currency-dollar"></i>
+                                                        </span>
+                                                        <div class="form-floating">
+                                                            <input type="number" class="form-control costo-valor" min="0">
+                                                            <label>Valor</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-info text-white">
+                                                            <i class="bi bi-chat-text"></i>
+                                                        </span>
+                                                        <div class="form-floating">
+                                                            <input type="text" class="form-control costo-motivo" >
+                                                            <label>Motivo del gasto</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1 d-flex align-items-end mb-2">
+                                                    <button type="button" class="btn btn-outline-danger h-100 w-100 eliminar-costo" style="display: none;">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                                                    
+                                </div>
+                            </div>                            
+                            </div>                                                                               
+                            <div class="mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body card-move text-center">
+                                        <div class="row text-center">
+                                            <div class="col-md-4">
+                                                <div>
+                                                    <i class="bi bi-tag me-2"></i>
+                                                    <strong>Precio Base</strong>
+                                                </div>
+                                                <div class="h5 text-primary mb-0">$150.00</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div>
+                                                    <i class="bi bi-plus-circle me-2"></i>
+                                                    <strong>Adicionales</strong>
+                                                </div>
+                                                <div class="h5 text-warning mb-0" id="totalAdicionales">$0.00</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div>
+                                                    <i class="bi bi-calculator me-2"></i>
+                                                    <strong>Total</strong>
+                                                </div>
+                                                <div class="h4 text-success mb-0" id="totalFinal">$150.00</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                            
+                            </div>
+                            <button type="submit" class="btn btn-enviar w-100" id="saveChanges">Enviar a Revisión</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal Registro -->
     <div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalRegistroLabel">Registrar Nuevo servicio</h5>
+                    <h5 class="modal-title" id="modalRegistroLabel"><i class="bi bi-clipboard-plus me-2"></i>Registrar Nuevo Servicio</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form action="/servicio/crear" method="post">
-
-                        <div class="mb-3">
-                            <label class="form-label">Cliente</label>
-                            <select id="selectClientes" name="cliente_id" required>
-                                <option></option>
-                            </select>                            
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="selectClientes" class="form-label"><i class="bi bi-person me-2"></i>Cliente</label>
+                                <select id="selectClientes" name="cliente_id" required>
+                                    <option></option>
+                                </select>                            
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="bi bi-laptop me-2"></i>Modelo del equipo</label>
+                                <input type="text" class="form-control" name="modelo_equipo" required maxlength="20">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="tipo_equipo" class="form-label"><i class="bi bi-list me-2"></i>Tipo de equipo</label>
+                                <select class="form-control" id="tipo_equipo" name="tipo_equipo" required>
+                                    <option value="" disabled selected hidden>Seleccionar tipo de equipo...</option>
+                                    <option value="Computador de mesa">Computador de mesa</option>
+                                    <option value="Computador portatil">Computador portatil</option>
+                                    <option value="Impresora laser">Impresora laser</option>
+                                    <option value="Impresora de tinta">Impresora de tinta</option>
+                                    <option value="Impresora termica">Impresora termica</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="tipo_servicio" class="form-label"><i class="bi bi-wrench me-2"></i>Tipo de servicio</label>
+                                <select class="form-control" id="tipo_servicio" name="tipo_servicio" required>
+                                    <option value="" disabled selected hidden>Seleccionar tipo de servicio...</option>
+                                    <option value="Mantenimiento">Mantenimiento - $150.000</option>
+                                    <option value="Reparación">Reparación - $250.000</option>
+                                    <option value="Diagnóstico">Diagnóstico - $50.000</option>
+                                    <option value="Instalación">Instalación - $90.000</option>                                    
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <div class="card bg-warning-subtle border-warning mx-auto" style="max-width: 300px;" id="previewCard">
+                                    <div class="card-body text-center py-2 px-3">
+                                    <h6 class="card-title mb-1">Precio Base</h6>
+                                    <p class="mb-0" id="previewPrecio">$0</p>
+                                    <input type="hidden" name="precio_servicio">                                  
+                                    </div>
+                                </div> 
+                            </div>                                            
+                            <div class="mb-3">
+                                <label class="form-label"><i class="bi bi-file-text me-2"></i>Descripción del problema</label>
+                                <textarea class="form-control" name="descripcion" placeholder="Descripción inicial del problema..." style="height: 100px" required maxlength="100"></textarea>                                
+                            </div>                                                                                 
                         </div>
-                        <div class="mb-3">
-                            <label for="tipo_equipo" class="form-label">Tipo de equipos</label>
-                            <select class="form-control" id="tipo_equipo" name="tipo_equipo" required
-                                pattern="[A-Za-z\s]+" maxlength="50">
-                                <option value="Computador de mesa">Computador de mesa</option>
-                                <option value="Computador portatil">Computador portatil</option>
-                                <option value="Impresora laser">Impresora laser</option>
-                                <option value="Impresora de tinta">Impresora de tinta</option>
-                                <option value="Impresora termica">Impresora termica</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="modelo_equipo" class="form-label">Modelo del equipo:</label>
-                            <input type="text" class="form-control" name="modelo_equipo" required maxlength="20">
-                        </div>
-                        <div class="mb-3">
-                            <label for="descripcion" class="form-label">Descripción del problema:</label>
-                            <input type="text" class="form-control" name="descripcion" required maxlength="100">
-                        </div>
-                        <div class="mb-3">
-                            <label for="garantia" class="form-label">Meses de Garantia:</label>
-                            <input type="number" class="form-control" name="mes_garantia" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="fecha_recepcion" class="form-label">Fecha de recepción:</label>
-                            <input type="date" class="form-control" name="fecha_recepcion" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="fecha_entrega" class="form-label">Fecha de entrega:</label>
-                            <input type="date" class="form-control" name="fecha_entrega" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editEstado" class="form-label">Estado del Servicio</label>
-                            <select class="form-control" id="editEstado" name="estado" required>
-                                <option value="En Progreso">En Progreso</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-enviar w-100">Guardar servicio</button>
+                        <button type="submit" class="btn btn-enviar w-100">Registrar servicio</button>
                     </form>
                 </div>
             </div>
@@ -341,9 +585,14 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Primero importar el js con las funciones -->
+    <!--  añadir el script de las alertas cuand toque hacer fetch por todo -->
     <script src="/static/js/funciones.js"></script>
+    <script src="/static/js/servicios//modales/actualizar.js"></script>
+    <script src="/static/js/servicios/modales/registrar.js"></script>
+    <script src="/static/js/servicios/modales/revision.js"></script>
     <script src="/static/js/modulo_servicios.js"></script>
-
+    <script src="/static/js/servicios/fetch/checkServicio.js"></script>
+    
 </body>
 
 </html>
