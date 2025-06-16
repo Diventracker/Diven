@@ -138,6 +138,7 @@
                             <thead>
                               <tr>
                                 <th>ID</th>
+                                <th> Fecha de compra</th>
                                 <th>Nombre</th>
                                 <th>Modelo</th>
                                 <th>Existencias</th>
@@ -153,6 +154,7 @@
               {% for p in productos %}
                                 <tr>
                                   <td>{{ p.id_producto }}</td>
+                                  <td>{{ p.	fecha_compra.strftime("%Y-%m-%d")  }} </td>
                                   <td>{{ p.nombre_producto }}</td>
                                   <td>{{ p.modelo }}</td>
                                   <td>{{ p.stock }}</td>

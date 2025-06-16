@@ -127,19 +127,6 @@ async def generar_informe(request: Request, db: Session = Depends(get_db)):
             "Fin": g.fecha_fin.strftime("%d/%m/%Y")
         } for g in garantias]
 
-    elif tipo == "ventas":
-        ventas = db.query(Venta).filter(
-            Venta.fecha_venta >= fecha_inicio,
-            Venta.fecha_venta <= fecha_fin
-        ).all()
-        columnas = ["ID Venta" , "Fecha de venta" , "Cliente" , "Total"]
-        datos = [{
-            "ID Venta": v.id_venta,
-            "Fecha de venta": v.fecha_venta.strftime("%d/%m/%y"),
-            "Cliente" : v.id_cliente,
-            "Total" : v.total_venta
-        } for v in ventas]
-
     else:
         return {"error": "Tipo de informe no soportado aún."}
 
@@ -340,4 +327,46 @@ def get_ventas_por_mes(db: Session = Depends(get_db)):
             "borderWidth": 2
         }]
     }
+
+
     
+#ruta para obtener el producto menos vendido
+@router.get("/api/dashboard/productos-mas-vendidos")
+def productos_mas_vendidos(db=Depends(get_db)):
+    query = text("""
+        SELECT p.nombre_producto, SUM(dv.cantidad) AS total_vendido
+        FROM detalle_venta dv
+        JOIN producto p ON dv.id_producto = p.id_producto
+        GROUP BY p.nombre_producto
+        ORDER BY total_vendido DESC
+        LIMIT 6
+    """)
+    resultados = db.execute(query).fetchall()
+    return [{"producto": r[0], "cantidad": r[1]} for r in resultados]
+
+# Ruta para obtener las ventas por vendedor
+@router.get("/api/dashboard/ventas-vendedor")
+def ventas_por_vendedor(db: Session = Depends(get_db)):
+    query = text("""
+        SELECT u.nombre_usuario, COALESCE(SUM(v.total_venta), 0) AS total_vendido
+        FROM usuario u
+        LEFT JOIN venta v ON u.id_usuario = v.id_usuario
+        WHERE u.rol = 'vendedor'
+        GROUP BY u.nombre_usuario
+        ORDER BY total_vendido DESC
+    """)
+    resultados = db.execute(query).fetchall()
+
+    return [{"vendedor": r[0], "total": r[1]} for r in resultados]
+
+# tipo de equipo mas recibido
+@router.get("/api/dashboard/servicios-por-equipo")
+def servicios_por_equipo(db: Session = Depends(get_db)):
+    query = text("""
+        SELECT tipo_equipo, COUNT(*) AS total
+        FROM servicio_tecnico
+        GROUP BY tipo_equipo
+        ORDER BY total DESC
+    """)
+    resultados = db.execute(query).fetchall()
+    return [{"equipo": r[0], "total": r[1]} for r in resultados]

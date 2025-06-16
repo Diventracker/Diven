@@ -26,7 +26,7 @@ def listar_clientes(
     if search:
         query = query.filter(
             (Cliente.nombre_cliente.ilike(f"%{search}%")) |
-            (Cliente.cedula.ilike(f"%{search}%"))
+            (Cliente.numero_documento.ilike(f"%{search}%"))
         )
 
     total = query.count()
@@ -49,7 +49,8 @@ def listar_clientes(
 @router.post("/clientes/crear", tags=["Clientes"])
 def crear_cliente(
     nombre_cliente: str = Form(...),
-    cedula: str = Form(...),
+    tipo_documento: str = Form(...),
+    numero_documento: str = Form(...),
     direccion_cliente: str = Form(...),
     telefono_cliente: str = Form(...),
     email_cliente: str = Form(...),
@@ -58,7 +59,8 @@ def crear_cliente(
 ):
     nuevo = Cliente(
         nombre_cliente=nombre_cliente,
-        cedula=cedula,
+        tipo_documento=tipo_documento,
+        numero_documento=numero_documento,
         direccion_cliente=direccion_cliente,
         telefono_cliente=telefono_cliente,
         email_cliente=email_cliente
@@ -74,7 +76,7 @@ def crear_cliente(
             return JSONResponse(content={
                 "id": nuevo.id_cliente,
                 "nombre_cliente": nuevo.nombre_cliente,
-                "cedula": nuevo.cedula,
+                "numero_documento": nuevo.numero_documento,
                 "direccion_cliente": nuevo.direccion_cliente
             })
 
@@ -93,7 +95,8 @@ def crear_cliente(
 def editar_cliente(
     id_cliente: int,
     nombre: str = Form(...),
-    cedula: str = Form(...),
+    tipo_documento: str = Form(...),
+    numero_documento: str = Form(...),
     telefono: str = Form(...),
     direccion: str = Form(...),
     email: str = Form(...),
@@ -105,7 +108,8 @@ def editar_cliente(
 
     try:        
         cliente.nombre_cliente = nombre
-        cliente.cedula = cedula
+        cliente.tipo_documento = tipo_documento
+        cliente.numero_documento = numero_documento
         cliente.telefono_cliente = telefono
         cliente.direccion_cliente = direccion
         cliente.email_cliente = email
@@ -137,9 +141,10 @@ def eliminar_cliente(
 
     
 #Ruta para obtener el cliente
-@router.get("/clientes/buscar/{cedula}", response_class=JSONResponse)
-def buscar_cliente_por_cedula(cedula: str, db: Session = Depends(get_db)):
-    cliente = db.query(Cliente).filter(Cliente.cedula == cedula).first()
+@router.get("/clientes/buscar/{documento}", response_class=JSONResponse)
+def buscar_cliente_por_documento(documento: str, db: Session = Depends(get_db)):
+    cliente = db.query(Cliente).filter(Cliente.numero_documento == document).first()
+
 
     if not cliente:
         raise HTTPException(status_code=404, detail="Cliente no encontrado")
@@ -147,7 +152,8 @@ def buscar_cliente_por_cedula(cedula: str, db: Session = Depends(get_db)):
     return {
         "id": cliente.id_cliente,
         "nombre": cliente.nombre_cliente,
-        "cedula": cliente.cedula,
+        "numero_documento": cliente.numero_documento,
         "direccion": cliente.direccion_cliente,
+        "tipo_documento":cliente.tipo_documento 
         # Agrega más campos si los tienes
     }

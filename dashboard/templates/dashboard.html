@@ -129,92 +129,63 @@
                             </div>
                             <div class="card-body">
                                 <div class="chart-container">
-                                    <canvas id="salesChart">
-                                    </canvas>
+                                    <canvas id="salesChart"></canvas>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <!-- Productos más vendidos -->
                     <div class="col-md-5">
                         <div class="card shadow-sm">
                             <div class="card-header">
                                 <h6 class="mb-0"><i class="bi bi-star me-2"></i>Productos Más Vendidos</h6>
                             </div>
-                            <div class="card-body">
-                                <div class="product-item">
-                                    <div class="product-name">Smartphone Galaxy S23</div>
-                                    <div class="product-bar" style="width: 80%;"></div>
-                                    <div class="product-value">32</div>
-                                </div>
-                                <div class="product-item">
-                                    <div class="product-name">Cargador rápido USB-C</div>
-                                    <div class="product-bar" style="width: 65%;"></div>
-                                    <div class="product-value">26</div>
-                                </div>
-                                <div class="product-item">
-                                    <div class="product-name">Audífonos Bluetooth JBL</div>
-                                    <div class="product-bar" style="width: 55%;"></div>
-                                    <div class="product-value">22</div>
-                                </div>
-                                <div class="product-item">
-                                    <div class="product-name">Funda protectora silicona</div>
-                                    <div class="product-bar" style="width: 45%;"></div>
-                                    <div class="product-value">18</div>
-                                </div>
-                                <div class="product-item">
-                                    <div class="product-name">Smart TV Samsung 50"</div>
-                                    <div class="product-bar" style="width: 35%;"></div>
-                                    <div class="product-value">14</div>
-                                </div>
-                                <div class="mt-3 text-center">
-                                    <button class="btn btn-outline-teal btn-sm">Ver todos los productos</button>
-                                </div>
+                            <div class="card-body" id="productosMasVendidos">
+                                <div class="text-center text-muted">Cargando productos...</div>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="row mb-4">
                     <!-- Gráfico de categorías -->
                     <div class="col-md-4">
                         <div class="card shadow-sm">
                             <div class="card-header">
-                                <h6 class="mb-0"><i class="bi bi-pie-chart me-2"></i>Ventas por Categoría</h6>
+                                <h6 class="mb-0"><i class="bi bi-pie-chart-fill me-2"></i>Servicios por Tipo de Equipo
+                                </h6>
                             </div>
                             <div class="card-body">
-                                <div class="chart-container">
-                                    <canvas id="categoryChart"></canvas>
-                                </div>
+                                <canvas id="graficoTipoEquipo" height="200"></canvas>
                             </div>
                         </div>
                     </div>
+
 
                     <!-- Ventas por vendedor -->
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <div class="card shadow-sm">
                             <div class="card-header">
-                                <h6 class="mb-0"><i class="bi bi-person-badge me-2"></i>Ventas por Vendedor</h6>
+                                <h6 class="mb-0"><i class="bi bi-bar-chart me-2"></i>Ventas por Vendedor</h6>
                             </div>
                             <div class="card-body">
-                                <div class="chart-container">
-                                    <canvas id="sellerChart"></canvas>
-                                </div>
+                                <canvas id="graficoVentasVendedor" height="200"></canvas>
                             </div>
                         </div>
                     </div>
 
+
                     <!-- Alertas de inventario -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="card shadow-sm">
                             <div class="card-header">
-                                <h6 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Alertas de Inventario
+                                <h6 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Alertas de
+                                    Inventario
                                 </h6>
                             </div>
                             <div class="card-body p-0">
                                 <div class="list-group list-group-flush">
-                                    {% for prod in alertas_inventario %}
+
+                                    {% for prod in alertas_inventario[:5] %}
                                     <a href="/inventario" class="list-group-item list-group-item-action py-3">
                                         <div class="d-flex w-100 justify-content-between">
                                             <h6 class="mb-1">{{ prod.nombre_producto }}</h6>
@@ -228,7 +199,6 @@
                                     <div class="text-center text-muted py-3">Sin alertas de inventario.</div>
                                     {% endfor %}
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -385,7 +355,6 @@
                                     <option value="proveedores">Proveedores</option>
                                     <option value="servicios">Servicios Técnicos</option>
                                     <option value="garantias">Garantías</option>
-                                    <option value="ventas">Ventas</option>
                                 </select>
                             </div>
                             <div class="mb-3">
