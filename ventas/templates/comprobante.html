@@ -24,7 +24,7 @@
     </div>
 
     <!-- Body -->
-    <div class="comprobante-body">
+    <div class="comprobante-body" id="comprobante">
       <div class="receipt-content">
         <div class="text-center mb-4">
           <h4 class="fw-bold mb-2">COMPROBANTE DE VENTA</h4>
@@ -107,7 +107,7 @@
       <button type="button" class="btn btn-outline-secondary">
         <i class="bi bi-envelope"></i> Enviar
       </button>
-      <button type="button" class="btn btn-dark">
+      <button id="btnDescargar" type="button" class="btn btn-dark">
         <i class="bi bi-download"></i> Descargar
       </button>
     </div>
@@ -132,20 +132,8 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    // Funcionalidad básica para los botones
-    document.querySelector('.btn:has(.bi-printer)').addEventListener('click', function () {
-      window.print();
-    });
-
-    document.querySelector('.btn:has(.bi-envelope)').addEventListener('click', function () {
-      alert('Función de envío por email - Por implementar');
-    });
-
-    document.querySelector('.btn:has(.bi-download)').addEventListener('click', function () {
-      alert('Función de descarga - Por implementar');
-    });
-  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="/static/js/ventas/facturapdf.js"></script>
 </body>
 
 </html>
