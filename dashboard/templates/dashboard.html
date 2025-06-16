@@ -21,13 +21,13 @@
                 <!-- Filtros de fecha -->
                 <div class="row mb-4">
                     <div class="col-12">
-                        <div class="card shadow-sm">
+                        <div class="card shadow-sm" style="z-index: 1050;">
                             <div class="card-body py-3">
                                 <div class="date-filter">
                                     <div>
                                         <label class="fw-bold me-2">Período:</label>
-                                        <span class="text-teal-dark" id="mesActual">Mayo 2025</span>
-                                    </div>
+                                        <span class="text-teal-dark" id="mesActual"></span>
+                                    </div>                                    
                                     <div class="btn-group" role="group">
                                         <button class="btn btn-outline-teal" data-periodo="hoy">Hoy</button>
                                         <button class="btn btn-outline-teal" data-periodo="semana">Semana</button>
@@ -43,8 +43,19 @@
                                             data-bs-target="#modalGenerarInforme">
                                             <i class="bi bi-file-earmark-text"></i> Generar Informe
                                         </button>
+                                    </div>                                    
+                                    <!-- Servicios Pendientes -->
+                                    <div class="dropdown">
+                                        <button class="btn btn-warning notification-badge" data-bs-toggle="dropdown">
+                                            <i class="bi bi-tools"></i> Servicios en revisión
+                                            <span class="notification-count" id="notificationCount">5</span>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end notification-dropdown" style="width: 350px;">
+                                            <div class="dropdown-header">
+                                                <h6 class="mb-0"><i class="bi bi-bell me-2"></i>Servicios Pendientes</h6>
+                                            </div>                                                                                                                                                                            
+                                        </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -220,7 +231,13 @@
                                                 <td>{{ s.modelo_equipo }}</td>
                                                 <td>{{ s.descripcion_problema }}</td>
                                                 <td>{{ s.fecha_recepcion.strftime("%Y-%m-%d") }}</td>
-                                                <td>{{ s.fecha_entrega_estimada.strftime("%Y-%m-%d") }}</td>
+                                                <td>
+                                                    {% if s.fecha_entrega %}
+                                                        {{ s.fecha_entrega.strftime('%d/%m/%Y') }}
+                                                    {% else %}
+                                                        <span class="text-muted">Sin entregar</span>
+                                                    {% endif %}
+                                                </td>
                                                 <td>{{ s.estado_servicio }}</td>
                                             </tr>
                                             {% endfor %}
@@ -387,6 +404,7 @@
         <script src="/static/js//dashboard/graficos.js"></script>
         <script src="/static/js//dashboard/informe.js"></script>
         <script src="/static/js/dashboard/cards.js"></script>
+        <script src="/static/js/dashboard/serviciosPendientes.js"></script>
     </body>
 
 </html>
