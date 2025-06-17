@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from database.database import get_db
 from utils.report_generator import generar_pdf_informe
-from inventario.model import Producto
+from producto.model import Producto
 from clientes.model import Cliente
 from usuarios.model import Usuario
 from proveedores.model import Proveedor
@@ -12,8 +12,8 @@ from servicios.model import  ServicioTecnico
 from garantias.model import Garantia
 from datetime import datetime 
 from ventas.model import Venta
-from inventario.model import Producto
-from inventario.schema import ProductoOut
+from producto.model import Producto
+from producto.schema import ProductoOut
 from sqlalchemy import text , extract, func
 
 router = APIRouter()
@@ -27,13 +27,13 @@ templates = Jinja2Templates(directory="dashboard/templates")
 def dashboard_get(request: Request, db: Session = Depends(get_db)):
     ultimas_ventas = db.query(Venta).order_by(Venta.fecha_venta.desc()).limit(5).all()
     ultimos_servicios = db.query(ServicioTecnico).order_by(ServicioTecnico.fecha_recepcion.desc()).limit(5).all()
-    alertas_inventario = db.query(Producto).filter(Producto.stock < 10).all()
+    alertas_producto = db.query(Producto).filter(Producto.stock < 10).all()
 
     return templates.TemplateResponse("dashboard.html", {
         "request": request,
         "ultimas_ventas": ultimas_ventas,
         "ultimos_servicios": ultimos_servicios,
-        "alertas_inventario": alertas_inventario
+        "alertas_producto": alertas_producto
     })
 
 
