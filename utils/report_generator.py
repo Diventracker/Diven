@@ -52,12 +52,12 @@ def generar_pdf_informe(tipo, fecha_inicio, fecha_fin, datos, columnas):
         c.setFont("Helvetica", 10)
         for fila in datos:
             for i, col in enumerate(columnas):
-                valor = str(fila.get(col, ""))
-                x_pos = x_start + i * col_width
+                valor = str(fila.get(col, "-"))
+                x_pos = x_start + i * col_width  # <-- ¡Mueve esta línea aquí!
                 max_width = col_width - 5
 
                 text_width = c.stringWidth(valor, "Helvetica", max_font_size)
-                if text_width > max_width:
+                if text_width > col_width:
                     font_size = max(min_font_size, max_font_size * (max_width / text_width))
                 else:
                     font_size = max_font_size

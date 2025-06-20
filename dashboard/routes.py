@@ -52,7 +52,7 @@ async def generar_informe(request: Request, db: Session = Depends(get_db)):
     except ValueError:
         return {"error": "Formato de fecha inválido"}
 
-    if tipo == "inventario":
+    if tipo == "producto":
         productos = db.query(Producto).filter(
         Producto.fecha_compra != None,
         Producto.fecha_compra >= fecha_inicio,
@@ -108,7 +108,7 @@ async def generar_informe(request: Request, db: Session = Depends(get_db)):
         datos = [{
             "ID": s.id_servicio,
             "Equipo": s.tipo_equipo,
-            "Marca": s.marca_equipo,
+            "Marca": s.modelo_equipo,
             "Cliente": s.id_cliente,
             "Estado": s.estado_servicio,
             "Recepción": s.fecha_recepcion.strftime("%d/%m/%Y")
