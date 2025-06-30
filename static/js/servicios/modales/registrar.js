@@ -5,7 +5,7 @@ initSelect2Modal({
   url: '/servicios/clientes',
   processResultsMapper: c => ({
     id: c.id,
-    text: `${c.nombre} (${c.cedula})`
+    text: `${c.nombre} (${c.documento})`
   }),
   parentModalSelector: '#modalRegistro',
   language: {
