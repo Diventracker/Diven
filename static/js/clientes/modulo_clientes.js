@@ -4,16 +4,25 @@
     url: window.location.pathname
   }, "*");
   
+
+  
 // Funcion  crud para eliminar datos 
 setupDeleteButtons({
     buttonSelector: '.btn-outline-danger',
     hiddenInputId: 'clienteIdToDelete',
     spanId: 'nombreCliente',
-    modalTitle: 'modalTitle', // Opcional: cambiar el título del modal
+    modalTitle: 'modalTitle',
     confirmButtonId: 'confirmDeleteBtn',
     deleteUrlBase: '/cliente/eliminar',
-    redirectUrlBase: '/clientes'
+    onSuccess: function (id, data) {
+        // Actualiza la tabla, elimina fila o recarga
+        location.reload(); // o usa JS para borrar la fila sin recargar
+    },
+    onError: function (id, data) {
+        console.log("Error eliminando cliente:", data);
+    }
 });
+
 
 
 //Funcion para cuando se le da click al btn editar, y rellene los campos del form
@@ -30,12 +39,5 @@ setupEditButtons({
     }
 });
 
-//Funcion Generica que enviar el form PUT y recibe la url
-setupEditForm({
-    formId: 'editClienteForm',
-    buttonId: 'saveChanges',
-    urlBase: '/cliente/editar',
-    redirectUrlBase: '/clientes',
-    idField: 'editClienteId'
-});
+
 

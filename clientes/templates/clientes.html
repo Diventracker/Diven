@@ -131,11 +131,6 @@
                                                                 <td>{{ cliente.email_cliente }}</td>
                                                                 {% if rol == "Administrador" %}
                                                                 <td>
-                                                                    <!-- Por si queremos ver detalles del cliente
-                                                <button class="btn btn-sm btn-outline-secondary me-1">
-                                                    <i class="bi bi-eye"></i>
-                                                </button>
-                                                -->
                                                                     <button
                                                                         class="btn btn-sm btn-outline-secondary me-1 edit-button"
                                                                         data-bs-toggle="modal"
@@ -228,7 +223,7 @@
                         <input type="hidden" id="editClienteId">
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre:</label>
-                            <input type="text" class="form-control" id="editNombre" name="nombre" required
+                            <input type="text" class="form-control" id="editNombre" name="nombre_cliente" required
                                 pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" maxlength="50">
                         </div>
                         <div class="mb-3">
@@ -247,16 +242,16 @@
                         </div>
                         <div class="mb-3">
                             <label for="direccion" class="form-label">Dirección:</label>
-                            <input type="text" class="form-control" id="editDireccion" name="direccion" required>
+                            <input type="text" class="form-control" id="editDireccion" name="direccion_cliente" required>
                         </div>
                         <div class="mb-3">
                             <label for="telefono" class="form-label">Teléfono:</label>
-                            <input type="tel" class="form-control" id="editTelefono" name="telefono" required
+                            <input type="tel" class="form-control" id="editTelefono" name="telefono_cliente" required
                                 pattern="\d{10}" maxlength="10">
                         </div>
                         <div class="mb-3">
                             <label for="correo" class="form-label">Correo:</label>
-                            <input type="email" class="form-control" id="editEmail" name="email" required>
+                            <input type="email" class="form-control" id="editEmail" name="email_cliente" required>
                         </div>
                         <button type="submit" id="saveChanges" class="btn btn-enviar w-100">Actualizar Cliente</button>
                     </form>
@@ -297,7 +292,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/clientes/crear" method="post">
+                    <form id="registrarCliente">
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre:</label>
                             <input type="text" class="form-control" id="nombre" name="nombre_cliente" required
@@ -343,8 +338,10 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Primero importar el js con las funciones -->
-    <script src="/static/js/funciones.js"></script>
-    <script src="/static/js/modulo_clientes.js"></script>
+    <script src="/static/js/clientes/fetch/eliminar.js"></script>
+    <script src="/static/js/clientes/modulo_clientes.js"></script>
+    <script src="/static/js/clientes/fetch/crear.js"></script>
+    <script src="/static/js/clientes/fetch/editar.js"></script>
 
 </body>
 
