@@ -96,12 +96,12 @@ function handleDeleteConfirm({ confirmButtonId, hiddenInputId, deleteUrlBase, mo
                     window[tablaVariable].ajax.reload(null, false); // false: mantener paginación
                 }
             } else {
-                alert("❌ " + (data.error || "No se pudo eliminar"));
+                mostrarAlerta("alerta-warning", (data.error || "No se pudo eliminar"));
             }
 
         } catch (error) {
             console.error("❌ Error de red al eliminar:", error);
-            alert("❌ Error de red al eliminar.");
+            mostrarAlerta("alerta-warning", "Error de red al eliminar.");
         }
     });
 }

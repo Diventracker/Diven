@@ -1,10 +1,10 @@
-from sqlite3 import IntegrityError
+from sqlalchemy.exc import IntegrityError
 from fastapi import Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from clientes.schema import ClienteBase
-from clientes.CRUD import ClienteCRUD
+from clientes.crud import ClienteCRUD
 from clientes.repositorio import ClienteRepositorio
 
 #Ruta de las vistas html
@@ -93,14 +93,27 @@ class ClienteControlador:
     def eliminar(self, id_cliente: int):
         try:
             self.crud.eliminar(id_cliente)
-            return JSONResponse(content={"success": True, "mensaje": "Cliente eliminado exitosamente"}, status_code=200)
+            return JSONResponse(content={"success": True, "mensaje": "Cliente eliminado exitosamente"},status_code=200)
 
         except ValueError as e:
-            return JSONResponse(content={"success": False, "error": str(e)}, status_code=404)
+            return JSONResponse(content={"success": False, "error": str(e)},status_code=404)
 
-        except IntegrityError:
+        except IntegrityError as e:
             self.crud.repo.db.rollback()
-            return JSONResponse(content={"success": False, "error": "Error al eliminar el cliente"}, status_code=400)
+
+            # Validar si es una violación por clave foránea
+            if "foreign key constraint" in str(e).lower() or "a foreign key constraint fails" in str(e.orig).lower():
+                return JSONResponse(content={"success": False, "error": "No se puede eliminar el cliente porque tiene relaciones con otros registros."}, status_code=400)
+
+            return JSONResponse(
+                content={"success": False, "error": "Error al eliminar el cliente"},
+                status_code=400
+            )
+
+        except Exception as e:
+            return JSONResponse(content={"success": False, "error": f"Error inesperado: {str(e)}"},status_code=500)
+        
+        
 
 
 
