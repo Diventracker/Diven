@@ -8,7 +8,7 @@
 initSelect2Modal({
   selector: '#selectProveedor',
   placeholder: 'Buscar proveedor...',
-  url: '/inventario/proveedores',
+  url: '/producto/proveedores',
   processResultsMapper: p => ({
     id: p.id,
     text: `${p.nombre} (${p.nit})`
@@ -52,7 +52,7 @@ $('#modalEditar').on('show.bs.modal', function (event) {
 initSelect2Modal({
   selector: '#selectProveedor2',
   placeholder: 'Buscar proveedor...',
-  url: '/inventario/proveedores',
+  url: '/producto/proveedores',
   processResultsMapper: p => ({
     id: p.id,
     text: `${p.nombre} (${p.nit})`
@@ -84,7 +84,7 @@ setupEditForm({
     formId: 'editProductoForm',
     buttonId: 'saveChanges',
     urlBase: '/producto/editar',
-    redirectUrlBase: '/inventario',
+    redirectUrlBase: '/producto',
     idField: 'productoId'
 });
 
@@ -96,5 +96,5 @@ setupDeleteButtons({
     modalTitle: 'modalTitle', // Opcional: cambiar el título del modal
     confirmButtonId: 'confirmDeleteBtn',
     deleteUrlBase: '/producto/eliminar',
-    redirectUrlBase: '/inventario'
+    redirectUrlBase: '/producto'
 });
