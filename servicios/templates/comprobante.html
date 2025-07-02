@@ -665,27 +665,6 @@
         document.body.removeChild(temp);
       });
     }  
-
-    // Calcular totales automáticamente (ejemplo con JavaScript)
-    function calcularTotales() {
-      const precioBase = 200000;
-      const valoresAdicionales = 125000;
-      const subtotal = precioBase + valoresAdicionales;
-      const iva = subtotal * 0.19;
-      const retencion = subtotal * 0.035;
-      const total = subtotal + iva - retencion;
-      
-      console.log('Cálculo de totales:', {
-        precioBase,
-        valoresAdicionales,
-        subtotal,
-        iva,
-        retencion,
-        total
-      });
-    }
-    // Ejecutar cálculo al cargar la página
-    document.addEventListener('DOMContentLoaded', calcularTotales);
   </script>
 </body>
 </html>

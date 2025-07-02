@@ -2,11 +2,12 @@ from fastapi import APIRouter,HTTPException, Depends, Request, Form
 from datetime import datetime
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse 
 from fastapi.templating import Jinja2Templates 
-from sqlalchemy.orm import Session
+from sqlalchemy import desc
+from sqlalchemy.orm import Session, joinedload
 from database.database import get_db
 from servicios.model import DetalleServicio, ServicioTecnico
 from clientes.model import Cliente
-from servicios.schema import ServicioCreate, ServicioRevisionSchema  
+from servicios.schema import EstadoServicioInput, ServicioCreate, ServicioRevisionSchema, ServicioUpdate  
 
 router = APIRouter()
 templates = Jinja2Templates(directory="servicios/templates")  # Ruta donde están las vistas
@@ -19,7 +20,9 @@ def listar_servicios(
     limit: int = 9,
     search: str = ""
 ):
-    query = db.query(ServicioTecnico)
+    query = db.query(ServicioTecnico).options(
+        joinedload(ServicioTecnico.detalles)
+    ).order_by(desc(ServicioTecnico.id_servicio))
 
     rol = request.cookies.get("rol")  # Obtener rol de la cookie
 
@@ -54,7 +57,9 @@ def filtrar_clientes(search: str = "", db: Session = Depends(get_db)):
         (Cliente.numero_documento.ilike(f"%{search}%"))
     ).all()
 
+cambio_inventario
 
+main
     return [{"id": c.id_cliente, "nombre": c.nombre_cliente, "documento": c.numero_documento} for c in clientes]
 
 
@@ -105,37 +110,46 @@ def eliminar_servicio(service_id: int, db: Session = Depends(get_db)):
 
 
 
-#Ruta para Editar servicio Tecnico
-@router.put("/servicio/editar/{service_id}", tags=["servicio_tecnico"])
-def editar_servicio(
-    service_id: int,
-    tipo_equipo: str = Form(...),
-    #se elimino marca
-    modelo_equipo: str = Form(...),
-    descripcion: str = Form(...),
-    fecha_recepcion: str = Form(...),
-    fecha_entrega: str = Form(...),
-    estado: str = Form(...),
-    db: Session = Depends(get_db)
-):
-    servicio = db.query(ServicioTecnico).filter(ServicioTecnico.id_servicio == service_id).first()
-    
-    if not servicio:
-        raise HTTPException(status_code=404, detail="Servicio no encontrado")
-
-    # Actualizar los campos
-    servicio.tipo_equipo = tipo_equipo
-    #se elminio marca de actualizar
-    servicio.modelo_equipo = modelo_equipo
-    servicio.descripcion_problema = descripcion
-    servicio.fecha_recepcion = fecha_recepcion
-    servicio.fecha_entrega_estimada = fecha_entrega
-    servicio.estado_servicio = estado
-
-    db.commit()
-    db.refresh(servicio)
+@router.put("/api/servicio/editar/{id_servicio}")
+def actualizar_servicio(request: Request, id_servicio: int, datos: ServicioUpdate, db: Session = Depends(get_db)):
+    try:
+        servicio = db.query(ServicioTecnico).filter_by(id_servicio=id_servicio).first()
+        if not servicio:
+            raise HTTPException(status_code=404, detail="Servicio no encontrado")
         
-    return JSONResponse(content={"message": "success"})
+        # Obtener el usuario_id desde la cookie
+        usuario_id = request.cookies.get("usuario_id")
+
+        # Convertir usuario_id a entero
+        usuario_id = int(usuario_id)
+
+        servicio.modelo_equipo = datos.modelo_equipo
+        servicio.tipo_equipo = datos.tipo_equipo
+        servicio.tipo_servicio = datos.tipo_servicio
+        servicio.descripcion_problema = datos.descripcion
+        if datos.descripcion_trabajo is not None:
+            servicio.descripcion_trabajo = datos.descripcion_trabajo
+        if datos.meses_garantia is not None:
+            servicio.meses_garantia = datos.meses_garantia
+
+        # Reemplazar los detalles (si vienen)
+        if datos.detalles:
+            db.query(DetalleServicio).filter_by(id_servicio=id_servicio).delete()
+            for d in datos.detalles:
+                detalle = DetalleServicio(
+                    id_servicio=id_servicio,
+                    id_usuario=usuario_id,
+                    valor_adicional=d.valor_adicional,
+                    motivo=d.motivo
+                )
+                db.add(detalle)
+
+        db.commit()
+        return {"success": True}
+    
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error interno: {e}")
 
 #Ruta para mandar el request de la revision al administradr
 @router.post("/api/servicio/revision")
@@ -216,3 +230,49 @@ def ver_comprobante(id_servicio: int, request: Request, db: Session = Depends(ge
         "fecha_hoy": fecha_hoy,
         "detalles": detalles
     })
+
+#Ruta para obtener los detalles del servicio
+@router.get("/api/servicio/{id_servicio}/detalles")
+def obtener_detalles(id_servicio: int, db: Session = Depends(get_db)):
+    detalles = db.query(DetalleServicio).filter(
+        DetalleServicio.id_servicio == id_servicio
+    ).order_by(DetalleServicio.id_detalle.desc()).all()
+
+    return [
+        {
+            "id_detalle": d.id_detalle,
+            "motivo": d.motivo,
+            "valor_adicional": d.valor_adicional
+        }
+        for d in detalles
+    ]
+
+#Funcion para aprobar el estado del servicio 
+@router.put("/servicios/{servicio_id}/estado")
+def cambiar_estado_servicio(servicio_id: int, datos: EstadoServicioInput, db: Session = Depends(get_db)):
+    servicio = db.query(ServicioTecnico).filter(ServicioTecnico.id_servicio == servicio_id).first()
+
+    if not servicio:
+        raise HTTPException(status_code=404, detail="Servicio no encontrado")
+
+    estado_actual = servicio.estado_servicio.lower()
+    estado_nuevo = datos.nuevo_estado.lower()
+
+    if estado_actual == "finalizado":
+        raise HTTPException(status_code=400, detail="El servicio ya está finalizado y no se puede modificar")
+
+    if estado_nuevo not in {"finalizado", "rechazado"}:
+        raise HTTPException(status_code=400, detail="Estado no válido")
+
+    if estado_nuevo == "rechazado" and not datos.motivo:
+        raise HTTPException(status_code=400, detail="Debe proporcionar un motivo para el rechazo")
+
+    # Actualiza el estado
+    servicio.estado_servicio = estado_nuevo.capitalize()
+
+    # (Opcional) podrías guardar el motivo en otra tabla o columna si la agregas
+    # servicio.motivo_rechazo = datos.motivo
+
+    db.commit()
+
+    return {"success": True, "message": f"Servicio marcado como {estado_nuevo}"}
