@@ -1,14 +1,46 @@
 from sqlite3 import IntegrityError
-from fastapi.responses import JSONResponse
+from fastapi import Request
+from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from clientes.schema import ClienteBase
 from clientes.CRUD import ClienteCRUD
 from clientes.repositorio import ClienteRepositorio
 
+#Ruta de las vistas html
+templates = Jinja2Templates(directory=["templates", "clientes/templates"])
+
 class ClienteControlador:
     def __init__(self, db: Session):
         repo = ClienteRepositorio(db)
         self.crud = ClienteCRUD(repo)
+        
+
+    def vista_clientes(self, request: Request) -> HTMLResponse:
+        rol = request.cookies.get("rol")
+        return templates.TemplateResponse("clientes.html", {
+            "request": request,
+            "rol": rol
+        })
+    
+    
+    def listar(self):
+        clientes = self.crud.listar()
+
+        return JSONResponse(content=[
+            {
+                "id_cliente": c.id_cliente,
+                "fecha_registro": c.fecha_registro.strftime("%Y-%m-%d"),
+                "nombre_cliente": c.nombre_cliente,
+                "tipo_documento": c.tipo_documento,
+                "numero_documento": c.numero_documento,
+                "direccion_cliente": c.direccion_cliente,
+                "telefono_cliente": c.telefono_cliente,
+                "email_cliente": c.email_cliente
+            }
+            for c in clientes
+        ])
+
 
     def buscar_por_documento(self, documento: str):
         try:

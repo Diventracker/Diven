@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, Date, DECIMAL, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, TIMESTAMP
 from database.database import Base
 from sqlalchemy.orm import relationship
+from datetime import datetime
 
 class Proveedor(Base):
     __tablename__ = "proveedor"
@@ -11,5 +12,6 @@ class Proveedor(Base):
     representante_ventas = Column(String(100), nullable=False)
     telefono_representante_ventas = Column(String(20), nullable=False)
     direccion_proveedor = Column(String(255), nullable=False)
+    fecha_registro = Column (TIMESTAMP, nullable=False, default=datetime.now)
 
     productos = relationship("Producto", back_populates="proveedor")

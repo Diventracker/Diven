@@ -1,3 +1,4 @@
+from sqlalchemy import desc
 from sqlalchemy.orm import Session
 from clientes.model import Cliente
 
@@ -13,3 +14,6 @@ class ClienteRepositorio:
     
     def obtener_por_id(self, id_cliente: int):
         return self.db.query(Cliente).filter(Cliente.id_cliente == id_cliente).first()
+    
+    def obtener_todos(self) -> list[Cliente]:
+        return self.db.query(Cliente).order_by(desc(Cliente.id_cliente)).all()

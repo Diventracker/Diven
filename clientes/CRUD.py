@@ -6,6 +6,10 @@ class ClienteCRUD:
     def __init__(self, repo: ClienteRepositorio):
         self.repo = repo
 
+    def listar(self) -> list[Cliente]:
+        return self.repo.obtener_todos()
+
+
     def buscar_por_documento(self, documento: str) -> Cliente:
         cliente = self.repo.obtener_por_documento(documento)
         if not cliente:

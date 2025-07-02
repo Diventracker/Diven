@@ -4,6 +4,15 @@
     url: window.location.pathname
   }, "*");
   
+
+//Manda el fetch para crear el registro
+handleFormSubmit({
+    formId: 'registrarProveedor',
+    url: '/proveedores/crear',
+    modalId: 'modalRegistro',
+    tablaVariable: 'tablaProveedores'
+});
+
 //Funcion para cuando se le da click al btn editar, y rellene los campos del form
 setupEditButtons({
     buttonSelector: '.edit-button',
@@ -17,22 +26,29 @@ setupEditButtons({
     }
 });
 
-//Funcion Generica que enviar el form PUT y recibe la url
-setupEditForm({
+// Manda el Fetch para editar registros
+handleEditFormSubmit({
     formId: 'editProveedorForm',
-    buttonId: 'saveChanges',
     urlBase: '/proveedor/editar',
-    redirectUrlBase: '/proveedores',
-    idField: 'editProveedorId'
+    modalId: 'modalEditar',
+    idFieldId: 'editProveedorId',
+    tablaVariable: 'tablaProveedores'
 });
 
-// Funcion  crud para eliminar datos 
-setupDeleteButtons({
+//Rellenar los campos del modal eliminar
+setDeleteModalData({
     buttonSelector: '.btn-outline-danger',
     hiddenInputId: 'proveedorIdToDelete',
-    spanId: 'nombreProveedor',
-    modalTitle: 'modalTitle', // Opcional: cambiar el título del modal
-    confirmButtonId: 'confirmDeleteBtn',
-    deleteUrlBase: '/proveedor/eliminar',
-    redirectUrlBase: '/proveedores'
+    spanId: 'nombreProveedor'
 });
+
+//Manda el fetch para eliminar el registro
+handleDeleteConfirm({
+    confirmButtonId: 'confirmDeleteBtn',
+    hiddenInputId: 'proveedorIdToDelete',
+    deleteUrlBase: '/proveedor/eliminar',
+    modalActive: 'modalEliminar',
+    tablaVariable: 'tablaProveedores' // 👈 nombre de la DataTable global
+});
+
+

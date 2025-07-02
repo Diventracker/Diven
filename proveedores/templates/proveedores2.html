@@ -1,0 +1,160 @@
+{% extends "plantilla.html" %}
+
+<!-- etiqueta <head> -->
+{% block head_scripts %}
+    <!-- CSS de DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <!-- JS de jQuery y DataTables -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+{% endblock %}
+
+<!-- card principal -->
+{% set titulo = "Gestión de Proveedores" %}
+{% set icono = "bi bi-truck" %}
+{% set tabs = false %}
+
+<!-- Buscador -->
+{% set subtitulo2 = "Buscar Proveedores" %}
+{% set placeholder = "Buscar proveedor..." %}
+
+<!-- Boton Crear Registro -->
+{% set icono_crear = "telephone-plus" %}
+{% set boton_crear = "Nuevo Proveedor" %}
+{% set modal_crear = "modalRegistro" %}
+
+<!-- tabla -->
+{% set subtitulo = "Lista de Proveedores" %}
+{% set tabla_id = "tablaProveedores" %}
+
+{% block columnas_tabla %}
+    <tr>
+        <th>Fecha de registro</th>
+        <th>NIT</th>
+        <th>Nombre del Proveedor</th>
+        <th>Representante de Ventas</th>
+        <th>Teléfono</th>
+        <th>Dirección</th>
+        <th>Acción</th>
+    </tr>
+{% endblock %}
+
+{% block modales %}
+    <!-- Modal registro -->
+    <div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalRegistroLabel">Registrar Nuevo Proveedor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registrarProveedor">
+                        <div class="mb-3">
+                            <label for="nit" class="form-label">NIT:</label>
+                            <input type="text" class="form-control" name="nit" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="nombreProveedor" class="form-label">Nombre del Proveedor:</label>
+                            <input type="text" class="form-control" name="nombre_proveedor" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="representante" class="form-label">Representante de Ventas:</label>
+                            <input type="text" class="form-control" name="representante_ventas" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono:</label>
+                            <input type="tel" class="form-control" name="telefono_representante_ventas" required pattern="\d{10}" maxlength="10">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Dirección:</label>
+                            <input type="text" class="form-control" name="direccion_proveedor" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-enviar w-100">Guardar Proveedor</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar -->
+    <div class="modal fade" id="modalEditar" aria-labelledby="modalEditarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditarLabel">Actualizar Proveedor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Pasar el id del Proveedor mediante el link del form -->
+                    <form id="editProveedorForm">
+                        <input type="hidden" id="editProveedorId">
+                        <div class="mb-3">
+                            <label for="nit" class="form-label">NIT:</label>
+                            <input type="text" class="form-control" id="editNit" name="nit" required >
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre del Proveedor:</label>
+                            <input type="text" class="form-control" id="editNombreP" name="nombre_proveedor" required maxlength="50">
+                        </div>
+                        <div class="mb-3">
+                            <label for="reventas" class="form-label">Representante de Ventas:</label>
+                            <input type="text" class="form-control" id="editRepresentante" name="representante_ventas" required pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" maxlength="50">
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Telefono:</label>
+                            <input type="tel" class="form-control" id="editTelefono" name="telefono_representante_ventas" required pattern="\d{10}" maxlength="10">
+                        </div>
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Dirección:</label>
+                            <input type="text" class="form-control" id="editDireccion" name="direccion_proveedor" required>
+                        </div>
+                        <button type="submit" id="saveChanges" class="btn btn-enviar w-100">Actualizar Proveedor</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Eliminar -->
+    <div class="modal fade" id="modalEliminar" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEliminarLabel">Eliminar Proveedor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p >¿Seguro que desea eliminar al Proveedor?</p>
+                    <input type="hidden" id="proveedorIdToDelete"/>
+                    <span id="nombreProveedor" class="fw-bold d-block fs-4"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <!-- bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Primero importar el js con las funciones -->
+    <script src="/static/js/funciones/alertas.js"></script>
+    <script src="/static/js/funciones/dataTables.js"></script>
+    <script src="/static/js/proveedores/datosTabla.js"></script>
+
+    <script src="/static/js/funciones/setupDatos.js"></script>
+    <script src="/static/js/funciones/crudFetch.js"></script>
+
+    <script src="/static/js/proveedores/modulo_proveedores.js"></script>
+{% endblock %}

@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
+from sqlalchemy import desc
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError #para manejo de errores
 from database.database import get_db
@@ -9,7 +10,7 @@ from fastapi.templating import Jinja2Templates
 
 router = APIRouter()
 
-templates = Jinja2Templates(directory="proveedores/templates")  # Ruta donde están las vistas
+templates = Jinja2Templates(directory=["templates", "proveedores/templates"])
 
 #Ruta principal para mostrar tabla Proveedores
 @router.get("/proveedores", response_class=HTMLResponse, tags=["Proveedores"])
@@ -21,6 +22,7 @@ def listar_proveedores(
     search: str = ""
 ):
     query = db.query(Proveedor)
+    rol = request.cookies.get("rol")
 
     if search:
         query = query.filter(
@@ -34,14 +36,32 @@ def listar_proveedores(
 
     total_pages = (total + limit - 1) // limit
 
-    return templates.TemplateResponse("proveedores.html", {
+    return templates.TemplateResponse("proveedores2.html", {
         "request": request,
         "proveedores": proveedores,
         "page": page,
         "total_pages": total_pages,
         "search": search,
-        "ruta_base": "/proveedores" 
+        "ruta_base": "/proveedores",
+        "rol": rol
     })
+
+#Ruta manda los datos de la base de datos en proveedores
+@router.get("/proveedores/data")
+async def obtener_datos_proveedores(db: Session = Depends(get_db)):
+    proveedores = db.query(Proveedor).order_by(desc(Proveedor.id_proveedor))
+    return JSONResponse([
+        {
+            "id_proveedor": p.id_proveedor,
+            "nit": p.nit,
+            "fecha_registro": p.fecha_registro.strftime("%Y-%m-%d"),
+            "nombre_proveedor": p.nombre_proveedor,
+            "representante_ventas": p.representante_ventas,
+            "telefono_representante_ventas": p.telefono_representante_ventas,
+            "direccion_proveedor": p.direccion_proveedor
+        }
+        for p in proveedores
+    ])
 
 #Ruta para Crear un nuevo Proveedor
 @router.post("/proveedores/crear", tags=["Proveedores"])

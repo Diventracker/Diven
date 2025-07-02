@@ -1,213 +1,100 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends "plantilla.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Clientes</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="/static/css/modulos.css">
+<!-- etiqueta <head> -->
+{% block head_scripts %}
+    <!-- CSS de DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <!-- JS de jQuery y DataTables -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+{% endblock %}
 
-</head>
+<!-- card principal -->
+{% set titulo = "Gestión de Clientes" %}
+{% set icono = "people" %}
+{% set tabs = false %}
 
-<body>
-    <main>
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card shadow-sm">
-                            <div class="card-header bg-white py-3">
-                                <h5 class="mb-0 text-teal-dark"><i class="bi bi-people me-2"></i>Gestión de Clientes
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <!-- Alertas -->
-                                {% if request.query_params.get("success") == "1" %}
-                                <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg"
-                                    role="alert" style="max-width: 400px; z-index: 1050;">
-                                    <i class="bi bi-check-circle-fill me-2"></i> ¡Cliente actualizado correctamente!
-                                </div>
-                                {% elif request.query_params.get("create") == "1" %}
-                                <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg"
-                                    role="alert" style="max-width: 400px; z-index: 1050;">
-                                    <i class="bi bi-check-circle-fill me-2"></i> ¡Cliente creado correctamente!
-                                </div>
-                                {% elif request.query_params.get("deleted") == "1" %}
-                                <div class="alert alert-danger d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg"
-                                    role="alert" style="max-width: 400px; z-index: 1050;">
-                                    <i class="bi bi-trash-fill me-2"></i> ¡Cliente eliminado correctamente!
-                                </div>
-                                {% elif request.query_params.get("error") == "1" %}
-                                <div class="alert alert-warning d-flex align-items-center justify-content-center text-center small fade show position-fixed  start-50 translate-middle-x shadow-lg"
-                                    role="alert" style="max-width: 400px; z-index: 1050;">
-                                    <i class="bi bi-exclamation-triangle-fill me-2"></i> ¡Ya existe un cliente con este
-                                    Correo o Cedula!
-                                </div>
-                                {% endif %}
+<!-- Buscador -->
+{% set subtitulo2 = "Buscar Clientes" %}
+{% set placeholder = "Buscar cliente..." %}
 
-                                <!-- Búsqueda y filtros -->
-                                <div class="row mb-4">
-                                    <div class="col-12">
-                                        <div class="card card-move shadow-sm">
-                                            <div class="card-header">
-                                                <h6 class="mb-0"><i class="bi bi-search me-2"></i>Buscar Clientes</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="mb-2 col-md-4">
-                                                        <form method="get" action="/clientes">
-                                                            <div class="input-group">
-                                                                <input name="search" value="{{ search | default('') }}"
-                                                                    type="search" class="form-control"
-                                                                    placeholder="Buscar por nombre o cedula">
-                                                                <button class="btn btn-outline-enviar" type="submit"><i
-                                                                        class="bi bi-search"></i></button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                    <div class="mb-2 col-md-3 col-lg-3">
-                                                        <div class="input-group">
-                                                            <select class="form-select ordenar-tabla"
-                                                                data-tabla="tablaClientes">
-                                                                <option disabled selected>Ordenar por</option>
-                                                                <option value="0-asc">Nombre (A-Z)</option>
-                                                                <option value="0-desc">Nombre (Z-A)</option>
-                                                            </select>
-                                                            <button class="btn btn-outline-enviar"
-                                                                onclick="location.href='/clientes'">
-                                                                <i class="bi bi-arrow-repeat"></i></button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-1 col-lg-2 col-xl-3"></div>
-                                                    <div class="col-md-4 col-lg-3 col-xl-2">
-                                                        <button class="btn btn-enviar w-100" data-bs-toggle="modal"
-                                                            data-bs-target="#modalRegistro">
-                                                            <i class="bi bi-person-add me-1"></i>Nuevo Cliente
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+<!-- Boton Crear Registro -->
+{% set icono_crear = "person-add" %}
+{% set boton_crear = "Nuevo Cliente" %}
+{% set modal_crear = "modalRegistro" %}
+<!-- tabla -->
+{% set subtitulo = "Lista de Clientes" %}
+{% set tabla_id = "tablaClientes" %}
 
-                                <!-- Tabla de clientes -->
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="card card-move shadow-sm">
-                                            <div class="card-header">
-                                                <h6 class="mb-0"><i class="bi bi-grid me-2"></i>Lista de Clientes</h6>
-                                            </div>
-                                            <div class="card-body pb-0">
-                                                <div class="table-responsive">
-                                                    <table class="table table-striped m-0 table-hover"
-                                                        id="tablaClientes">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col">Fecha de registro</th>
-                                                                <th scope="col">Nombre</th>
-                                                                <th scope="col">Tipo de documento</th>
-                                                                <th scope="col">Documento</th>
-                                                                <th scope="col">Dirección</th>
-                                                                <th scope="col">Teléfono</th>
-                                                                <th scope="col">Correo</th>
-                                                                {% if rol == "Administrador" %}
-                                                                <th scope="col">Acción</th>
-                                                                {% endif %}
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="tabla-clientes">
-                                                            {% for cliente in clientes %}
-                                                            <tr>
-                                                               <td>{{ cliente.fecha_registro.strftime("%Y-%m-%d") }}</td>
-                                                                <td>{{ cliente.nombre_cliente }}</td>
-                                                                <td>{{ cliente.tipo_documento}} </td>
-                                                                <td>{{ cliente.numero_documento }}</td>
-                                                                <td>{{ cliente.direccion_cliente }}</td>
-                                                                <td>{{ cliente.telefono_cliente }}</td>
-                                                                <td>{{ cliente.email_cliente }}</td>
-                                                                {% if rol == "Administrador" %}
-                                                                <td>
-                                                                    <button
-                                                                        class="btn btn-sm btn-outline-secondary me-1 edit-button"
-                                                                        data-bs-toggle="modal"
-                                                                        data-bs-target="#modalEditar"
-                                                                        data-id="{{ cliente.id_cliente }}"
-                                                                        data-nombre="{{ cliente.nombre_cliente }}"
-                                                                        data-tipodocumento="{{ cliente.tipo_documento }}"
-                                                                        data-numerodocumento="{{ cliente.numero_documento }}"
-                                                                        data-telefono="{{ cliente.telefono_cliente }}"
-                                                                        data-direccion="{{ cliente.direccion_cliente }}"
-                                                                        data-email="{{ cliente.email_cliente }}">
-                                                                        <i class="bi bi-pencil"></i>
-                                                                    </button>
-                                                                    <button class="btn btn-sm btn-outline-danger"
-                                                                        data-bs-toggle="modal"
-                                                                        data-bs-target="#modalEliminar"
-                                                                        data-id="{{ cliente.id_cliente }}"
-                                                                        data-nombre="{{ cliente.nombre_cliente }}">
-                                                                        <i class="bi bi-trash"></i>
-                                                                    </button>
-                                                                </td>
-                                                                {% endif %}
-                                                            </tr>
-                                                            {% endfor %}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+{% block columnas_tabla %}
+    <tr>
+        <th>Fecha de registro</th>
+        <th>Nombre</th>
+        <th>Tipo de documento</th>
+        <th>Documento</th>
+        <th>Dirección</th>
+        <th>Teléfono</th>
+        <th>Correo</th>
+        {% if rol == "Administrador" %}
+            <th>Acción</th>
+        {% endif %}
+    </tr>
+{% endblock %}
 
-                                                <!-- Paginación -->
-                                                {# Macro para construir URLs de paginación con search opcional #}
-                                                {% macro pagina_url(ruta, pagina, search) -%}
-                                                {{ ruta }}?page={{ pagina }}{% if search %}&search={{ search }}{% endif
-                                                %}
-                                                {%- endmacro %}
 
-                                                {# Paginación visual #}
-                                                <nav aria-label="Paginación de Servicios">
-                                                    <ul class="pagination justify-content-center mt-4">
-                                                        <!-- Botón Anterior -->
-                                                        <li class="page-item {% if page <= 1 %}disabled{% endif %}">
-                                                            <a class="page-link"
-                                                                href="{% if page > 1 %}{{ pagina_url(ruta_base, page - 1, search) }}{% else %}#{% endif %}">
-                                                                Anterior
-                                                            </a>
-                                                        </li>
-
-                                                        <!-- Números de página -->
-                                                        {% for s in range(1, total_pages + 1) %}
-                                                        <li class="page-item {% if s == page %}active{% endif %}">
-                                                            <a class="page-link"
-                                                                href="{{ pagina_url(ruta_base, s, search) }}">{{ s
-                                                                }}</a>
-                                                        </li>
-                                                        {% endfor %}
-
-                                                        <!-- Botón Siguiente -->
-                                                        <li
-                                                            class="page-item {% if page >= total_pages %}disabled{% endif %}">
-                                                            <a class="page-link"
-                                                                href="{% if page < total_pages %}{{ pagina_url(ruta_base, page + 1, search) }}{% else %}#{% endif %}">
-                                                                Siguiente
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </nav>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+{% block modales %}
+    <!-- Modal Registro -->
+    <div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalRegistroLabel">Registrar Nuevo Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registrarCliente">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre_cliente" required
+                                pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" maxlength="50">
                         </div>
-                    </div>
+                        <div class="mb-3">
+                            <label for="tipo_documento" class="form-label">Tipo de documento:</label>
+                            <select id="tipo_documento" name="tipo_documento" class="form-select" required>
+                                <option value="" disabled selected>Seleccione tipo</option>
+                                <option value="CC">Cédula de Ciudadanía (CC)</option>
+                                <option value="TI">Tarjeta de Identidad (TI)</option>
+                                <option value="CE">Cédula de Extranjería (CE)</option>
+                                <option value="Pasaporte">Pasaporte</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="documento" class="form-label">Numero de documento:</label>
+                            <input type="text" class="form-control" id="numero_Documento" name="numero_documento" required
+                                pattern="\d+" maxlength="10">
+                        </div>
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Dirección:</label>
+                            <input type="text" class="form-control" name="direccion_cliente" id="direccion" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono:</label>
+                            <input type="tel" class="form-control" id="telefono" name="telefono_cliente" required
+                                maxlength="10" pattern="\d{10}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo:</label>
+                            <input type="email" class="form-control" id="correo" name="email_cliente" required>
+                        </div>
+                        <input type="hidden" name="lugar" value="clientes">
+                        <button type="submit" class="btn btn-enviar w-100">Guardar Cliente</button>
+                    </form>
                 </div>
             </div>
         </div>
-
-    </main>
+    </div>
 
     <!-- Modal Editar -->
     <div class="modal fade" id="modalEditar" aria-labelledby="modalEditarLabel" aria-hidden="true">
@@ -282,67 +169,18 @@
         </div>
     </div>
 
+{% endblock %}
 
-    <!-- Modal Registro -->
-    <div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalRegistroLabel">Registrar Nuevo Cliente</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="registrarCliente">
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre:</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre_cliente" required
-                                pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" maxlength="50">
-                        </div>
-                        <div class="mb-3">
-                            <label for="tipo_documento" class="form-label">Tipo de documento:</label>
-                            <select id="tipo_documento" name="tipo_documento" class="form-select" required>
-                                <option value="">Seleccione tipo</option>
-                                <option value="CC">Cédula de Ciudadanía (CC)</option>
-                                <option value="TI">Tarjeta de Identidad (TI)</option>
-                                <option value="CE">Cédula de Extranjería (CE)</option>
-                                <option value="Pasaporte">Pasaporte</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="documento" class="form-label">Numero de documento:</label>
-                            <input type="text" class="form-control" id="numero_Documento" name="numero_documento" required
-                                pattern="\d+" maxlength="10">
-                        </div>
-                        <div class="mb-3">
-                            <label for="direccion" class="form-label">Dirección:</label>
-                            <input type="text" class="form-control" name="direccion_cliente" id="direccion" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="telefono" class="form-label">Teléfono:</label>
-                            <input type="tel" class="form-control" id="telefono" name="telefono_cliente" required
-                                maxlength="10" pattern="\d{10}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="correo" class="form-label">Correo:</label>
-                            <input type="email" class="form-control" id="correo" name="email_cliente" required>
-                        </div>
-                        <input type="hidden" name="lugar" value="clientes">
-                        <button type="submit" class="btn btn-enviar w-100">Guardar Cliente</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
+{% block scripts %}
+    <!-- bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Primero importar el js con las funciones -->
-    <script src="/static/js/clientes/fetch/eliminar.js"></script>
+    <script src="/static/js/funciones/alertas.js"></script>
+    <script src="/static/js/funciones/dataTables.js"></script>
+    <script src="/static/js/clientes/datosTabla.js"></script>
+
+    <script src="/static/js/funciones/setupDatos.js"></script>
+    <script src="/static/js/funciones/crudFetch.js"></script>
+
     <script src="/static/js/clientes/modulo_clientes.js"></script>
-    <script src="/static/js/clientes/fetch/crear.js"></script>
-    <script src="/static/js/clientes/fetch/editar.js"></script>
-
-</body>
-
-</html>
+{% endblock %}
