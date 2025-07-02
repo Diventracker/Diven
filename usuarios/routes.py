@@ -6,6 +6,7 @@ from passlib.context import CryptContext
 import secrets
 from fastapi.templating import Jinja2Templates
 from database.database import get_db
+from usuarios.controller import UsuarioControlador
 from utils.crud import crear_recurso
 from usuarios.model import Usuario
 from usuarios.schema import UsuarioCreateSchema, UsuarioUpdateSchema
@@ -13,43 +14,24 @@ from utils.email import enviar_correo
 
 router = APIRouter()
 
-templates = Jinja2Templates(directory="usuarios/templates")  # Ruta donde están las vistas
+templates = Jinja2Templates(directory=["templates", "usuarios/templates"])
 
 #Ruta principal para mostrar tabla usuarios
 @router.get("/usuarios", tags=["Usuarios"])
 def listar_usuarios(
     request: Request,
-    search: str = "",
-    page: int = 1,
-    limit: int = 9,
-    db: Session = Depends(get_db)
 ):
-    rol = request.cookies.get("rol")  # Leer rol de la cookie
-
-    query = db.query(Usuario)
-
-    if search:
-        query = query.filter(
-            (Usuario.nombre_usuario.ilike(f"%{search}%")) |
-            (Usuario.correo.ilike(f"%{search}%"))
-        )
-
-    total = query.count()
-    offset = (page - 1) * limit
-    usuarios = (
-    query.order_by(Usuario.id_usuario.desc()).offset(offset).limit(limit).all())
-    total_pages = (total + limit - 1) // limit  # Redondeo hacia arriba
-
+    rol = request.cookies.get("rol") 
     return templates.TemplateResponse("usuarios.html", {
         "request": request,
-        "usuarios": usuarios,
-        "search": search,
-        "rol": rol,
-        "page": page,
-        "total_pages": total_pages,
-        "ruta_base": "/usuarios"
+        "rol": rol
     })
 
+#Ruta que devuelve todos los datos
+@router.get("/usuarios/data")
+async def obtener_datos_usuarios(db: Session = Depends(get_db)):
+    controlador = UsuarioControlador(db)
+    return controlador.listar_todos()
 
 # Inicializamos un contexto de hash para bcrypt
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
