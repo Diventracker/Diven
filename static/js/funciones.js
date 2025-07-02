@@ -111,65 +111,8 @@ function setupEditButtons(config) {
 // Exportar la función para usarla en otros archivos
 window.setupEditButtons = setupEditButtons;
 
-
-// Función genérica para manejar la actualización de registros
-function setupEditForm(config) {
-    const { formId, buttonId, urlBase, redirectUrlBase, idField } = config;
-
-    document.getElementById(buttonId).addEventListener('click', function (event) {
-        event.preventDefault(); // Evita el envío tradicional del formulario
-
-        let form = document.getElementById(formId);
-        let formData = new FormData(form);
-        let recordId = document.getElementById(idField).value;
-
-        fetch(`${urlBase}/${recordId}`, {
-            method: 'PUT',
-            body: formData,
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.text(); // Leer la respuesta como texto
-                } else {
-                    throw new Error("Error en la actualización");
-                }
-            })
-            .then(data => {
-                if (data.includes("success")) { // Comprobamos si la respuesta incluye "success"
-                    window.location.href = `${redirectUrlBase}?success=1`; // Redirigir con indicador de éxito
-                } else {
-                    throw new Error("Error inesperado en la respuesta del servidor.");
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("Hubo un error al procesar la solicitud.");
-            });
-    });
-}
-
 // Exponer la función para usarla en otros archivos
 window.setupEditForm = setupEditForm;
-
-//Mostrar una alerta 
-document.addEventListener("DOMContentLoaded", function() {
-    let alertBox = document.querySelector(".alert");
-    if (alertBox) {
-        setTimeout(() => {
-            alertBox.style.transition = "opacity 0.5s ease";
-            alertBox.style.opacity = "0";
-            setTimeout(() => alertBox.remove(), 500);
-        }, 3000);
-
-        // Eliminar parámetros "success=1" o "deleted=1" de la URL
-        const url = new URL(window.location);
-        url.searchParams.delete("success");
-        url.searchParams.delete("deleted");
-        url.searchParams.delete("create");
-        url.searchParams.delete("error");
-        window.history.replaceState({}, document.title, url);
-    }
-});
 
 //Para el uso del select que ordena las cosas
 document.querySelectorAll('.ordenar-tabla').forEach(select => {

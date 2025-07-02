@@ -3,41 +3,60 @@
     tipo: "moduloActivo",
     url: window.location.pathname
   }, "*");
-  
 
-  
-// Funcion  crud para eliminar datos 
-setupDeleteButtons({
-    buttonSelector: '.btn-outline-danger',
-    hiddenInputId: 'clienteIdToDelete',
-    spanId: 'nombreCliente',
-    modalTitle: 'modalTitle',
-    confirmButtonId: 'confirmDeleteBtn',
-    deleteUrlBase: '/cliente/eliminar',
-    onSuccess: function (id, data) {
-        // Actualiza la tabla, elimina fila o recarga
-        location.reload(); // o usa JS para borrar la fila sin recargar
-    },
-    onError: function (id, data) {
-        console.log("Error eliminando cliente:", data);
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    //Manda el fetch para crear el registro
+    handleFormSubmit({
+        formId: 'registrarCliente',
+        url: '/clientes/crear',
+        modalId: 'modalRegistro',
+        tablaVariable: 'tablaClientes'
+    });
+    
+    //Funcion para cuando se le da click al btn editar, y rellene los campos del form
+    setupEditButtons({
+        buttonSelector: '.edit-button',
+        modalFields: {
+            id: 'editClienteId',
+            nombre: 'editNombre',
+            tipodocumento: 'editTipo',
+            numerodocumento: 'editDocumento',
+            direccion: 'editDireccion',
+            telefono: 'editTelefono',
+            email: 'editEmail'
+        }
+    });
+
+    // Manda el Fetch para editar registros
+    handleEditFormSubmit({
+        formId: 'editClienteForm',
+        urlBase: '/cliente/editar',
+        modalId: 'modalEditar',
+        idFieldId: 'editClienteId',
+        tablaVariable: 'tablaClientes'
+    });
+
+    //Rellenar los campos del modal eliminar
+    setDeleteModalData({
+        buttonSelector: '.btn-outline-danger',
+        hiddenInputId: 'clienteIdToDelete',
+        spanId: 'nombreCliente'
+    });
+    //Manda el fetch para eliminar el registro
+    handleDeleteConfirm({
+        confirmButtonId: 'confirmDeleteBtn',
+        hiddenInputId: 'clienteIdToDelete',
+        deleteUrlBase: '/cliente/eliminar',
+        modalActive: 'modalEliminar',
+        tablaVariable: 'tablaClientes' // 👈 nombre de la DataTable global
+    });
+
+
+
 });
 
 
 
-//Funcion para cuando se le da click al btn editar, y rellene los campos del form
-setupEditButtons({
-    buttonSelector: '.edit-button',
-    modalFields: {
-        id: 'editClienteId',
-        nombre: 'editNombre',
-        tipodocumento: 'editTipo',
-        numerodocumento: 'editDocumento',
-        direccion: 'editDireccion',
-        telefono: 'editTelefono',
-        email: 'editEmail'
-    }
-});
 
 
 

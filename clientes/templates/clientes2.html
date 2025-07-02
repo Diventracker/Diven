@@ -1,0 +1,190 @@
+{% extends "plantilla.html" %}
+
+<!-- etiqueta <head> -->
+{% block head_scripts %}
+    <!-- CSS de DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <!-- JS de jQuery y DataTables -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+{% endblock %}
+
+<!-- card principal -->
+{% set titulo = "Gestión de Clientes" %}
+{% set icono = "bi bi-people" %}
+{% set tabs = false %}
+<!-- Buscador -->
+{% set subtitulo2 = "Buscar Clientes" %}
+{% set ruta_get = "/clientes" %}
+{% set placeholder = "Buscar cliente..." %}
+<!-- ordenar por opciones -->
+{% block ordenar %}
+    <option value="0-asc">Nombre (A-Z)</option>
+    <option value="0-desc">Nombre (Z-A)</option>
+{% endblock %}
+<!-- Boton Crear Registro -->
+{% set icono_crear = "person-add" %}
+{% set boton_crear = "Nuevo Cliente" %}
+{% set modal_crear = "modalRegistro" %}
+<!-- tabla -->
+{% set subtitulo = "Lista de Clientes" %}
+{% set tabla_id = "tablaClientes" %}
+
+{% block columnas_tabla %}
+    <tr>
+        <th>Fecha de registro</th>
+        <th>Nombre</th>
+        <th>Tipo de documento</th>
+        <th>Documento</th>
+        <th>Dirección</th>
+        <th>Teléfono</th>
+        <th>Correo</th>
+        {% if rol == "Administrador" %}
+            <th>Acción</th>
+        {% endif %}
+    </tr>
+{% endblock %}
+
+
+{% block modales %}
+    <!-- Modal Registro -->
+    <div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalRegistroLabel">Registrar Nuevo Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registrarCliente">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre_cliente" required
+                                pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" maxlength="50">
+                        </div>
+                        <div class="mb-3">
+                            <label for="tipo_documento" class="form-label">Tipo de documento:</label>
+                            <select id="tipo_documento" name="tipo_documento" class="form-select" required>
+                                <option value="" disabled selected>Seleccione tipo</option>
+                                <option value="CC">Cédula de Ciudadanía (CC)</option>
+                                <option value="TI">Tarjeta de Identidad (TI)</option>
+                                <option value="CE">Cédula de Extranjería (CE)</option>
+                                <option value="Pasaporte">Pasaporte</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="documento" class="form-label">Numero de documento:</label>
+                            <input type="text" class="form-control" id="numero_Documento" name="numero_documento" required
+                                pattern="\d+" maxlength="10">
+                        </div>
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Dirección:</label>
+                            <input type="text" class="form-control" name="direccion_cliente" id="direccion" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono:</label>
+                            <input type="tel" class="form-control" id="telefono" name="telefono_cliente" required
+                                maxlength="10" pattern="\d{10}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo:</label>
+                            <input type="email" class="form-control" id="correo" name="email_cliente" required>
+                        </div>
+                        <input type="hidden" name="lugar" value="clientes">
+                        <button type="submit" class="btn btn-enviar w-100">Guardar Cliente</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar -->
+    <div class="modal fade" id="modalEditar" aria-labelledby="modalEditarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditarLabel">Actualizar Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Pasar el id del cliente mediante el link del form -->
+                    <form id="editClienteForm">
+                        <input type="hidden" id="editClienteId">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="editNombre" name="nombre_cliente" required
+                                pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" maxlength="50">
+                        </div>
+                        <div class="mb-3">
+                            <label for="tipoDocumento" class="form-label">Tipo de documento:</label>
+                            <select type="text" class="form-control" id="editTipo" name="tipo_documento" required >
+                                <option value="CC">CC</option>
+                                <option value="TI">TI</option>
+                                <option value="CE">CE</option>
+                                <option value="Pasaporte">Pasaporte</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="numero_Documento" class="form-label">Documento:</label>
+                            <input type="text" class="form-control" id="editDocumento" name="numero_documento" required pattern="\d+"
+                                maxlength="10">
+                        </div>
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Dirección:</label>
+                            <input type="text" class="form-control" id="editDireccion" name="direccion_cliente" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono:</label>
+                            <input type="tel" class="form-control" id="editTelefono" name="telefono_cliente" required
+                                pattern="\d{10}" maxlength="10">
+                        </div>
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo:</label>
+                            <input type="email" class="form-control" id="editEmail" name="email_cliente" required>
+                        </div>
+                        <button type="submit" id="saveChanges" class="btn btn-enviar w-100">Actualizar Cliente</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Eliminar -->
+    <div class="modal fade" id="modalEliminar" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEliminarLabel">Eliminar Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>¿Seguro que desea eliminar al cliente?</p>
+                    <input type="hidden" id="clienteIdToDelete" />
+                    <!-- Span que muestra el nombre del cliente -->
+                    <span id="nombreCliente" class="fw-bold d-block fs-4"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <!-- bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Primero importar el js con las funciones -->
+    <script src="/static/js/funciones/alertas.js"></script>
+    <script src="/static/js/funciones/dataTables.js"></script>
+    <script src="/static/js/clientes/datosTabla.js"></script>
+
+    <script src="/static/js/funciones/setupDatos.js"></script>
+    <script src="/static/js/funciones/crudFetch.js"></script>
+
+    <script src="/static/js/clientes/modulo_clientes.js"></script>
+{% endblock %}
