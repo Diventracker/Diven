@@ -48,7 +48,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/usuario/crear" method="post">
+                    <form id="registrarUsuario">
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre del usuario:</label>
                             <input type="text" class="form-control" id="nombre" name="nombre_usuario" required
@@ -67,7 +67,7 @@
                             <select name="rol" class="form-control" required>
                                 <option value="" selected disabled>Seleccione un rol...</option>
                                 <option value="Administrador">Administrador</option>
-                                <option value="Tecnico">Técnico</option>
+                                <option value="Técnico">Técnico</option>
                                 <option value="Vendedor">Vendedor</option>
                             </select>
                         </div>
@@ -105,7 +105,10 @@
                         <div class="mb-3">
                             <label for="rol" class="form-label">Rol del usuario:</label>
                             <select id="editRol" name="rol" class="form-control" required>
-                                <!-- El contenido de aca viene desde el js de usuarios -->                               
+                                <option value="" selected disabled>Seleccione un rol...</option>
+                                <option value="Administrador">Administrador</option>
+                                <option value="Técnico">Técnico</option>
+                                <option value="Vendedor">Vendedor</option>                                                                  
                             </select>
                         </div>
                         <button type="submit" id="saveChanges" class="btn btn-enviar w-100">Actualizar Usuario</button>
