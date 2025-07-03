@@ -1,24 +1,17 @@
 from fastapi import APIRouter, Request, Depends
 from sqlalchemy.orm import Session
-from fastapi.templating import Jinja2Templates
 from database.database import get_db
 from usuarios.controller import UsuarioControlador
 from usuarios.schema import UsuarioCreateSchema
 
 router = APIRouter()
 
-templates = Jinja2Templates(directory=["templates", "usuarios/templates"])
-
 #Ruta principal para mostrar tabla usuarios
 @router.get("/usuarios", tags=["Usuarios"])
-def listar_usuarios(
-    request: Request,
-):
-    rol = request.cookies.get("rol") 
-    return templates.TemplateResponse("usuarios.html", {
-        "request": request,
-        "rol": rol
-    })
+def listar_usuarios(request: Request, db: Session = Depends(get_db)):
+    controlador = UsuarioControlador(db)  # No necesita DB para esta vista
+    return controlador.vista_principal(request)
+
 
 #Ruta que devuelve todos los datos
 @router.get("/usuarios/data")

@@ -1,13 +1,21 @@
+from fastapi import Request
 from fastapi.responses import JSONResponse
+from fastapi.templating import Jinja2Templates
 from usuarios.repositorio import UsuarioRepositorio
 from usuarios.crud import UsuarioCRUD
 from usuarios.schema import UsuarioCreateSchema
 from utils.email import enviar_correo
 
+templates = Jinja2Templates(directory=["templates", "usuarios/templates"])
+
 class UsuarioControlador:
     def __init__(self, db):
         repo = UsuarioRepositorio(db)
         self.crud = UsuarioCRUD(repo)
+
+    def vista_principal(self, request: Request):
+        rol = request.cookies.get("rol")
+        return templates.TemplateResponse("usuarios.html", {"request": request, "rol": rol})
 
     def listar_todos(self):
         usuarios = self.crud.listar_todos()
