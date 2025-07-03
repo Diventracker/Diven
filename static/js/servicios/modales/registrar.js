@@ -2,7 +2,7 @@
 initSelect2Modal({
   selector: '#selectClientes',
   placeholder: 'Buscar cliente...',
-  url: '/servicios/clientes',
+  url: '/clientes/filtrar',
   processResultsMapper: c => ({
     id: c.id,
     text: `${c.nombre} (${c.documento})`

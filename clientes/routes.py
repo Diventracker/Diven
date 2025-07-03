@@ -53,10 +53,17 @@ def eliminar_cliente_endpoint(
     controlador = ClienteControlador(db)
     return controlador.eliminar(id_cliente)
 
-
     
 #Ruta para obtener el cliente
-@router.get("/clientes/buscar/{documento}", response_class=JSONResponse, tags=["Clientes"])
+@router.get("/clientes/buscar/{documento}", tags=["Clientes"])
 def buscar_cliente_por_documento(documento: str, db: Session = Depends(get_db)):
     controlador = ClienteControlador(db)
     return controlador.buscar_por_documento(documento)
+
+
+#Ruta para filtrar los clientes en las busquedas
+@router.get("/clientes/filtrar", tags=["Clientes"])
+def filtrar_clientes(search: str = "", db: Session = Depends(get_db)):
+    controlador = ClienteControlador(db)
+    return controlador.filtrar_clientes(search)
+

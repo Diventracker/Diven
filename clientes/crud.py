@@ -61,3 +61,5 @@ class ClienteCRUD:
         self.repo.db.delete(cliente)
         self.repo.db.commit()
 
+    def filtrar_por_texto(self, texto: str):
+        return self.repo.buscar_por_nombre_o_documento(texto)

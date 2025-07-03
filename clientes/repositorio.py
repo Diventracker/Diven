@@ -17,3 +17,9 @@ class ClienteRepositorio:
     
     def obtener_todos(self) -> list[Cliente]:
         return self.db.query(Cliente).order_by(desc(Cliente.id_cliente)).all()
+
+    def buscar_por_nombre_o_documento(self, texto: str) -> list[Cliente]:
+        return self.db.query(Cliente).filter(
+            (Cliente.nombre_cliente.ilike(f"%{texto}%")) |
+            (Cliente.numero_documento.ilike(f"%{texto}%"))
+        ).all()

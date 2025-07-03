@@ -112,6 +112,17 @@ class ClienteControlador:
 
         except Exception as e:
             return JSONResponse(content={"success": False, "error": f"Error inesperado: {str(e)}"},status_code=500)
+    
+    #Funcion pasa filtra los clientes para los selects de servicios
+    def filtrar_clientes(self, texto: str):
+        clientes = self.crud.filtrar_por_texto(texto)
+        return [
+            {
+                "id": c.id_cliente,
+                "nombre": c.nombre_cliente,
+                "documento": c.numero_documento
+            } for c in clientes
+        ]
         
         
 

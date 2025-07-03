@@ -1,93 +1,39 @@
-from fastapi import APIRouter,HTTPException, Depends, Request, Form 
+from fastapi import APIRouter,HTTPException, Depends, Request
 from datetime import datetime
-from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse 
-from fastapi.templating import Jinja2Templates 
-from sqlalchemy import desc
-from sqlalchemy.orm import Session, joinedload
+from fastapi.responses import HTMLResponse, JSONResponse 
+from sqlalchemy.orm import Session
 from database.database import get_db
+from servicios.controller import ServicioControlador
 from servicios.model import DetalleServicio, ServicioTecnico
 from clientes.model import Cliente
 from servicios.schema import EstadoServicioInput, ServicioCreate, ServicioRevisionSchema, ServicioUpdate  
 
 router = APIRouter()
-templates = Jinja2Templates(directory="servicios/templates")  # Ruta donde están las vistas
 
-@router.get("/servicios", response_class=HTMLResponse, tags=["servicio_tecnico"])
-def listar_servicios(
-    request: Request,
-    db: Session = Depends(get_db),
-    page: int = 1,
-    limit: int = 9,
-    search: str = ""
-):
-    query = db.query(ServicioTecnico).options(
-        joinedload(ServicioTecnico.detalles)
-    ).order_by(desc(ServicioTecnico.id_servicio))
+#Ruta muestra el html de los servicios
+@router.get("/servicios", tags=["servicio_tecnico"])
+def listar_servicios(request: Request, db: Session = Depends(get_db)):
+    controlador = ServicioControlador(db)
+    return controlador.vista_principal(request)
 
-    rol = request.cookies.get("rol")  # Obtener rol de la cookie
+#Ruta que envia todos los servicios json
+@router.get("/servicios/data", tags=["servicio_tecnico"])
+def obtener_servicios_data(db: Session = Depends(get_db)):
+    controlador = ServicioControlador(db)
+    return controlador.obtener_datos()
 
-    if search:
-        query = query.filter(
-            (ServicioTecnico.id_servicio.ilike(f"%{search}%")) |
-            (ServicioTecnico.tipo_equipo.ilike(f"%{search}%"))
-        )
-    
-    total = query.count()
-    offset = (page - 1) * limit
-    servicios = query.offset(offset).limit(limit).all()
-
-    total_pages = (total + limit - 1) // limit  # Redondeo hacia arriba
-
-    return templates.TemplateResponse("servicios.html", {
-        "request": request,
-        "servicios": servicios,
-        "ruta_base": "/servicios",
-        "page": page,
-        "total_pages": total_pages,
-        "search": search,
-        "rol": rol  
-    })
-
-
-#Obetener los clientes para agregarlos al Select
-@router.get("/servicios/clientes", response_class=JSONResponse)
-def filtrar_clientes(search: str = "", db: Session = Depends(get_db)):
-    clientes = db.query(Cliente).filter(
-        (Cliente.nombre_cliente.ilike(f"%{search}%")) |
-        (Cliente.numero_documento.ilike(f"%{search}%"))
-    ).all()
-
-    return [{"id": c.id_cliente, "nombre": c.nombre_cliente, "documento": c.numero_documento} for c in clientes]
 
 
 #Ruta para crear un nuevo servicio tecnico
 @router.post("/servicio/crear", tags=["servicio_tecnico"])
 def crear_servicio(
-    request: Request,  # Para acceder a la cookie
+    request: Request,
     datos: ServicioCreate = Depends(ServicioCreate.as_form),
     db: Session = Depends(get_db)
 ):
-    # Obtener el usuario_id desde la cookie
-    usuario_id = request.cookies.get("usuario_id")
+    controlador = ServicioControlador(db)
+    return controlador.crear(request, datos)
 
-    # Convertir usuario_id a entero
-    usuario_id = int(usuario_id)
-    
-    # Crear el nuevo servicio técnico
-    nuevo_servicio = ServicioTecnico(
-        id_cliente=datos.cliente_id,
-        id_usuario=usuario_id,
-        modelo_equipo=datos.modelo_equipo,
-        tipo_equipo=datos.tipo_equipo,
-        tipo_servicio=datos.tipo_servicio,
-        precio_servicio=datos.precio_servicio,
-        descripcion_problema=datos.descripcion
-    )
-
-    db.add(nuevo_servicio)
-    db.commit()
-
-    return RedirectResponse(url="/servicios?create=1", status_code=303)
 
 
 #Ruta para eliminar un servicio Tecnico
