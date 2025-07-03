@@ -3,7 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-06-2025 a las 21:19:26
+-- Tiempo de generación: 20-06-2025 a las 23:12:24
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -71,8 +73,8 @@ INSERT INTO `cliente` (`id_cliente`, `nombre_cliente`, `numero_documento`, `dire
 (28, 'Valeria Rincón', '1190123458', 'Calle 6 #18-80', '3099012345', 'valeriar@example.com', 'CC', '2025-07-25'),
 (29, 'Nicolás Torres', '1201234569', 'Carrera 18 #40-44', '3100123456', 'nicolast@example.com', 'TI', '2025-08-19'),
 (30, 'Daniela Suárez', '1212345670', 'Avenida 5 #30-70', '3111234567', 'danielas@example.com', 'Pasaporte', '2025-09-10'),
-(31, 'Joaquin Cañon', '1012443507', 'tv 77 i # 65 j 16 sur ', '3053970242', 'Danielcf97@hotmail.com', 'CC', '2025-06-12');
-
+(31, 'Joaquin Cañon', '1012443507', 'tv 77 i # 65 j 16 sur ', '3053970242', 'Danielcf97@hotmail.com', 'CC', '2025-06-12'),
+(32, 'deivit', '1012328726', 'dg 74 8 sur i 45', '1234567890', 'deivit@gmail.com', 'CC', '2025-06-17');
 
 -- --------------------------------------------------------
 
@@ -101,6 +103,22 @@ CREATE TABLE `detalle_venta` (
   `cantidad` int(11) NOT NULL,
   `precio_unitario` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `detalle_venta`
+--
+
+INSERT INTO `detalle_venta` (`id_detalle`, `id_venta`, `id_producto`, `cantidad`, `precio_unitario`) VALUES
+(1, 1, 1, 1, 45000),
+(2, 1, 16, 1, 22000),
+(3, 1, 17, 1, 85000),
+(4, 1, 31, 1, 50000),
+(5, 2, 4, 50, 40000),
+(6, 4, 19, 3, 162702),
+(7, 4, 17, 2, 106743),
+(31, 17, 5, 2, 36615),
+(32, 23, 20, 1, 48000),
+(33, 24, 25, 1, 59000);
 
 -- --------------------------------------------------------
 
@@ -153,7 +171,7 @@ CREATE TABLE `producto` (
 --
 
 INSERT INTO `producto` (`id_producto`, `nombre_producto`, `modelo`, `descripcion`, `precio`, `stock`, `id_proveedor`, `meses_garantia`, `fecha_compra`, `precio_venta`) VALUES
-(1, 'Teclado USB', 'KB-100', 'Teclado básico alámbrico USB', 30000, 25, 1, 12, '2025-01-10 05:00:00', 45000),
+(1, 'Teclado USB', 'KB-100', 'Teclado básico alámbrico USB', 30000, 24, 1, 12, '2025-01-10 05:00:00', 45000),
 (2, 'Cable HDMI 2m', 'HDMI-2M', 'Cable HDMI de 2 metros', 15000, 40, 2, 6, '2025-01-17 05:00:00', 25000),
 (3, 'Adaptador HDMI a VGA', 'AD-HDVGA', 'Convertidor HDMI a VGA con audio', 18000, 35, 13, 6, '2025-02-03 05:00:00', 28000),
 (4, 'Memoria USB 32GB', 'USB-32', 'Memoria flash 32GB USB 3.0', 28000, 50, 10, 24, '2025-02-11 05:00:00', 40000),
@@ -168,23 +186,22 @@ INSERT INTO `producto` (`id_producto`, `nombre_producto`, `modelo`, `descripcion
 (13, 'Memoria RAM 8GB DDR4', 'RAM-8GB', 'RAM 8GB DDR4 2666MHz', 130000, 12, 23, 36, '2025-05-02 05:00:00', 180000),
 (14, 'Disco duro 500GB', 'HDD-500', 'HDD interno 500GB SATA', 80000, 10, 22, 12, '2025-05-10 05:00:00', 110000),
 (15, 'Teclado ergonómico', 'KB-ERGO', 'Teclado ergonómico para oficina', 95000, 8, 19, 12, '2025-05-18 05:00:00', 130000),
-(16, 'Cable VGA 3m', 'VGA-3M', 'Cable VGA reforzado de 3 metros', 16000, 20, 29, 6, '2025-05-27 05:00:00', 22000),
-(17, 'Memoria USB 128GB', 'USB-128', 'Memoria flash 128GB 3.0', 68000, 18, 24, 24, '2025-06-01 05:00:00', 85000),
+(16, 'Cable VGA 3m', 'VGA-3M', 'Cable VGA reforzado de 3 metros', 16000, 19, 29, 6, '2025-05-27 05:00:00', 22000),
+(17, 'Memoria USB 128GB', 'USB-128', 'Memoria flash 128GB 3.0', 68000, 17, 24, 24, '2025-06-01 05:00:00', 85000),
 (18, 'SSD 512GB', 'SSD-512', 'Unidad de estado sólido 512GB NVMe', 150000, 10, 12, 24, '2025-06-05 05:00:00', 200000),
 (19, 'Teclado multimedia', 'KB-MULTI', 'Teclado con teclas multimedia dedicadas', 48000, 18, 28, 12, '2025-06-08 05:00:00', 65000),
-(20, 'Adaptador USB a HDMI', 'AD-USBHD', 'Adaptador USB 3.0 a HDMI full HD', 33000, 20, 27, 6, '2025-06-10 05:00:00', 48000),
+(20, 'Adaptador USB a HDMI', 'AD-USBHD', 'Adaptador USB 3.0 a HDMI full HD', 33000, 19, 27, 6, '2025-06-10 05:00:00', 48000),
 (21, 'Memoria RAM 16GB DDR4', 'RAM-16GB', 'RAM 16GB DDR4 3200MHz', 250000, 6, 21, 36, '2025-06-11 05:00:00', 330000),
 (22, 'Cartucho HP 664 Negro', 'HP-664BK', 'Cartucho original HP 664 negro para impresoras DeskJet', 40000, 20, 7, 12, '2025-01-12 05:00:00', 58000),
 (23, 'Cartucho HP 664 Tricolor', 'HP-664C', 'Cartucho original HP 664 tricolor (C/M/Y)', 42000, 18, 7, 12, '2025-01-25 05:00:00', 60000),
 (24, 'Cartucho Canon PG-145 Negro', 'CN-145BK', 'Cartucho Canon PG-145 negro para PIXMA', 38000, 15, 12, 12, '2025-02-08 05:00:00', 55000),
-(25, 'Cartucho Canon CL-146 Tricolor', 'CN-146C', 'Cartucho Canon CL-146 tricolor compatible con PIXMA', 41000, 12, 12, 12, '2025-02-18 05:00:00', 59000),
+(25, 'Cartucho Canon CL-146 Tricolor', 'CN-146C', 'Cartucho Canon CL-146 tricolor compatible con PIXMA', 41000, 11, 12, 12, '2025-02-18 05:00:00', 59000),
 (26, 'Cartucho Epson T664 Negro', 'EP-T664BK', 'Botella de tinta Epson T664 negra para L220/L365', 35000, 30, 13, 24, '2025-03-03 05:00:00', 48000),
 (27, 'Cartucho Epson T664 Tricolor', 'EP-T664C', 'Botellas de tinta Epson T664 C/M/Y para L-series', 36000, 28, 13, 24, '2025-03-15 05:00:00', 50000),
 (28, 'Cartucho Brother LC-3011 Negro', 'BR-3011BK', 'Cartucho Brother negro LC3011 para DCP-T510W', 37000, 10, 21, 12, '2025-04-02 05:00:00', 52000),
 (29, 'Cartucho Brother LC-3011 Tricolor', 'BR-3011C', 'Cartucho Brother tricolor LC3011 para multifuncionales', 39000, 10, 21, 12, '2025-04-11 05:00:00', 54000),
 (30, 'Cartucho genérico HP 662 Negro', 'HP-662GEN-BK', 'Cartucho compatible con HP 662 negro', 30000, 25, 24, 6, '2025-05-06 05:00:00', 45000),
-(31, 'Cartucho genérico HP 662 Tricolor', 'HP-662GEN-C', 'Cartucho compatible con HP 662 tricolor', 32000, 25, 24, 6, '2025-05-12 05:00:00', 47000);
-
+(31, 'Cartucho genérico HP 662 Tricolor', 'HP-662GEN-C', 'Cartucho compatible con HP 662 tricolor', 32000, 24, 24, 6, '2025-05-12 05:00:00', 50000);
 
 -- --------------------------------------------------------
 
@@ -254,6 +271,29 @@ CREATE TABLE `servicio_tecnico` (
   `descripcion_trabajo` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `servicio_tecnico`
+--
+
+INSERT INTO `servicio_tecnico` (`id_servicio`, `id_cliente`, `id_usuario`, `tipo_equipo`, `modelo_equipo`, `descripcion_problema`, `fecha_recepcion`, `fecha_entrega`, `estado_servicio`, `meses_garantia`, `tipo_servicio`, `precio_servicio`, `descripcion_trabajo`) VALUES
+(1, 1, 13, 'Laptop', 'HP Pavilion', 'No enciende', '2025-01-12 05:00:00', '2025-01-15', 'Finalizado', 3, 'Reparación', 85000, 'Cambio de fuente'),
+(2, 2, 15, 'Impresora', 'Canon LBP', 'Atascos de papel', '2025-01-20 05:00:00', '2025-01-23', 'Finalizado', 2, 'Mantenimiento', 60000, 'Limpieza de rodillos'),
+(3, 3, 17, 'PC Escritorio', 'Lenovo ThinkCentre', 'Pantalla azul', '2025-02-01 05:00:00', '2025-02-04', 'Finalizado', 1, 'Diagnóstico y ajuste', 95000, 'Actualización BIOS'),
+(4, 4, 19, 'Laptop', 'Dell Inspiron', 'Sobrecalentamiento', '2025-02-10 05:00:00', '2025-02-13', 'Finalizado', 3, 'Reparación', 100000, 'Cambio de ventilador'),
+(5, 5, 21, 'Monitor', 'Samsung 24\"', 'No da imagen', '2025-02-20 05:00:00', '2025-02-23', 'Finalizado', 0, 'Diagnóstico', 50000, 'Revisión sin reparación'),
+(6, 6, 23, 'Laptop', 'Acer Aspire', 'Teclado dañado', '2025-03-01 05:00:00', '2025-03-03', 'Finalizado', 2, 'Reparación', 75000, 'Cambio de teclado'),
+(7, 7, 25, 'Tablet', 'Samsung Galaxy Tab', 'Pantalla rota', '2025-03-10 05:00:00', '2025-03-14', 'Finalizado', 1, 'Reemplazo de pantalla', 120000, 'Pantalla nueva instalada'),
+(8, 8, 27, 'CPU', 'Custom AMD', 'No prende', '2025-03-20 05:00:00', '2025-03-23', 'Finalizado', 3, 'Revisión general', 70000, 'Fuente dañada, se reemplazó'),
+(9, 9, 29, 'Impresora', 'Epson EcoTank', 'Tinta no fluye', '2025-04-01 05:00:00', '2025-04-04', 'Finalizado', 1, 'Mantenimiento', 55000, 'Limpieza de cabezales'),
+(10, 10, 31, 'Portátil', 'Asus VivoBook', 'Pantalla parpadea', '2025-04-10 05:00:00', '2025-04-13', 'Finalizado', 2, 'Reparación', 80000, 'Cambio de cable flex'),
+(11, 11, 13, 'Laptop', 'MacBook Pro', 'No carga batería', '2025-05-01 05:00:00', '2025-05-04', 'Finalizado', 3, 'Reemplazo de batería', 150000, 'Batería nueva instalada'),
+(12, 12, 15, 'Impresora', 'HP Deskjet', 'Error de sistema', '2025-05-10 05:00:00', '2025-05-13', 'Finalizado', 1, 'Reparación', 65000, 'Reseteo y prueba exitosa'),
+(13, 13, 17, 'CPU', 'Intel Core i5', 'No arranca', '2025-05-20 05:00:00', '2025-05-23', 'Finalizado', 0, 'Diagnóstico', 50000, 'Problema en board'),
+(14, 14, 19, 'Laptop', 'Lenovo Yoga', 'No funciona teclado', '2025-06-01 05:00:00', '2025-06-03', 'Finalizado', 2, 'Reparación', 85000, 'Cambio parcial de teclado'),
+(15, 15, 21, 'Monitor', 'LG UltraWide', 'Línea en pantalla', '2025-06-12 05:00:00', '2025-06-15', 'Finalizado', 0, 'Diagnóstico', 40000, 'Panel dañado, no reparado'),
+(16, 32, 1, 'Computador portatil', 'asus ', 'no da imagen', '2025-06-20 19:55:23', NULL, 'En Revisión', 2, 'Instalación', 90000, ''),
+(17, 31, 1, 'Computador portatil', 'acer', 'no carga', '2025-06-20 19:56:59', NULL, 'En Progreso', 0, 'Mantenimiento', 150000, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -312,6 +352,35 @@ CREATE TABLE `venta` (
   `fecha_venta` date NOT NULL,
   `total_venta` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `venta`
+--
+
+INSERT INTO `venta` (`id_venta`, `id_cliente`, `id_usuario`, `fecha_venta`, `total_venta`) VALUES
+(1, 32, 1, '2025-06-17', 202000),
+(2, 32, 1, '2025-06-17', 2000000),
+(3, 19, 1, '2025-02-27', 53588),
+(4, 10, 1, '2025-04-24', 701592),
+(5, 5, 20, '2025-02-12', 120000),
+(6, 6, 22, '2025-03-03', 99000),
+(7, 7, 24, '2025-03-15', 158000),
+(8, 8, 26, '2025-03-22', 104000),
+(9, 9, 28, '2025-04-06', 175000),
+(10, 10, 30, '2025-04-18', 117000),
+(11, 11, 12, '2025-05-02', 95000),
+(12, 12, 14, '2025-05-14', 143000),
+(13, 13, 16, '2025-05-29', 198000),
+(14, 14, 18, '2025-06-05', 125000),
+(15, 15, 20, '2025-06-15', 172000),
+(16, 2, 14, '2025-01-18', 130000),
+(17, 11, 1, '2025-05-23', 132523),
+(18, 3, 16, '2025-01-25', 145000),
+(19, 4, 18, '2025-02-05', 110000),
+(20, 1, 12, '2025-01-10', 95000),
+(22, 19, 1, '2025-05-18', 373226),
+(23, 1, 1, '2025-06-20', 48000),
+(24, 1, 1, '2025-06-20', 59000);
 
 --
 -- Índices para tablas volcadas
@@ -400,8 +469,7 @@ ALTER TABLE `venta`
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_servicio`
@@ -413,8 +481,7 @@ ALTER TABLE `detalle_servicio`
 -- AUTO_INCREMENT de la tabla `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
-
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT de la tabla `garantia_producto`
@@ -432,7 +499,7 @@ ALTER TABLE `garantia_servicio`
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT de la tabla `proveedor`
@@ -444,8 +511,7 @@ ALTER TABLE `proveedor`
 -- AUTO_INCREMENT de la tabla `servicio_tecnico`
 --
 ALTER TABLE `servicio_tecnico`
-  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
@@ -457,9 +523,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `venta`
 --
 ALTER TABLE `venta`
-
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- Restricciones para tablas volcadas
