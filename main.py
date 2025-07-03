@@ -6,7 +6,7 @@ from access import routes as access_router
 from usuarios import routes as usuarios_router
 from clientes import routes as clientes_router
 from servicios import routes as servicios_router
-from producto import routes as producto_router
+from productos import routes as producto_router
 from proveedores import routes as proveedores_router
 from ventas import routes as ventas_router
 from garantias import routes as garantias_router

@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session, joinedload
 from clientes.model import Cliente
 from database.database import get_db
-from producto.model import Producto
+from productos.model import Producto
 from usuarios.model import Usuario
 from ventas.model import DetalleVenta, Venta
 from sqlalchemy import desc, or_

@@ -3,57 +3,21 @@ from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.exc import IntegrityError
 from database.database import get_db
-from producto.schema import ProductoCreate, ProductoOut, ProductoUpdate, StockUpdate
+from productos.controller import ProductoControlador
+from productos.schema import ProductoCreate, ProductoOut, ProductoUpdate, StockUpdate
 from proveedores.model import Proveedor
-from producto.model import Producto
-
-from fastapi.templating import Jinja2Templates
-from datetime import datetime
+from productos.model import Producto
 
 
 router = APIRouter()
-templates = Jinja2Templates(directory="producto/templates")
 
-# Vista principal del producto
-@router.get("/producto", response_class=HTMLResponse, tags=["Productos"])
-def vista_producto(
-    request: Request,
-    search: str = "",
-    page: int = 1,
-    limit: int = 9,
-    db: Session = Depends(get_db)
-):
-    rol = request.cookies.get("rol")  # Obtener rol desde cookies
 
-    query = db.query(Producto).options(joinedload(Producto.proveedor))
+# Vista principal que muestra el html de productos
+@router.get("/productos", response_class=HTMLResponse, tags=["Productos"])
+def vista_producto(request: Request, db: Session = Depends(get_db)):
+    controlador = ProductoControlador(db)
+    return controlador.mostrar_vista(request)
 
-    if search:
-        query = query.filter(
-            (Producto.nombre_producto.ilike(f"%{search}%")) |
-            (Producto.id_producto.ilike(f"%{search}%"))
-        )
-
-    total = query.count()
-    offset = (page - 1) * limit
-
-    productos = (
-        query.order_by(Producto.id_producto.desc())
-        .offset(offset)
-        .limit(limit)
-        .all()
-    )
-
-    total_pages = (total + limit - 1) // limit
-
-    return templates.TemplateResponse("producto.html", {
-        "request": request,
-        "productos": productos,
-        "search": search,
-        "rol": rol,
-        "page": page,
-        "total_pages": total_pages,
-        "ruta_base": "/producto"
-    })
 
 
 #Obetener los proveedores para agregarlos al Select
@@ -70,41 +34,12 @@ def filtrar_proveedores(search: str = "", db: Session = Depends(get_db)):
 # Ruta que recibe el formulario de agregar Porducto
 @router.post("/producto/crear", tags=["Productos"])
 def crear_producto(
-    nombre_producto: str = Form(...),
-    modelo: str = Form(...),
-    descripcion: str = Form(...),
-    stock: int = Form(...),
-    precio: int = Form(...),
-    precio_venta: int = Form(None),
-    id_proveedor: int = Form(...),
-    meses_garantia: int = Form(None),
+    datos: ProductoCreate = Depends(ProductoCreate.as_form),
     db: Session = Depends(get_db)
 ):
-    try:
-        # Validar con Pydantic
-        producto_data = ProductoCreate(
-            nombre_producto=nombre_producto,
-            modelo=modelo,
-            descripcion=descripcion,
-            precio=precio,
-            precio_venta=precio_venta,
-            stock=stock,
-            id_proveedor=id_proveedor,
-            meses_garantia=meses_garantia
-        )
-        
-        nuevo_producto = Producto(**producto_data.model_dump())
-        db.add(nuevo_producto)
-        db.commit()      
+    controlador = ProductoControlador(db)
+    return controlador.crear(datos)
 
-        return RedirectResponse(url="/producto?create=1", status_code=303)  # Redirección con éxito
-
-    except IntegrityError:
-        db.rollback()
-        return RedirectResponse(url="/producto?error=1", status_code=303)  # Redirección con error algun duplicado
-
-    except Exception as e:
-        return RedirectResponse(url="/producto?error=2", status_code=303)  # Redirección con error al crear
 
 
 #Ruta que recibe el fetch de js para editar producto
