@@ -54,7 +54,6 @@ def filtrar_clientes(search: str = "", db: Session = Depends(get_db)):
         (Cliente.numero_documento.ilike(f"%{search}%"))
     ).all()
 
-Ventasfix
     return [{"id": c.id_cliente, "nombre": c.nombre_cliente, "documento": c.numero_documento} for c in clientes]
 
 
