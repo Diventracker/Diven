@@ -2,45 +2,68 @@ document.getElementById('checkServicioForm').addEventListener('submit', async fu
     e.preventDefault();
 
     const id_servicio = document.getElementById('serviceIdCheck').value;
-    const meses_garantia = document.querySelector('input[name="meses_garantia"]').value;
+    const form = document.getElementById('checkServicioForm');
+    const meses_garantia = parseInt(document.querySelector('input[name="meses_garantiaCheck"]').value);
     const descripcion = document.getElementById('descripcionTrabajo').value;
     const modal = bootstrap.Modal.getInstance(document.getElementById('modalCheck'));
 
-    // Recoger detalles de costos
-    const detalles = Array.from(document.querySelectorAll('.costo-item')).map(item => {
-        const valor = parseInt(item.querySelector('.costo-valor').value) || 0;
-        const motivo = item.querySelector('.costo-motivo').value.trim();
-        return { valor_adicional: valor, motivo: motivo };
-    });
+    const incluirCostos = document.getElementById('toggleCostos').checked;
+
+    let detalles = [];
+    if (incluirCostos) {
+        //Recoger los detalles de costos
+        detalles = Array.from(document.querySelectorAll('.costo-item')).map(item => {
+            const valor = parseInt(item.querySelector('.costo-valor').value) || 0;
+            const motivo = item.querySelector('.costo-motivo').value.trim();
+            return { valor_adicional: valor, motivo: motivo };
+        });
+    }
 
     // Crear FormData y agregar todos los campos
     const formData = new FormData();
     formData.append("id_servicio", id_servicio);
     formData.append("meses_garantia", meses_garantia);
     formData.append("descripcion", descripcion);
-    formData.append("detalles", JSON.stringify(detalles));  // clave: JSON en string
+    if (incluirCostos && detalles.length > 0) {
+        formData.append("detalles", JSON.stringify(detalles));
+    }
 
     try {
-        const response = await fetch('/api/servicio/revision', {
+        const response = await fetch('/servicio/revision', {
             method: 'POST',
-            body: formData // sin headers
+            body: formData
         });
 
         const result = await response.json();
-        if (response.ok) {
-            // Cerrar el modal            
-            if (modal) {
-                modal.hide();
+
+        if (result.success) {
+            // Ocultar el modal si está presente
+            if (modal) modal.hide();
+            form.reset(); // 🧹 Limpiar el formulario
+            //Resetar el card de costos adicionales 
+            resetCostosAdicionales({
+                toggleId: 'toggleCostos',
+                grupoCostosId: 'grupoCostos',
+                contenedorCostosId: 'costosAdicionales',
+                botonAgregarId: 'agregarCosto'
+            });
+
+
+            // Mostrar alerta de éxito
+            mostrarAlerta("alerta-success", result.mensaje || "Servicio actualizado correctamente");
+
+            // Recargar DataTable si existe
+            if (window.tablaServicios) {
+                tablaServicios.ajax.reload(null, false); // false = mantener paginación
             }
-            alert('Servicio actualizado correctamente');
-            window.location.reload(); //Para recargar la pagina mejor, depues lo cambio
-            //mostrarAlerta("alerta-exito", "Servicio actualizado correctamente");        
+
         } else {
             console.error(result);
-            alert('Error al guardar los cambios.');
+            mostrarAlerta("alerta-warning", result.error || "No se pudo actualizar el servicio");
         }
+
     } catch (err) {
         console.error('Fetch error:', err);
-        alert('Error al enviar los datos.');
+        mostrarAlerta("alerta-warning", "Error al enviar los datos. Intenta nuevamente.");
     }
 });

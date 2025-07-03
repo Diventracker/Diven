@@ -1,22 +1,43 @@
 //evento que recibe para que se muestren tambien en el id y el estado en las cards
-document.addEventListener('DOMContentLoaded', function () {
-    const editButtons = document.querySelectorAll('.aprob-button');
+document.addEventListener('click', function (e) {
+    const button = e.target.closest('.aprob-button');
+    if (!button) return;
 
-    editButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            // Obtener los valores desde los atributos data-*
-            const servicioId = button.getAttribute('data-id');
-            const modal = document.getElementById('modalAprobar');
-            //Poner el id al modal
-            modal.setAttribute('data-servicio-id', servicioId);  
-            // Cambiar la URL del enlace con el ID
-            const link = document.getElementById('verServicioLink');
-            if (link && servicioId) {
-                link.href = `/servicios/comprobante/${servicioId}`;
-            }
-        });
-    });
+    const servicioId = button.getAttribute('data-id');
+    const modal = document.getElementById('modalAprobar');
+
+    if (modal && servicioId) {
+        modal.setAttribute('data-servicio-id', servicioId);
+
+        const link = document.getElementById('verServicioLink');
+        if (link) {
+            link.href = `/servicios/comprobante/${servicioId}`;
+        }
+    }
 });
+
+//Para desactivarlo si cierran el modal
+document.addEventListener('DOMContentLoaded', function () {
+  const modal = document.getElementById('modalAprobar');
+  const checkbox = document.getElementById('confirmarAprobacion');
+  const btnAprobar = document.getElementById('btnAprobar');
+
+  modal.addEventListener('show.bs.modal', function () {
+    checkbox.checked = false;
+    btnAprobar.disabled = true;
+  });
+});
+
+//Limpia el textarea del rechazo
+document.addEventListener('DOMContentLoaded', function () {
+  const modalRechazo = document.getElementById('modalRechazo');
+  const textareaMotivo = document.getElementById('motivoRechazo');
+
+  modalRechazo.addEventListener('show.bs.modal', function () {
+    textareaMotivo.value = '';
+  });
+});
+
 
 //Funcion que activa el boton de aprobar segun el checkbox
 function toggleBotonAprobar() {
@@ -31,7 +52,7 @@ function prepararModalRechazo() {
   document.getElementById('modalRechazo').setAttribute('data-servicio-id', idServicio);
 }
 
-//Funcion que manda el fetch al hacer click en aprobar
+// Función que manda el fetch al hacer clic en aprobar
 function aprobarServicio() {
   const modal = document.getElementById('modalAprobar');
   const servicioId = modal.getAttribute('data-servicio-id');
@@ -46,27 +67,32 @@ function aprobarServicio() {
   .then(res => res.json())
   .then(data => {
     if (data.success) {
-      alert('✅ Servicio aprobado correctamente');
-      bootstrap.Modal.getInstance(modal).hide();
-      location.reload();
+      mostrarAlerta("alerta-success", data.mensaje || 'Servicio aprobado correctamente');
+      const bsModal = bootstrap.Modal.getInstance(modal);
+      if (bsModal) bsModal.hide();
+
+      if (window.tablaServicios) {
+        tablaServicios.ajax.reload(null, false);
+      }
     } else {
-      alert('❌ Error: ' + data.message);
+      mostrarAlerta("alerta-warning", data.error || 'No se pudo aprobar el servicio');
     }
   })
   .catch(err => {
     console.error(err);
-    alert('❌ Error inesperado');
+    mostrarAlerta("alerta-warning", 'Error inesperado al aprobar el servicio.');
   });
 }
 
-//Funcion para enviar el rechazo
+
+// Función para enviar el rechazo
 function confirmarRechazo() {
   const modal = document.getElementById('modalRechazo');
   const servicioId = modal.getAttribute('data-servicio-id');
   const motivo = document.getElementById('motivoRechazo').value.trim();
 
   if (!motivo) {
-    alert("❗ Por favor ingresa un motivo para el rechazo.");
+    mostrarAlerta("alerta-warning", "Por favor ingresa un motivo para el rechazo.");
     return;
   }
 
@@ -83,18 +109,26 @@ function confirmarRechazo() {
   .then(res => res.json())
   .then(data => {
     if (data.success) {
-      alert('🚫 Servicio rechazado correctamente');
-      bootstrap.Modal.getInstance(modal).hide();
-      bootstrap.Modal.getInstance(document.getElementById('modalAprobar')).hide();
-      location.reload();
+      mostrarAlerta("alerta-success", data.mensaje || 'Servicio rechazado correctamente');
+
+      const bsModalRechazo = bootstrap.Modal.getInstance(modal);
+      if (bsModalRechazo) bsModalRechazo.hide();
+
+      const bsModalAprobar = bootstrap.Modal.getInstance(document.getElementById('modalAprobar'));
+      if (bsModalAprobar) bsModalAprobar.hide();
+
+      if (window.tablaServicios) {
+        tablaServicios.ajax.reload(null, false); 
+      }
     } else {
-      alert('❌ Error: ' + data.message);
+      mostrarAlerta("alerta-warning", data.error || 'No se pudo rechazar el servicio');
     }
   })
   .catch(err => {
     console.error(err);
-    alert('❌ Error inesperado al rechazar');
+    mostrarAlerta("alerta-warning", 'Error inesperado al rechazar el servicio.');
   });
 }
+
 
 

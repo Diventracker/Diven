@@ -1,88 +1,58 @@
-//Funcion para cuando se le da click al btn editar, y rellene los campos del form
-setupEditButtons({
-    buttonSelector: '.edit-button',
-    modalFields: {
-        id: 'serviceId',
-        tipoEquipo: 'editTipoEquipo',
-        tipoServicio: 'editTipoServicio',      
-        modelo: 'editModeloEquipo',
-        tecnico: 'editTecnico',
-        descripcion: 'editDescripcion',
-        trabajo: 'editTrabajo',
-        garantia: 'editGarantia'
-    }
-});
-
 //evento que recibe para que se muestren tambien en el id y el estado en las cards
-document.addEventListener('DOMContentLoaded', function () {
-    const editButtons = document.querySelectorAll('.edit-button');
+document.addEventListener('click', function (e) {
+    const button = e.target.closest('.edit-button');
+    if (!button) return;
+
+    const servicioId = button.getAttribute('data-id');
+    const estado = button.getAttribute('data-estado');
     const detalleCostos = document.getElementById('detalleCostos2');
     const totales = document.getElementById('totales2');
     const detalleTrabajo = document.getElementById('detallesTrabajo');
 
-    editButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            // Obtener los valores desde los atributos data-*
-            const servicioId = button.getAttribute('data-id');
-            const estado = button.getAttribute('data-estado');
+    const idDisplay = document.getElementById('servicioId');
+    if (idDisplay) {
+        idDisplay.textContent = servicioId;
+    }
 
-            // Mostrar el ID en el <h4 id="servicioId">
-            const idDisplay = document.getElementById('servicioId');
-            if (idDisplay) {
-                idDisplay.textContent = servicioId;
-            }
+    const estadoDisplay = document.getElementById('estadoActual');
+    if (estadoDisplay) {
+        estadoDisplay.className = 'badge'; // resetear clases
+        const estadoLower = estado.toLowerCase();
 
-            // Mostrar el estado en el <span id="estadoActual">
-            const estadoDisplay = document.getElementById('estadoActual');
-            if (estadoDisplay) {
-                // Cambiar clase del estado visual según su valor
-                estadoDisplay.className = 'badge'; // resetear clases
+        switch (estadoLower) {
+            case 'en progreso':
+                estadoDisplay.classList.add('text-bg-secondary','fs-6');
+                estadoDisplay.innerHTML = '<i class="bi bi-gear-fill"></i> En Progreso';
+                detalleCostos?.classList.add('d-none');
+                totales?.classList.add('d-none');
+                detalleTrabajo?.classList.add('d-none');
+                break;
 
-                // Obtener el estado en minúsculas para comparar
-                const estadoLower = estado.toLowerCase();
+            case 'en revisión':
+                estadoDisplay.classList.add('text-bg-warning','fs-6');
+                estadoDisplay.innerHTML = '<i class="bi bi-search"></i> En Revisión';
+                detalleCostos?.classList.remove('d-none');
+                totales?.classList.remove('d-none');
+                detalleTrabajo?.classList.remove('d-none');
+                break;
 
+            case 'rechazado':
+                estadoDisplay.classList.add('text-bg-danger','fs-6');
+                estadoDisplay.innerHTML = '<i class="bi bi-x"></i> Rechazado';
+                detalleCostos?.classList.remove('d-none');
+                totales?.classList.remove('d-none');
+                detalleTrabajo?.classList.remove('d-none');
+                break;
 
-                switch (estadoLower) {
-                    case 'en progreso':
-                        estadoDisplay.classList.add('text-bg-secondary','fs-6');
-                        estadoDisplay.innerHTML = '<i class="bi bi-gear-fill"></i> En Progreso';
-
-                        // Ocultar secciones
-                        if (detalleCostos) detalleCostos.classList.add('d-none');
-                        if (totales) totales.classList.add('d-none');
-                        if (detalleTrabajo) detalleTrabajo.classList.add('d-none');
-                        break;
-
-                    case 'en revisión':
-                        estadoDisplay.classList.add('text-bg-warning','fs-6');
-                        estadoDisplay.innerHTML = '<i class="bi bi-search"></i> En Revisión';
-
-                        if (detalleCostos) detalleCostos.classList.remove('d-none');
-                        if (totales) totales.classList.remove('d-none');
-                        if (detalleTrabajo) detalleTrabajo.classList.remove('d-none');
-                        break;
-
-                    case 'rechazado':
-                        estadoDisplay.classList.add('text-bg-danger','fs-6');
-                        estadoDisplay.innerHTML = '<i class="bi bi-x"></i> Rechazado';
-
-                        if (detalleCostos) detalleCostos.classList.remove('d-none');
-                        if (totales) totales.classList.remove('d-none');
-                        if (detalleTrabajo) detalleTrabajo.classList.remove('d-none');                        
-                        break;
-
-                    case 'finalizado':
-                        estadoDisplay.classList.add('text-bg-success','fs-6');
-                        estadoDisplay.innerHTML = '<i class="bi bi-check"></i> Finalizado';
-
-                        if (detalleCostos) detalleCostos.classList.remove('d-none');
-                        if (totales) totales.classList.remove('d-none');
-                        if (detalleTrabajo) detalleTrabajo.classList.remove('d-none');                        
-                        break;
-                }
-            }
-        });
-    });
+            case 'finalizado':
+                estadoDisplay.classList.add('text-bg-success','fs-6');
+                estadoDisplay.innerHTML = '<i class="bi bi-check"></i> Finalizado';
+                detalleCostos?.classList.remove('d-none');
+                totales?.classList.remove('d-none');
+                detalleTrabajo?.classList.remove('d-none');
+                break;
+        }
+    }
 });
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -162,6 +132,7 @@ document.getElementById('saveChanges').addEventListener('click', async function 
     const form = document.getElementById('editServicioForm');
     const id_servicio = document.getElementById('serviceId').value;
     const id_usuario = parseInt(localStorage.getItem("id_usuario")) || 1;
+    const modal = bootstrap.Modal.getInstance(document.getElementById('modalEditar'));
 
     // Campos siempre presentes
     const modelo_equipo = form.querySelector('input[name="modelo_equipo"]').value;
@@ -195,22 +166,29 @@ document.getElementById('saveChanges').addEventListener('click', async function 
     };
 
     try {
-        const res = await fetch(`/api/servicio/editar/${id_servicio}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
+      const res = await fetch(`/servicio/editar/${id_servicio}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+      });
 
-        const result = await res.json();
-        if (res.ok) {
-            alert("Servicio actualizado");
-            //mostrarAlerta("alerta-exito", "Cambios guardados correctamente");
-            setTimeout(() => location.reload(), 1500);
-        } else {
-            throw new Error(result?.message || "Error inesperado");
-        }
-    } catch (err) {
-        console.error(err);
-        alert("Error al actualizar el servicio.");
-    }
+      const result = await res.json();
+
+      if (result.success) {
+          if (modal) modal.hide();
+          form.reset();
+          mostrarAlerta("alerta-success", result.mensaje || "Servicio actualizado correctamente");
+
+          if (window.tablaServicios) {
+              tablaServicios.ajax.reload(null, false);
+          }
+
+      } else {
+          mostrarAlerta("alerta-warning", result.error || "No se pudo actualizar el servicio");
+      }
+
+  } catch (err) {
+      console.error(err);
+      mostrarAlerta("alerta-warning", "Error de red al actualizar el servicio.");
+  }
 });

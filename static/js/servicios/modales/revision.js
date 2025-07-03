@@ -1,40 +1,22 @@
-//Funcion para cuando se le da click al btn editar, y rellene los campos del form
-setupEditButtons({
-    buttonSelector: '.check-button',
-    modalFields: {
-        id: 'serviceIdCheck',
-        tipoEquipo: 'checkTipoEquipo',
-        tipoServicio: 'checkTipoServicio',      
-        modelo: 'checkModeloEquipo',
-        tecnico: 'checkTecnico',
-        descripcion: 'checkDescripcion'     
+//evento que recibe para que se muestren tambien en el id y el estado en las cards
+document.addEventListener('click', function (e) {
+    const button = e.target.closest('.check-button');
+    if (!button) return;
+
+    const servicioId = button.getAttribute('data-id');
+    const modelo = button.getAttribute('data-modelo');
+
+    const idDisplay = document.getElementById('servicioIdCheck');
+    if (idDisplay) {
+        idDisplay.textContent = servicioId;
+    }
+
+    const idModelo = document.getElementById('idModeloCheck');
+    if (idModelo) {
+        idModelo.textContent = modelo;
     }
 });
 
-//evento que recibe para que se muestren tambien en el id y el estado en las cards
-document.addEventListener('DOMContentLoaded', function () {
-    const editButtons = document.querySelectorAll('.check-button');
-
-    editButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            // Obtener los valores desde los atributos data-*
-            const servicioId = button.getAttribute('data-id');
-            const modelo = button.getAttribute('data-modelo');
-
-            // Mostrar el ID en el <h4 id="servicioId">
-            const idDisplay = document.getElementById('servicioIdCheck');
-            if (idDisplay) {
-                idDisplay.textContent = servicioId;
-            }
-
-            // Mostrar el modelo de equipo en el span
-            const idModelo = document.getElementById('idModeloCheck');
-            if (idModelo) {
-                idModelo.textContent = modelo;
-            }
-        });
-    });
-});
 
 //Funcion del switch que muestrar inputs para costos adicionales
 document.addEventListener('DOMContentLoaded', function () {    

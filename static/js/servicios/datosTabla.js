@@ -26,9 +26,9 @@ $(document).ready(function () {
         data: 'estado_servicio',
         render: function (data) {
         let clase = "secondary";
-        if (data === "En Progreso") clase = "warning";
+        if (data === "En Progreso") clase = "secondary";
         else if (data === "Finalizado") clase = "success";
-        else if (data === "En Revisión") clase = "info";
+        else if (data === "En Revisión") clase = "warning";
 
         return `<span class="badge bg-${clase}">${data}</span>`;
         }
@@ -85,6 +85,7 @@ $(document).ready(function () {
             </button>
             <button class="btn btn-sm btn-outline-danger me-1"
                     data-id="${row.id_servicio}"
+                    data-nombre="${row.modelo_equipo}"
                     data-bs-toggle="modal"
                     data-bs-target="#modalEliminar">
             <i class="bi bi-trash"></i>

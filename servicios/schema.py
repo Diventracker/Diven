@@ -37,7 +37,7 @@ class ServicioRevisionSchema(BaseModel):
     id_servicio: int
     meses_garantia: int
     descripcion: str
-    detalles: List[DetalleGasto]
+    detalles: List[DetalleGasto] = []
 
     @classmethod
     def as_form(
@@ -45,10 +45,10 @@ class ServicioRevisionSchema(BaseModel):
         id_servicio: int = Form(...),
         meses_garantia: int = Form(...),
         descripcion: str = Form(...),
-        detalles: str = Form(...)  # lo recibimos como JSON string
+        detalles: str = Form(None)  # puede venir None
     ):
         import json
-        detalles_list = json.loads(detalles)
+        detalles_list = json.loads(detalles) if detalles else []
         return cls(
             id_servicio=id_servicio,
             meses_garantia=meses_garantia,
