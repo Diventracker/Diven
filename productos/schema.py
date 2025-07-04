@@ -39,9 +39,29 @@ class ProductoUpdate(BaseModel):
     modelo: str
     descripcion: str
     precio: int
-    precio_venta: int
     id_proveedor: int
-    meses_garantia: int | None = None
+    precio_venta: Optional[int] = None
+    meses_garantia: Optional[int] = None
+
+    @classmethod
+    def as_form(cls, 
+        nombre_producto: str = Form(...),
+        modelo: str = Form(...),
+        descripcion: str = Form(...),
+        precio: int = Form(...),
+        id_proveedor: int = Form(...),
+        precio_venta: int = Form(None),
+        meses_garantia: int = Form(None)
+    ):
+        return cls(
+            nombre_producto=nombre_producto,
+            modelo=modelo,
+            descripcion=descripcion,
+            precio=precio,
+            id_proveedor=id_proveedor,
+            precio_venta=precio_venta,
+            meses_garantia=meses_garantia
+        )
 
 #Para las consultas de las facturas
 class ProductoOut(BaseModel):

@@ -15,4 +15,10 @@ class ProveedorRepositorio:
 
     def obtener_por_nit(self, nit: str) -> Proveedor | None:
         return self.db.query(Proveedor).filter_by(nit=nit).first()
+    
+    def filtrar_por_nombre_o_nit(self, search: str):
+        return self.db.query(Proveedor).filter(
+            (Proveedor.nombre_proveedor.ilike(f"%{search}%")) |
+            (Proveedor.nit.ilike(f"%{search}%"))
+        ).all()
 

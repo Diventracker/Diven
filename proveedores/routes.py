@@ -48,3 +48,8 @@ def eliminar_proveedor(
 ):
     controlador = ProveedorControlador(db)
     return controlador.eliminar(id_proveedor)
+
+#Ruta filtra los proveedores por ni o nombre y los manda al select2
+@router.get("/proveedores/filtrar", tags=["Proveedores"])
+def filtrar_proveedores(search: str = "", db: Session = Depends(get_db)):
+    return ProveedorControlador(db).filtrar_proveedores(search)

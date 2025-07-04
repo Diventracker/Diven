@@ -15,15 +15,28 @@ function handleFormSubmit({ formId, url, modalId, tablaVariable = null }) {
 
             if (data.success) {
                 form.reset();
+
                 if (modalId) {
                     const modal = bootstrap.Modal.getInstance(document.getElementById(modalId));
                     if (modal) modal.hide();
                 }
-                mostrarAlerta("alerta-success", data.mensaje || "Registro exitoso");
-                if (tablaVariable && window[tablaVariable]) {
-                    window[tablaVariable].ajax.reload(null, false);
-                }
 
+                mostrarAlerta("alerta-success", data.mensaje || "Registro exitoso");
+
+                if (tablaVariable) {
+                    const variable = window[tablaVariable];
+
+                    if (variable && typeof variable.ajax === "function") {
+                        // Es un DataTable
+                        variable.ajax.reload(null, false);
+                    } else {
+                        // Intenta llamar a una función actualizar[Nombre] (por ejemplo: actualizarProductos)
+                        const funcionNombre = "actualizar" + tablaVariable.charAt(0).toUpperCase() + tablaVariable.slice(1);
+                        if (typeof window[funcionNombre] === "function") {
+                            window[funcionNombre]();
+                        }
+                    }
+                }
             } else {
                 mostrarAlerta("alerta-warning", "Error: " + (data.error || "No se pudo completar la operación"));
             }
@@ -54,12 +67,18 @@ function handleEditFormSubmit({ formId, urlBase, modalId, idFieldId, tablaVariab
             if (data.success) {
                 mostrarAlerta("alerta-success", data.mensaje || "Actualizado con éxito");
                 form.reset();
+
                 if (modalId) {
                     const modal = bootstrap.Modal.getInstance(document.getElementById(modalId));
                     if (modal) modal.hide();
                 }
+
                 if (tablaVariable && window[tablaVariable]) {
+                    // Si hay DataTable activa
                     window[tablaVariable].ajax.reload(null, false); // false: mantener paginación
+                } else if (typeof actualizarProductos === "function") {
+                    // Si estás en el módulo de productos con List.js
+                    actualizarProductos();
                 }
 
             } else {
@@ -94,7 +113,10 @@ function handleDeleteConfirm({ confirmButtonId, hiddenInputId, deleteUrlBase, mo
 
                 if (tablaVariable && window[tablaVariable]) {
                     window[tablaVariable].ajax.reload(null, false); // false: mantener paginación
+                } else if (typeof actualizarProductos === "function") {
+                    actualizarProductos(); // recargar la lista de productos en List.js
                 }
+
             } else {
                 mostrarAlerta("alerta-warning", (data.error || "No se pudo eliminar"));
             }

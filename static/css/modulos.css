@@ -378,3 +378,10 @@ table.dataTable {
     font-size: 0.75rem;
     font-weight: bold;
 }
+
+.card-img-top {
+  height: 150px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}

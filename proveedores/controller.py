@@ -69,4 +69,14 @@ class ProveedorControlador:
 
         except Exception as e:
             return JSONResponse(content={"success": False, "error": f"Error inesperado: {str(e)}"}, status_code=500)
+        
+    def filtrar_proveedores(self, search: str = ""):
+        proveedores = self.crud.filtrar(search)
+        return JSONResponse(content=[
+            {
+                "id": p.id_proveedor,
+                "nombre": p.nombre_proveedor,
+                "nit": p.nit
+            } for p in proveedores
+        ])
 

@@ -1,11 +1,10 @@
 from fastapi import APIRouter, Depends, Request, Form, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from database.database import get_db
 from productos.controller import ProductoControlador
 from productos.schema import ProductoCreate, ProductoOut, ProductoUpdate, StockUpdate
-from proveedores.model import Proveedor
 from productos.model import Producto
 
 
@@ -19,16 +18,10 @@ def vista_producto(request: Request, db: Session = Depends(get_db)):
     return controlador.mostrar_vista(request)
 
 
-
-#Obetener los proveedores para agregarlos al Select
-@router.get("/producto/proveedores", response_class=JSONResponse, tags=["Productos"])
-def filtrar_proveedores(search: str = "", db: Session = Depends(get_db)):
-    proveedores = db.query(Proveedor).filter(
-        (Proveedor.nombre_proveedor.ilike(f"%{search}%")) |
-        (Proveedor.nit.ilike(f"%{search}%"))
-    ).all()
-
-    return [{"id": p.id_proveedor, "nombre": p.nombre_proveedor, "nit": p.nit} for p in proveedores]
+#Ruta que retorna todos los productos en json
+@router.get("/productos/data", tags=["Productos"])
+def obtener_productos(db: Session = Depends(get_db)):
+    return ProductoControlador(db).obtener_productos()
 
 
 # Ruta que recibe el formulario de agregar Porducto
@@ -41,64 +34,26 @@ def crear_producto(
     return controlador.crear(datos)
 
 
-
 #Ruta que recibe el fetch de js para editar producto
-@router.put("/producto/editar/{productoId}", tags=["Productos"])
+@router.put("/producto/editar/{producto_id}", tags=["Productos"])
 def editar_producto(
-    productoId: int,
-    nombre_producto: str = Form(...),
-    modelo: str = Form(...),
-    descripcion: str = Form(...),
-    precio: int = Form(...),
-    precio_venta: int = Form(None),
-    proveedor_id: int = Form(...),
-    meses_garantia: int = Form(None),
+    producto_id: int,
+    datos: ProductoUpdate = Depends(ProductoUpdate.as_form),
     db: Session = Depends(get_db)
 ):
-    producto = db.query(Producto).filter(Producto.id_producto == productoId).first()
-    if not producto:
-        return HTMLResponse(content="Producto no encontrado", status_code=404)
+    controlador = ProductoControlador(db)
+    return controlador.editar_producto(producto_id, datos)
 
-    try:        
-        # Validar con Pydantic
-        producto_data = ProductoUpdate(
-            nombre_producto=nombre_producto,
-            modelo=modelo,
-            descripcion=descripcion,
-            precio=precio,
-            precio_venta=precio_venta,
-            id_proveedor=proveedor_id,
-            meses_garantia=meses_garantia
-        )
-        for field, value in producto_data.model_dump(exclude_none=True).items():
-            setattr(producto, field, value)
-
-        
-        db.commit()
-        return JSONResponse(content={"message": "success"})
-
-    except IntegrityError:
-        db.rollback()
-        return JSONResponse(content={"message": "error"})
 
 
 #Eliminar Producto...
 @router.delete("/producto/eliminar/{id_producto}", tags=["Productos"])
-def eliminar_producto(
+def eliminar_producto_endpoint(
     id_producto: int,
     db: Session = Depends(get_db)
 ):
-    producto = db.query(Producto).filter(Producto.id_producto == id_producto).first()
-    if not producto:
-        return HTMLResponse(content="Producto no encontrado", status_code=404)
-    try: 
-        db.delete(producto)
-        db.commit()
-        return JSONResponse(content={"message": "deleted"})
-    
-    except IntegrityError:
-        db.rollback()
-        return JSONResponse(content={"message": "error"})
+    controlador = ProductoControlador(db)
+    return controlador.eliminar(id_producto)
 
 
 

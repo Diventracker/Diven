@@ -79,10 +79,16 @@
                             <!-- Botón registrar -->
                             {% if rol == "Administrador" and btnRegistrar %}
                             <div class="mb-2 col-12 col-md-6 col-lg-2 ms-md-auto text-md-end">
-                              <button class="btn btn-enviar w-100 w-md-auto" data-bs-toggle="modal"
-                                data-bs-target="#{{ modal_crear }}">
-                                <i class="bi bi-{{ icono_crear }} me-1"></i>{{ boton_crear }}
-                              </button>
+                              {% if btnLink %}
+                                <button class="btn btn-enviar w-100" onclick="location.href='/crear_venta'">
+                                  <i class="bi bi-cash-coin me-1"></i> Nueva Venta
+                                </button>
+                              {% else %}
+                                <button class="btn btn-enviar w-100 w-md-auto" data-bs-toggle="modal"
+                                  data-bs-target="#{{ modal_crear }}">
+                                  <i class="bi bi-{{ icono_crear }} me-1"></i>{{ boton_crear }}
+                                </button>
+                              {% endif %}
                             </div>
                             {% endif %}
                           </div>
@@ -99,6 +105,19 @@
                           <h6 class="mb-0"><i class="bi bi-grid me-2"></i>{{ subtitulo }}</h6>
                         </div>
                         <div class="card-body pb-0">
+                          {% if cards_productos %}
+                            <!-- Contenedor para List.js -->
+                            <div id="productos-lista">
+                              <!-- Tarjetas de productos -->
+                              <div class="row list">
+                                <!-- Aquí se cargarán las tarjetas dinámicamente -->
+                              </div>
+                              <!-- Paginación -->
+                              <nav aria-label="Navegación de productos">
+                                  <ul class="pagination justify-content-center mt-4"></ul>
+                              </nav>
+                            </div>
+                          {% else %}
                           <div class="table-responsive">
                             <table class="table table-striped m-0 table-hover" id="{{ tabla_id }}">
                               <thead>
@@ -109,6 +128,7 @@
                               </tbody>
                             </table>
                           </div>
+                          {% endif %}
                         </div>
                       </div>
                     </div>

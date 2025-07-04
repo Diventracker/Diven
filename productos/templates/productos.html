@@ -2,9 +2,6 @@
 
 <!-- etiqueta <head> -->
 {% block head_scripts %}
-    <!-- CSS de DataTables -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-
     <!-- CSS de Select2 -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
@@ -14,10 +11,9 @@
     <!-- JS de Select2 -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <!-- JS de DataTables -->
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-    {% endblock %}
+    <!-- JS del list.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
+{% endblock %}
 
 <!-- card principal -->
 {% set titulo = "Gestión de Productos" %}
@@ -42,24 +38,9 @@
 {% set modal_crear = "modalRegistro" %}
 
 <!-- Tabla -->
+{% set cards_productos = true %}
 {% set subtitulo = "Lista de Productos" %}
 {% set tabla_id = "tablaProductos" %}
-
-{% block columnas_tabla %}
-    <tr>
-        <th>ID</th>
-        <th> Fecha de compra</th>
-        <th>Nombre</th>
-        <th>Modelo</th>
-        <th>Existencias</th>
-        <th>Precio de compra</th>
-        <th>Precio de venta</th>
-        <th>Proveedor</th>
-        {% if rol == "Administrador" %}
-        <th>Acción</th>
-        {% endif %}
-    </tr>
-{% endblock %}
 
 {% block nueva_tab %}
     <!-- Pestaña de Control de Stock -->
@@ -125,9 +106,9 @@
             </div>
         </div>
     </div>
-    {% endblock %}
+{% endblock %}
 
-    {% block modales %}
+{% block modales %}
     <!-- Modal Crear un Nuevo Producto -->
     <div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -137,7 +118,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/producto/crear" method="post">
+                    <form id="registrarProducto">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="selectProveedor" class="form-label">Proveedor</label>
@@ -196,7 +177,7 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="selectProveedor2" class="form-label">Proveedor</label>
-                                <select id="selectProveedor2" name="proveedor_id" required>
+                                <select id="selectProveedor2" name="id_proveedor" required>
                                     <option></option>
                                 </select>
                             </div>
@@ -263,8 +244,12 @@
 {% block scripts %}
     <script src="/static/js/funciones/alertas.js"></script>
     <script src="/static/js/funciones/select2.js"></script>
+    <script src="/static/js/funciones/crudFetch.js"></script>
+    <script src="/static/js/funciones/setupDatos.js"></script>
 
     <script src="/static/js/productos/stock.js"></script>
+    <script src="/static/js/productos/dataCards.js"></script>
+    <script src="/static/js/productos/select2Modales.js"></script>
     <script src="/static/js/productos/actualizarStock.js"></script>
-    <script src="/static/js/productos/modulo_producto.js"></script>
+    <script src="/static/js/productos/modulo_productos.js"></script>
 {% endblock %}

@@ -1,7 +1,7 @@
 from fastapi import Request
 from fastapi.templating import Jinja2Templates
 from productos.crud import ProductoCRUD
-from productos.schema import ProductoCreate
+from productos.schema import ProductoCreate, ProductoUpdate
 from fastapi.responses import JSONResponse
 
 templates = Jinja2Templates(directory=["templates", "productos/templates"])
@@ -12,7 +12,7 @@ class ProductoControlador:
 
     def mostrar_vista(self, request: Request):
         rol = request.cookies.get("rol")
-        return templates.TemplateResponse("productos2.html", {
+        return templates.TemplateResponse("productos.html", {
             "request": request,
             "rol": rol
         })
@@ -20,12 +20,48 @@ class ProductoControlador:
     def crear(self, datos: ProductoCreate):
         try:
             producto = self.crud.crear(datos)
-            return JSONResponse(content={
-                "success": True,
-                "message": "Producto creado exitosamente.",
-                "id": producto.id_producto
-            })
+            return JSONResponse(content={"success": True, "mensaje": "Producto creado exitosamente.", "id": producto.id_producto})
         except ValueError as e:
             return JSONResponse(content={"success": False, "error": str(e)}, status_code=400)
         except Exception as e:
             return JSONResponse(content={"success": False, "error": "Error interno al crear producto."}, status_code=500)
+        
+    #Pasa los productos mediante /data
+    def obtener_productos(self):
+        productos = self.crud.listar_productos()
+
+        datos = []
+        for p in productos:
+            datos.append({
+                "id": p.id_producto,
+                "nombre": p.nombre_producto,
+                "modelo": p.modelo,
+                "descripcion": p.descripcion,
+                "precio": p.precio_venta if p.precio_venta is not None else p.precio,
+                "stock": p.stock,
+                "garantia": p.meses_garantia,
+                "fecha_compra": p.fecha_compra.strftime("%Y-%m-%d"),
+                "id_proveedor": p.id_proveedor,
+                "proveedor": p.proveedor.nombre_proveedor if p.proveedor else "Desconocido",
+                "imagen_url": "/static/img/productos/sin-imagen.png"
+            })
+
+        return JSONResponse(content=datos)
+    
+    def editar_producto(self, producto_id: int, datos: ProductoUpdate):
+        try:
+            self.crud.editar(producto_id, datos)
+            return JSONResponse(content={"success": True, "mensaje": "Producto actualizado exitosamente."})
+        except ValueError as e:
+            return JSONResponse(content={"success": False, "error": str(e)}, status_code=404)
+        except Exception:
+            return JSONResponse(content={"success": False, "error": "Error interno al editar producto."}, status_code=500)
+        
+    def eliminar(self, id_producto: int) -> JSONResponse:
+        try:
+            self.crud.eliminar(id_producto)
+            return JSONResponse(content={"success": True, "mensaje": "Producto eliminado correctamente."})
+        except ValueError as e:
+            return JSONResponse(status_code=400, content={"success": False, "error": str(e)})
+        except Exception:
+            return JSONResponse(status_code=500, content={"success": False, "error": "Ocurrió un error inesperado."})

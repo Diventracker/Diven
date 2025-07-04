@@ -43,4 +43,7 @@ class ProveedorCRUD:
         self.repo.db.delete(proveedor)
         self.repo.db.commit()
 
+    def filtrar(self, search: str):
+        return self.repo.filtrar_por_nombre_o_nit(search)
+
 
