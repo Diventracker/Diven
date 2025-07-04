@@ -11,6 +11,7 @@ from ventas.controller import VentaControlador
 from ventas.model import DetalleVenta, Venta
 
 router = APIRouter()
+templates = Jinja2Templates(directory=["templates", "ventas/templates"])
 
 #Ruta para mostrar el html de ventas
 @router.get("/ventas", tags=["Ventas"])
@@ -34,7 +35,7 @@ def Ventas_get(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse(url="/login?error=2", status_code=303)
 
     fecha_actual = date.today().strftime("%Y-%m-%d")
-
+    
     return templates.TemplateResponse("crear.html", {
         "request": request,
         "fecha_actual": fecha_actual,

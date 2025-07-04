@@ -50,12 +50,3 @@ handleDeleteConfirm({
     modalActive: 'modalEliminar',
     tablaVariable: 'tablaClientes' // 👈 nombre de la DataTable global
 });
-
-
-
-
-
-
-
-
-
