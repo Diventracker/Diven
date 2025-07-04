@@ -5,53 +5,19 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session, joinedload
 from clientes.model import Cliente
 from database.database import get_db
-from producto.model import Producto
+from productos.model import Producto
 from usuarios.model import Usuario
+from ventas.controller import VentaControlador
 from ventas.model import DetalleVenta, Venta
-from sqlalchemy import desc, or_
 
 router = APIRouter()
-templates = Jinja2Templates(directory="ventas/templates")
 
-#Ruta para mostrar todas las ventas
-@router.get("/ventas", response_class=HTMLResponse, tags=["Ventas"])
-def gestionventas_get(
-    request: Request,
-    search: str = "",
-    page: int = 1,
-    limit: int = 9,
-    db: Session = Depends(get_db)
-):
-    query = db.query(Venta).join(Venta.cliente).options(joinedload(Venta.cliente))
+#Ruta para mostrar el html de ventas
+@router.get("/ventas", tags=["Ventas"])
+def gestionventas_get(request: Request, db: Session = Depends(get_db)):
+    controlador = VentaControlador(db)
+    return controlador.vista_ventas(request)
 
-    if search:
-        query = query.filter(
-            or_(
-                Cliente.nombre_cliente.ilike(f"%{search}%"),
-                Venta.id_venta.ilike(f"%{search}%")
-            )
-        )
-
-    total = query.count()
-    offset = (page - 1) * limit
-
-    ventas = (
-        query.order_by(desc(Venta.fecha_venta))
-        .offset(offset)
-        .limit(limit)
-        .all()
-    )
-
-    total_pages = (total + limit - 1) // limit
-
-    return templates.TemplateResponse("ventas.html", {
-        "request": request,
-        "ventas": ventas,
-        "search": search,
-        "page": page,
-        "total_pages": total_pages,
-        "ruta_base": "/ventas"
-    })
 
 
 #Ruta para mostrar la vista de crear una nueva venta
@@ -133,31 +99,12 @@ def generar_venta(data: dict, db: Session = Depends(get_db)):
     return {"message": "Venta registrada con éxito", "id_venta": nueva_venta.id_venta}
 
 
-#Ruta para obtener venta pr id
-@router.get("/ventas/detalle/{id_venta}", response_class=JSONResponse, tags=["Ventas"])
+#Ruta para obtener venta por id
+@router.get("/ventas/detalle/{id_venta}", tags=["Ventas"])
 def obtener_detalle(id_venta: int, db: Session = Depends(get_db)):
-    venta = db.query(Venta).options(joinedload(Venta.cliente), joinedload(Venta.usuario)).filter(Venta.id_venta == id_venta).first()
-    if not venta:
-        raise HTTPException(status_code=404, detail="Venta no encontrada")
+    controlador = VentaControlador(db)
+    return controlador.detalle_venta(id_venta)
 
-    detalles = db.query(DetalleVenta).filter(DetalleVenta.id_venta == id_venta).all()
-
-    resultado = {
-        "cliente": venta.cliente.nombre_cliente,
-        "fecha": venta.fecha_venta.strftime("%d/%m/%Y"),
-        "vendedor": venta.usuario.nombre_usuario,
-        "total": int(venta.total_venta),
-        "detalles": []
-    }
-
-    for d in detalles:
-        producto = db.query(Producto).filter(Producto.id_producto == d.id_producto).first()
-        resultado["detalles"].append({
-            "producto": producto.nombre_producto if producto else "¿?",
-            "descripcion": producto.descripcion if producto else "¿?"
-        })
-
-    return resultado
 
 #Mostar la venta Cuando ya este finalizada
 @router.get("/ventas/comprobante/{id_venta}", response_class=HTMLResponse, tags=["Ventas"])

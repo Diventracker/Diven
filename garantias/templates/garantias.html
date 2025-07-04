@@ -1,345 +1,124 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends "plantilla.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Garantías</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="/static/css/modulos.css">   
-</head>
+<!-- etiqueta <head> -->
+{% block head_scripts %}
+    <!-- CSS de DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <!-- JS de jQuery y DataTables -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+{% endblock %}
 
-<body>
-<main>
-    <!-- Page Content -->
-    <div id="page-content-wrapper">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-            <div class="card shadow-sm">
-              <div class="card-header bg-white py-3">
-                <h5 class="mb-0 text-teal-dark"><i class="bi bi-shield-check me-2"></i>Gestión de Garantías</h5>
-              </div>
-              <div class="card-body">
-                <!-- Pestañas de navegación -->
-                <ul class="nav nav-tabs mb-4" id="garantiasTabs" role="tablist">
-                  <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="ventas-tab" data-bs-toggle="tab" data-bs-target="#ventas" type="button" role="tab" aria-controls="ventas" aria-selected="true">
-                      <i class="bi bi-cash-coin me-1"></i> Garantías Ventas
-                    </button>
-                  </li>
-                  <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="servicios-tab" data-bs-toggle="tab" data-bs-target="#servicios" type="button" role="tab" aria-controls="servicios" aria-selected="false">
-                      <i class="bi bi-tools me-1"></i> Garantías Servicios
-                    </button>
-                  </li>
-                </ul>
-                
-                <!-- Contenido de las pestañas -->
-                <div class="tab-content" id="garantiasTabsContent">
-                  <!-- Pestaña de Productos -->
-                  <div class="tab-pane fade show active" id="ventas" role="tabpanel" aria-labelledby="products-tab">
-                    <!-- Búsqueda y filtros -->
-                    <div class="row mb-4">
-                      <div class="col-12">
-                        <div class="card card-move shadow-sm">
-                          <div class="card-header">
-                            <h6 class="mb-0"><i class="bi bi-search me-2"></i>Buscar Garantías Ventas</h6>
-                          </div>
-                          <div class="card-body">
-                            <div class="row">
-                              <div class="mb-2 col-md-4">
-                                <form method="get" action="/garantias">
-                                    <div class="input-group">
-                                      <input name="search" value="{{ search | default('') }}" type="search" class="form-control" placeholder="Buscar por equipo o id">
-                                      <button class="btn btn-outline-enviar" type="submit"><i class="bi bi-search"></i></button>
-                                    </div>
-                                </form>
-                              </div>
-                              <div class="mb-2 col-md-5 col-lg-4 col-xl-2">
-                                <div class="input-group">
-                                  <select class="form-select ordenar-tabla" data-tabla="tablaGarantias">
-                                    <option disabled selected>Ordenar por</option>
-                                    <option value="1-asc">Nombre de cliente (A-Z)</option>
-                                    <option value="1-desc">Nombre de cliente (Z-A)</option>                          
-                                    <option value="0-asc">Estado</option>
-                                    <option value="3-asc">Fecha de inicio (más reciente)</option>
-                                    <option value="4-asc">Fecha de finalización (más reciente)</option>
-                                  </select>
-                                  <button class="btn btn-outline-enviar" onclick="location.href='/garantias'"><i
-                                                                    class="bi bi-arrow-repeat"></i></button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <!-- Tabla de Garantias de ventas-->
-                    <div class="row">
-                      <div class="col-12">
-                        <div class="card card-move shadow-sm">
-                          <div class="card-header">
-                            <h6 class="mb-0"><i class="bi bi-grid me-2"></i>Lista de Garantías</h6>
-                          </div>
-                          <div class="card-body pb-0">
-                            <div class="table-responsive">
-                                 <table class="table table-striped m-0 table-hover" id="tablaGarantias">
-                                    <thead>
-                                        <tr>
-                                            <th>ID Garantía</th>
-                                            <th>Cliente</th>
-                                            <th>Equipo</th>
-                                            <th>Fecha de Inicio</th>
-                                            <th>Fecha de Finalización</th>
-                                            <th>Descripción</th>
-                                            {#<th>Acción</th>#}
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tabla-garantias">
-                                        {% for g in garantias %}
-                                        <tr>
-                                            <td>{{ g.id_garantia }}</td>
-                                            <td>{{ g.servicio.cliente.nombre_cliente }}</td>  {# Asegúrate de que esto exista #}
-                                            <td>{{ g.servicio.tipo_equipo }}</td>
-                                            <td>{{ g.fecha_inicio }}</td>
-                                            <td>{{ g.fecha_fin }}</td>
-                                            <td>{{ g.servicio.descripcion_problema }}</td>
-                                            {#<td>#}
-                                                {#<button class="btn btn-sm btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalEditar">#}
-                                        {#<i class="bi bi-pencil"></i>#}
-                                                {#</button>#}
-                                                {#<button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar">#}
-                                                    {#<i class="bi bi-trash"></i>#}
-                                                {#</button>#}
-                                            {#</td>#}
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <!-- Paginación -->
-                            {# Macro para construir URLs de paginación con search opcional #}
-                            {% macro pagina_url(ruta, pagina, search) -%}
-                                {{ ruta }}?page={{ pagina }}{% if search %}&search={{ search }}{% endif %}
-                            {%- endmacro %}
+<!-- card principal -->
+{% set titulo = "Gestión de Garantías" %}
+{% set icono = "shield-check" %}
 
-                            {# Paginación visual #}
-                            <nav aria-label="Paginación de Servicios">
-                                <ul class="pagination justify-content-center mt-4">
-                                    <!-- Botón Anterior -->
-                                    <li class="page-item {% if page <= 1 %}disabled{% endif %}">
-                                        <a class="page-link" href="{% if page > 1 %}{{ pagina_url(ruta_base, page - 1, search) }}{% else %}#{% endif %}">
-                                            Anterior
-                                        </a>
-                                    </li>
+<!-- Tabs -->
+{% set tabs_view = true %}
+{% set tabs2 = true %}
+{% set tab1_icono = "cash-coin" %}
+{% set tab1_nombre = "Garantías Ventas" %}
+{% set tab2_icono = "tools" %}
+{% set tab2_nombre = "Garantías Servicios" %}
 
-                                    <!-- Números de página -->
-                                    {% for s in range(1, total_pages + 1) %}
-                                        <li class="page-item {% if s == page %}active{% endif %}">
-                                            <a class="page-link" href="{{ pagina_url(ruta_base, s, search) }}">{{ s }}</a>
-                                        </li>
-                                    {% endfor %}
+<!-- Buscador -->
+{% set subtitulo2 = "Buscar Garantías Ventas" %}
+{% set placeholder = "Buscar garantía venta..." %}
 
-                                    <!-- Botón Siguiente -->
-                                    <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
-                                        <a class="page-link" href="{% if page < total_pages %}{{ pagina_url(ruta_base, page + 1, search) }}{% else %}#{% endif %}">
-                                            Siguiente
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <!-- Pestaña de Garantias de Servicios -->
-                  <div class="tab-pane fade" id="servicios" role="tabpanel" aria-labelledby="servicios-tab">
-                    <!-- Búsqueda y filtros -->
-                    <div class="row mb-4">
-                      <div class="col-12">
-                        <div class="card card-move shadow-sm">
-                          <div class="card-header">
-                            <h6 class="mb-0"><i class="bi bi-search me-2"></i>Buscar Garantías Servicios</h6>
-                          </div>
-                          <div class="card-body">
-                            <div class="row">
-                              <div class="mb-2 col-md-4">
-                                <form method="get" action="/garantias">
-                                    <div class="input-group">
-                                      <input name="search" value="{{ search | default('') }}" type="search" class="form-control" placeholder="Buscar por equipo o id">
-                                      <button class="btn btn-outline-enviar" type="submit"><i class="bi bi-search"></i></button>
-                                    </div>
-                                </form>
-                              </div>
-                              <div class="mb-2 col-md-5 col-lg-4 col-xl-2">
-                                <select class="form-select">
-                                  <option selected>Ordenar por</option>
-                                  <option>Nombre de cliente (A-Z)</option>
-                                  <option>Nombre de cliente (Z-A)</option>                          
-                                  <option>Estado</option>
-                                  <option>Fecha de inicio (más reciente)</option>
-                                  <option>Fecha de finalización (más reciente)</option>
-                                </select>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <!-- Tabla de Garantias de servicios -->
-                    <div class="row">
-                      <div class="col-12">
-                        <div class="card card-move shadow-sm">
-                          <div class="card-header">
-                            <h6 class="mb-0"><i class="bi bi-grid me-2"></i>Lista de Garantías</h6>
-                          </div>
-                          <div class="card-body pb-0">
-                            <div class="table-responsive">
-                                 <table class="table table-striped m-0 table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>ID Garantía</th>
-                                            <th>Cliente</th>
-                                            <th>Equipo</th>
-                                            <th>Fecha de Inicio</th>
-                                            <th>Fecha de Finalización</th>
-                                            <th>Descripción</th>
-                                            {#<th>Acción</th>#}
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tabla-garantias">
-                                        {% for g in garantias %}
-                                        <tr>
-                                            <td>{{ g.id_garantia }}</td>
-                                            <td>{{ g.servicio.cliente.nombre_cliente }}</td>  {# Asegúrate de que esto exista #}
-                                            <td>{{ g.servicio.tipo_equipo }}</td>
-                                            <td>{{ g.fecha_inicio }}</td>
-                                            <td>{{ g.fecha_fin }}</td>
-                                            <td>{{ g.servicio.descripcion_problema }}</td>
-                                            {#<td>#}
-                                                {#<button class="btn btn-sm btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalEditar">#}
-                                        {#<i class="bi bi-pencil"></i>#}
-                                                {#</button>#}
-                                                {#<button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar">#}
-                                                    {#<i class="bi bi-trash"></i>#}
-                                                {#</button>#}
-                                            {#</td>#}
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <!-- Paginación -->
-                            {# Macro para construir URLs de paginación con search opcional #}
-                            {% macro pagina_url(ruta, pagina, search) -%}
-                                {{ ruta }}?page={{ pagina }}{% if search %}&search={{ search }}{% endif %}
-                            {%- endmacro %}
+<!-- Segundo Buscador -->
+{% set subtitulo4 = "Buscar Garantías Servicios" %}
+{% set placeholder3 = "Buscar garantía servicio..." %}
 
-                            {# Paginación visual #}
-                            <nav aria-label="Paginación de Garantias" id="paginacion">
-                              <div id="scroll-paginacion"></div>
-                                <ul class="pagination justify-content-center mt-4">
-                                    <!-- Botón Anterior -->
-                                    <li class="page-item {% if page <= 1 %}disabled{% endif %}">
-                                        <a class="page-link" href="{% if page > 1 %}{{ pagina_url(ruta_base, page - 1, search) }}{% else %}#{% endif %}">
-                                            Anterior
-                                        </a>
-                                    </li>
+<!-- Boton Crear Registro -->
+{% set btnRegistrar = false %}
 
-                                    <!-- Números de página -->
-                                    {% for s in range(1, total_pages + 1) %}
-                                        <li class="page-item {% if s == page %}active{% endif %}">
-                                            <a class="page-link" href="{{ pagina_url(ruta_base, s, search) }}">{{ s }}</a>
-                                        </li>
-                                    {% endfor %}
+<!-- Tabla -->
+{% set subtitulo = "Lista Garantías de Ventas" %}
+{% set tabla_id = "tablaVentas" %}
 
-                                    <!-- Botón Siguiente -->
-                                    <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
-                                        <a class="page-link" href="{% if page < total_pages %}{{ pagina_url(ruta_base, page + 1, search) }}{% else %}#{% endif %}">
-                                            Siguiente
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+<!-- Segunda Tabla -->
+{% set subtitulo3 = "Lista Garantías de Servicios" %}
+{% set tabla_id2 = "tablaServicios" %}
+
+{% block columnas_tabla %}
+    <tr>
+        <th>ID Garantía</th>
+        <th>Cliente</th>
+        <th>Producto</th>
+        <th>Fecha de Inicio</th>
+        <th>Fecha de Finalización</th>
+        <th>Descripción</th>
+    </tr>
+{% endblock %}
+
+{% block columnas_tabla2 %}
+    <tr>
+        <th>ID Garantía</th>
+        <th>Cliente</th>
+        <th>Equipo</th>
+        <th>Fecha de Inicio</th>
+        <th>Fecha de Finalización</th>
+        <th>Descripción</th>
+    </tr>
+{% endblock %}
+
+{% block modales %}
+    <!-- Modal Editar -->
+    <div class="modal fade" id="modalEditar" aria-labelledby="modalEditarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditarLabel">Actualizar Garantía </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-</main>
-    
-<!-- Modal Editar -->
-<div class="modal fade" id="modalEditar" aria-labelledby="modalEditarLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalEditarLabel">Actualizar Garantía </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Pasar el id del cliente mediante el link del form -->
-                <form id="formCliente" action="" method="post">
-                    <div class="mb-3">
-                        <label for="nombre" class="form-label">Equipo:</label>
-                        <input type="text" class="form-control" value="" name="nombre_cliente" required
-                            pattern="[A-Za-z\s]+" maxlength="50">
-                    </div>
-                    <div class="mb-3">
-                        <label for="cedula" class="form-label">Fecha de Inicio:</label>
-                        <input type="text" class="form-control" value="" name="cedula" required pattern="\d+"
-                            maxlength="10">
-                    </div>
-                    <div class="mb-3">
-                        <label for="direccion" class="form-label">Descripción:</label>
-                        <input type="text" class="form-control" name="direccion_cliente" value="" required>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-enviar w-100">Actualizar Garantía</button>
-                </form>
+                <div class="modal-body">
+                    <!-- Pasar el id del cliente mediante el link del form -->
+                    <form id="formCliente" action="" method="post">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Equipo:</label>
+                            <input type="text" class="form-control" value="" name="nombre_cliente" required
+                                pattern="[A-Za-z\s]+" maxlength="50">
+                        </div>
+                        <div class="mb-3">
+                            <label for="cedula" class="form-label">Fecha de Inicio:</label>
+                            <input type="text" class="form-control" value="" name="cedula" required pattern="\d+"
+                                maxlength="10">
+                        </div>
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Descripción:</label>
+                            <input type="text" class="form-control" name="direccion_cliente" value="" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-enviar w-100">Actualizar Garantía</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Modal Eliminar -->
-<div class="modal fade" id="modalEliminar" aria-labelledby="modalEliminarLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalEliminarLabel">Eliminar Garantía</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body text-center">
-                <p >¿Seguro que desea eliminar esta garantía?</p>
-                <input type="hidden" id="garantiaIdToDelete"/>
-                <!-- Span que muestra el nombre de la garantia -->
-                <span id="nombreGarantia" class="fw-bold d-block fs-4">Tarjeta Grafica</span>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
+    <!-- Modal Eliminar -->
+    <div class="modal fade" id="modalEliminar" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEliminarLabel">Eliminar Garantía</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p >¿Seguro que desea eliminar esta garantía?</p>
+                    <input type="hidden" id="garantiaIdToDelete"/>
+                    <!-- Span que muestra el nombre de la garantia -->
+                    <span id="nombreGarantia" class="fw-bold d-block fs-4">Tarjeta Grafica</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/static/js/funciones.js"></script>
-    
-</body>
+{% endblock %}
 
-</html>
+{% block scripts %}
+
+{% endblock %}

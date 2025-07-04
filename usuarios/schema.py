@@ -7,7 +7,6 @@ class UsuarioCreateSchema(BaseModel):
     nombre_usuario: str
     correo: EmailStr
     telefono_usuario: str
-    clave: Optional[str] = None  # Ahora es opcional
     rol: Optional[str] = None
 
     @field_validator("nombre_usuario", mode="before")
@@ -23,59 +22,14 @@ class UsuarioCreateSchema(BaseModel):
         nombre_usuario: str = Form(...),
         correo: EmailStr = Form(...),
         telefono_usuario: str = Form(...),
-        clave: Optional[str] = Form(None),
         rol: Optional[str] = Form(None),
     ):
         return cls(
             nombre_usuario=nombre_usuario,
             correo=correo,
             telefono_usuario=telefono_usuario,
-            clave=clave,
             rol=rol,
         )
-
-class UsuarioUpdateSchema(BaseModel):
-    id_usuario: int
-    nombre_usuario: Optional[str] = None
-    correo: Optional[EmailStr] = None
-    telefono_usuario: str    
-    rol: Optional[str] = None
-
-    @field_validator("nombre_usuario", mode="before")
-    @classmethod
-    def validar_nombre(cls, v):
-        if v is not None and any(char.isdigit() for char in v):
-            raise ValueError("El nombre de usuario no debe contener números.")
-        return v
-
-    @classmethod
-    def as_form(
-        cls,
-        id_usuario: int = Form(...),
-        nombre_usuario: Optional[str] = Form(None),
-        correo: Optional[EmailStr] = Form(None),
-        telefono_usuario: str = Form(...),        
-        rol: Optional[str] = Form(None),
-    ):
-        return cls(
-            id_usuario=id_usuario,
-            nombre_usuario=nombre_usuario,
-            correo=correo,
-            telefono_usuario=telefono_usuario,           
-            rol=rol,
-        )
-
-
-class UsuarioOutSchema(BaseModel):
-    id_usuario: int
-    nombre_usuario: str
-    correo: EmailStr
-    telefono_usuario: str
-    rol: Optional[str] = None
-
-    class Config:
-        orm_mode = True  # Permite que Pydantic convierta objetos ORM a dicts automáticamente
-
 
 class SolicitudRecuperacion(BaseModel):
     correo: EmailStr

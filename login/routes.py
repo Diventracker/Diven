@@ -49,7 +49,7 @@ async def login_post(
     # Verificar el rol del usuario
     if usuario.rol == "Administrador":
         response = RedirectResponse(url="/diventracker", status_code=302)
-    elif usuario.rol == "Tecnico":
+    elif usuario.rol == "Técnico":
         response = RedirectResponse(url="/diventracker", status_code=302)
     else:
         return HTMLResponse(content="Rol no autorizado", status_code=403)

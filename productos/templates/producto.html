@@ -199,40 +199,6 @@
                                 </tbody>
                               </table>
                             </div>
-
-                            <!-- Paginación -->
-                            {# Macro para construir URLs de paginación con search opcional #}
-                            {% macro pagina_url(ruta, pagina, search) -%}
-                            {{ ruta }}?page={{ pagina }}{% if search %}&search={{ search }}{% endif %}
-                            {%- endmacro %}
-
-                            {# Paginación visual #}
-                            <nav aria-label="Paginación de Productos">
-                              <ul class="pagination justify-content-center mt-4">
-                                <!-- Botón Anterior -->
-                                <li class="page-item {% if page <= 1 %}disabled{% endif %}">
-                                  <a class="page-link"
-                                    href="{% if page > 1 %}{{ pagina_url(ruta_base, page - 1, search) }}{% else %}#{% endif %}">
-                                    Anterior
-                                  </a>
-                                </li>
-
-                                <!-- Números de página -->
-                                {% for s in range(1, total_pages + 1) %}
-                                <li class="page-item {% if s == page %}active{% endif %}">
-                                  <a class="page-link" href="{{ pagina_url(ruta_base, s, search) }}">{{ s }}</a>
-                                </li>
-                                {% endfor %}
-
-                                <!-- Botón Siguiente -->
-                                <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
-                                  <a class="page-link"
-                                    href="{% if page < total_pages %}{{ pagina_url(ruta_base, page + 1, search) }}{% else %}#{% endif %}">
-                                    Siguiente
-                                  </a>
-                                </li>
-                              </ul>
-                            </nav>
                           </div>
                         </div>
                       </div>

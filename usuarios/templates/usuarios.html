@@ -1,194 +1,45 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends "plantilla.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Usuarios</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="/static/css/modulos.css">
-</head>
-<body>
+<!-- etiqueta <head> -->
+{% block head_scripts %}
+    <!-- CSS de DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <!-- JS de jQuery y DataTables -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+{% endblock %}
 
-    <main>
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card shadow-sm">
-                            <div class="card-header bg-white py-3">
-                                <h5 class="mb-0 text-teal-dark"><i class="bi bi-person-gear me-2"></i>Registro de
-                                    Usuarios</h5>
-                            </div>
-                            <div class="card-body">
+<!-- card principal -->
+{% set titulo = "Gestión de Usuarios" %}
+{% set icono = "person-gear" %}
+{% set tabs = false %}
 
-                                <!-- Alertas -->
-                                {% if request.query_params.get("success") == "1" %}
-                                <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg"
-                                    role="alert" style="max-width: 400px; z-index: 1050;">
-                                    <i class="bi bi-check-circle-fill me-2"></i> ¡Usuario actualizado correctamente!
-                                </div>
-                                {% elif request.query_params.get("create") == "1" %}
-                                <div class="alert alert-success d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg"
-                                    role="alert" style="max-width: 400px; z-index: 1050;">
-                                    <i class="bi bi-check-circle-fill me-2"></i> ¡Usuario creado correctamente!
-                                </div>
-                                {% elif request.query_params.get("deleted") == "1" %}
-                                <div class="alert alert-danger d-flex align-items-center justify-content-center text-center small fade show position-fixed start-50 translate-middle-x shadow-lg"
-                                    role="alert" style="max-width: 400px; z-index: 1050;">
-                                    <i class="bi bi-trash-fill me-2"></i> ¡Usuario eliminado correctamente!
-                                </div>
-                                {% elif request.query_params.get("error") == "1" %}
-                                <div class="alert alert-warning d-flex align-items-center justify-content-center text-center small fade show position-fixed top-10 start-50 translate-middle-x shadow-lg"
-                                    role="alert" style="max-width: 400px; z-index: 1050;">
-                                    <i class="bi bi-exclamation-triangle-fill me-2"></i> ¡Este usuario no puede ser
-                                    eliminado!
-                                </div>
-                                {% endif %}
+<!-- Buscador -->
+{% set subtitulo2 = "Buscar Usuarios" %}
+{% set placeholder = "Buscar usuario..." %}
 
-                                <!-- Búsqueda y filtros -->
-                                <div class="row mb-4">
-                                    <div class="col-12">
-                                        <div class="card card-move shadow-sm">
-                                            <div class="card-header">
-                                                <h6 class="mb-0"><i class="bi bi-search me-2"></i>Buscar usuarios</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="mb-2 col-md-4">
-                                                        <form method="get" action="/usuarios">
-                                                            <div class="input-group">
-                                                                <input name="search" value="{{ search | default('') }}"
-                                                                    type="search" class="form-control"
-                                                                    placeholder="Buscar por nombre o correo">
-                                                                <button class="btn btn-outline-enviar" type="submit"><i
-                                                                        class="bi bi-search"></i></button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                    <div class="mb-2 col-md-3 col-lg-3">
-                                                        <div class="input-group">
-                                                            <select class="form-select ordenar-tabla" data-tabla="tablaUsuarios">
-                                                                <option disabled selected>Ordenar por</option>
-                                                                <option value="0-asc">Nombre (A-Z)</option>
-                                                                <option value="0-desc">Nombre (Z-A)</option>
-                                                                <option value="3-asc">Rol (A-Z)</option>
-                                                                <option value="3-desc">Rol (Z-A)</option>
-                                                            </select>
-                                                            <button class="btn btn-outline-enviar" onclick="location.href='/usuarios'"><i
-                                                                    class="bi bi-arrow-repeat"></i></button>                                                            
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-1 col-lg-2 col-xl-3"></div>
-                                                    <div class="col-md-4 col-lg-3 col-xl-2">
-                                                        <button class="btn btn-enviar w-100" data-bs-toggle="modal"
-                                                            data-bs-target="#modalRegistro">
-                                                            <i class="bi bi-person-add me-1"></i>Nuevo Usuario
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+<!-- Boton Crear Registro -->
+{% set btnRegistrar = true %}
+{% set icono_crear = "person-add" %}
+{% set boton_crear = "Nuevo Usuario" %}
+{% set modal_crear = "modalRegistro" %}
 
-                                <!-- Tabla de Usuarios -->
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="card card-move shadow-sm">
-                                            <div class="card-header">
-                                                <h6 class="mb-0"><i class="bi bi-grid me-2"></i>Lista de usuarios</h6>
-                                            </div>
-                                            <div class="card-body pb-0">
-                                                <div class="table-responsive">
-                                                    <table class="table m-0 table-striped table-hover" id="tablaUsuarios">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col">Nombre del usuario</th>
-                                                                <th scope="col">Correo</th>
-                                                                <th scope="col">Teléfono</th>
-                                                                <th scope="col">Rol</th>
-                                                                <th scope="col">Acción</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {% for usuario in usuarios %}
-                                                            <tr>
-                                                                <td>{{ usuario.nombre_usuario }}</td>
-                                                                <td>{{ usuario.correo }}</td>
-                                                                <td>{{ usuario.telefono_usuario }}</td>
-                                                                <td>{{ usuario.rol }}</td>
-                                                                <td>                                                                
-                                                                    <button
-                                                                        class="btn btn-sm btn-outline-secondary me-1 edit-button"
-                                                                        data-bs-toggle="modal"
-                                                                        data-bs-target="#modalEditar"
-                                                                        data-id="{{ usuario.id_usuario }}"
-                                                                        data-nombre="{{ usuario.nombre_usuario }}"
-                                                                        data-correo="{{ usuario.correo }}"
-                                                                        data-telefono="{{ usuario.telefono_usuario }}"
-                                                                        data-rol="{{ usuario.rol }}">
-                                                                        <i class="bi bi-pencil"></i>
-                                                                    </button>
-                                                                    <button class="btn btn-sm btn-outline-danger"
-                                                                        data-bs-toggle="modal"
-                                                                        data-bs-target="#modalEliminar"
-                                                                        data-id="{{ usuario.id_usuario }}"
-                                                                        data-nombre="{{ usuario.nombre_usuario }}">
-                                                                        <i class="bi bi-trash"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                            {% endfor %}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+<!-- tabla -->
+{% set subtitulo = "Lista de Usuarios" %}
+{% set tabla_id = "tablaUsuarios" %}
 
-                                                <!-- Paginación -->
-                                                 {# Macro para construir URLs de paginación con search opcional #}
-                                                 {% macro pagina_url(ruta, pagina, search) -%}
-                                                     {{ ruta }}?page={{ pagina }}{% if search %}&search={{ search }}{% endif %}
-                                                 {%- endmacro %}
-        
-                                                 {# Paginación visual #}
-                                                 <nav aria-label="Paginación de Servicios">
-                                                     <ul class="pagination justify-content-center mt-4">
-                                                         <!-- Botón Anterior -->
-                                                         <li class="page-item {% if page <= 1 %}disabled{% endif %}">
-                                                             <a class="page-link" href="{% if page > 1 %}{{ pagina_url(ruta_base, page - 1, search) }}{% else %}#{% endif %}">
-                                                                 Anterior
-                                                             </a>
-                                                         </li>
-        
-                                                         <!-- Números de página -->
-                                                         {% for s in range(1, total_pages + 1) %}
-                                                             <li class="page-item {% if s == page %}active{% endif %}">
-                                                                 <a class="page-link" href="{{ pagina_url(ruta_base, s, search) }}">{{ s }}</a>
-                                                             </li>
-                                                         {% endfor %}
-        
-                                                         <!-- Botón Siguiente -->
-                                                         <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
-                                                             <a class="page-link" href="{% if page < total_pages %}{{ pagina_url(ruta_base, page + 1, search) }}{% else %}#{% endif %}">
-                                                                 Siguiente
-                                                             </a>
-                                                         </li>
-                                                     </ul>
-                                                 </nav>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+{% block columnas_tabla %}
+    <tr>
+        <th>Nombre del usuario</th>
+        <th>Correo</th>
+        <th>Teléfono</th>
+        <th>Rol</th>
+        <th>Acción</th>
+    </tr>
+{% endblock %}
 
+{% block modales %}
     <!-- Modal Registro -->
     <div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -198,7 +49,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/usuario/crear" method="post">
+                    <form id="registrarUsuario">
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre del usuario:</label>
                             <input type="text" class="form-control" id="nombre" name="nombre_usuario" required
@@ -217,7 +68,7 @@
                             <select name="rol" class="form-control" required>
                                 <option value="" selected disabled>Seleccione un rol...</option>
                                 <option value="Administrador">Administrador</option>
-                                <option value="Tecnico">Técnico</option>
+                                <option value="Técnico">Técnico</option>
                                 <option value="Vendedor">Vendedor</option>
                             </select>
                         </div>
@@ -255,7 +106,10 @@
                         <div class="mb-3">
                             <label for="rol" class="form-label">Rol del usuario:</label>
                             <select id="editRol" name="rol" class="form-control" required>
-                                <!-- El contenido de aca viene desde el js de usuarios -->                               
+                                <option value="" selected disabled>Seleccione un rol...</option>
+                                <option value="Administrador">Administrador</option>
+                                <option value="Técnico">Técnico</option>
+                                <option value="Vendedor">Vendedor</option>                                                                  
                             </select>
                         </div>
                         <button type="submit" id="saveChanges" class="btn btn-enviar w-100">Actualizar Usuario</button>
@@ -286,12 +140,16 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/static/js/funciones.js"></script>
-    <script src="/static/js/modulo_usuarios.js"></script>
+{% block scripts %}
+    <!-- Primero importar el js con las funciones -->
+    <script src="/static/js/funciones/alertas.js"></script>
+    <script src="/static/js/funciones/dataTables.js"></script>
+    <script src="/static/js/usuarios/datosTabla.js"></script>
 
-</body>
+    <script src="/static/js/funciones/setupDatos.js"></script>
+    <script src="/static/js/funciones/crudFetch.js"></script>
 
-</html>
+    <script src="/static/js/usuarios/modulo_usuarios.js"></script>
+{% endblock %}

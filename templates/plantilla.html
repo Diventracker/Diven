@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+<main>
+  <!-- Page Content -->
+  <div id="page-content-wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card shadow-sm">
+            <div class="card-header bg-white py-3">
+              <h5 class="mb-0 text-teal-dark"><i class="bi bi-{{ icono }} me-2"></i>{{ titulo }}</h5>
+            </div>
+            <div class="card-body">
+              <!-- Alertas -->
+              <div id="alerta-success"
+                  class="alert alert-success text-center small fade position-fixed start-50 translate-middle-x shadow-lg"
+                  role="alert"
+                  style="max-width: 400px; z-index: 1060; display: none;">
+                <i class="bi bi-check-circle-fill me-2"></i> <span>¡Mensaje por defecto!</span>
+              </div>
+              <div id="alerta-warning"
+                  class="alert alert-warning text-center small fade position-fixed start-50 translate-middle-x shadow-lg"
+                  role="alert"
+                  style="max-width: 400px; z-index: 1060; display: none;">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> <span>¡Mensaje por defecto!</span>
+              </div>
+              <div id="alerta-eliminado"
+                  class="alert alert-danger text-center small fade position-fixed start-50 translate-middle-x shadow-lg"
+                  role="alert"
+                  style="max-width: 400px; z-index: 1060; display: none;">
+                <i class="bi bi-trash-fill me-2"></i> <span>¡Mensaje por defecto!</span>
+              </div>
+              <!-- Pestañas de navegación -->
+              {% if (tabs and rol == "Administrador") or tabs_view %}
+              <ul class="nav nav-tabs mb-4" id="Tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="btnTab1" data-bs-toggle="tab" data-bs-target="#tab1"
+                    type="button" role="tab" aria-controls="tab1" aria-selected="true">
+                    <i class="bi bi-{{ tab1_icono }} me-1"></i> {{ tab1_nombre }}
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="btnTab2" data-bs-toggle="tab" data-bs-target="#tab2" type="button"
+                    role="tab" aria-controls="tab2" aria-selected="false">
+                    <i class="bi bi-{{ tab2_icono }} me-1"></i> {{ tab2_nombre }}
+                  </button>
+                </li>
+              </ul>
+              <!-- Contenido de las pestañas -->
+              <div class="tab-content" id="TabsContent">
+                <!-- Pestaña numero 1 -->
+                <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
+                  {% endif %}
+
+                  <!-- Búsqueda y filtros -->
+                  <div class="row mb-4">
+                    <div class="col-12">
+                      <div class="card card-move shadow-sm">
+                        <div class="card-header">
+                          <h6 class="mb-0"><i class="bi bi-search me-2"></i>{{ subtitulo2 }}</h6>
+                        </div>
+                        <div class="card-body">
+                          <div class="row align-items-center">
+                            <!-- Busqueda + Limpiar -->
+                            <div class="mb-2 col-12 col-md-6 col-lg-4">
+                              <div class="input-group">
+                                <input type="search" id="buscador" class="form-control" placeholder="{{ placeholder }}">
+                                <button class="btn btn-outline-enviar" type="button" id="btn-buscar">
+                                  <i class="bi bi-search"></i>
+                                </button>
+                                <!-- Botón limpiar -->
+                                <button id="btn-limpiar-filtros" class="btn btn-outline-enviar" type="button">
+                                  <i class="bi bi-arrow-repeat"></i>
+                                </button>
+                              </div>
+                            </div>
+
+                            <!-- Botón registrar -->
+                            {% if rol == "Administrador" and btnRegistrar %}
+                            <div class="mb-2 col-12 col-md-6 col-lg-2 ms-md-auto text-md-end">
+                              <button class="btn btn-enviar w-100 w-md-auto" data-bs-toggle="modal"
+                                data-bs-target="#{{ modal_crear }}">
+                                <i class="bi bi-{{ icono_crear }} me-1"></i>{{ boton_crear }}
+                              </button>
+                            </div>
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Tabla -->
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="card card-move shadow-sm">
+                        <div class="card-header">
+                          <h6 class="mb-0"><i class="bi bi-grid me-2"></i>{{ subtitulo }}</h6>
+                        </div>
+                        <div class="card-body pb-0">
+                          <div class="table-responsive">
+                            <table class="table table-striped m-0 table-hover" id="{{ tabla_id }}">
+                              <thead>
+                                {% block columnas_tabla %}{% endblock %}
+                              </thead>
+                              <tbody>
+                                <!-- DataTables -->
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Pestaña numero 2 -->
+                {% if tabs2  %} <!-- activa la segunda pestaña predeterminada -->
+                    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab1">
+                    <!-- Búsqueda y filtros -->
+                    <div class="row mb-4">
+                      <div class="col-12">
+                        <div class="card card-move shadow-sm">
+                          <div class="card-header">
+                            <h6 class="mb-0"><i class="bi bi-search me-2"></i>{{ subtitulo4 }}</h6>
+                          </div>
+                          <div class="card-body">
+                            <div class="row align-items-center">
+                              <!-- Busqueda + Limpiar -->
+                              <div class="mb-2 col-12 col-md-6 col-lg-4">
+                                <div class="input-group">
+                                  <input type="search" id="buscador" class="form-control" placeholder="{{ placeholder3 }}">
+                                  <button class="btn btn-outline-enviar" type="button" id="btn-buscar">
+                                    <i class="bi bi-search"></i>
+                                  </button>
+                                  <!-- Botón limpiar -->
+                                  <button id="btn-limpiar-filtros" class="btn btn-outline-enviar" type="button">
+                                    <i class="bi bi-arrow-repeat"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Tabla -->
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="card card-move shadow-sm">
+                          <div class="card-header">
+                            <h6 class="mb-0"><i class="bi bi-grid me-2"></i>{{ subtitulo3 }}</h6>
+                          </div>
+                          <div class="card-body pb-0">
+                            <div class="table-responsive">
+                              <table class="table table-striped m-0 table-hover" id="{{ tabla_id2 }}">
+                                <thead>
+                                  {% block columnas_tabla2 %}{% endblock %}
+                                </thead>
+                                <tbody>
+                                  <!-- DataTables -->
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+                <!--  Pestaña si es necesaria -->
+                {% block nueva_tab %}{% endblock %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

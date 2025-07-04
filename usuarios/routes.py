@@ -1,127 +1,50 @@
-from sqlalchemy.exc import IntegrityError
 from fastapi import APIRouter, Request, Depends
-from fastapi.responses import JSONResponse, RedirectResponse
 from sqlalchemy.orm import Session
-from passlib.context import CryptContext
-import secrets
-from fastapi.templating import Jinja2Templates
 from database.database import get_db
-from utils.crud import crear_recurso
-from usuarios.model import Usuario
-from usuarios.schema import UsuarioCreateSchema, UsuarioUpdateSchema
-from utils.email import enviar_correo
+from usuarios.controller import UsuarioControlador
+from usuarios.schema import UsuarioCreateSchema
 
 router = APIRouter()
 
-templates = Jinja2Templates(directory="usuarios/templates")  # Ruta donde están las vistas
-
 #Ruta principal para mostrar tabla usuarios
 @router.get("/usuarios", tags=["Usuarios"])
-def listar_usuarios(
-    request: Request,
-    search: str = "",
-    page: int = 1,
-    limit: int = 9,
-    db: Session = Depends(get_db)
-):
-    rol = request.cookies.get("rol")  # Leer rol de la cookie
-
-    query = db.query(Usuario)
-
-    if search:
-        query = query.filter(
-            (Usuario.nombre_usuario.ilike(f"%{search}%")) |
-            (Usuario.correo.ilike(f"%{search}%"))
-        )
-
-    total = query.count()
-    offset = (page - 1) * limit
-    usuarios = (
-    query.order_by(Usuario.id_usuario.desc()).offset(offset).limit(limit).all())
-    total_pages = (total + limit - 1) // limit  # Redondeo hacia arriba
-
-    return templates.TemplateResponse("usuarios.html", {
-        "request": request,
-        "usuarios": usuarios,
-        "search": search,
-        "rol": rol,
-        "page": page,
-        "total_pages": total_pages,
-        "ruta_base": "/usuarios"
-    })
+def listar_usuarios(request: Request, db: Session = Depends(get_db)):
+    controlador = UsuarioControlador(db)  # No necesita DB para esta vista
+    return controlador.vista_principal(request)
 
 
-# Inicializamos un contexto de hash para bcrypt
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+#Ruta que devuelve todos los datos
+@router.get("/usuarios/data")
+async def obtener_datos_usuarios(db: Session = Depends(get_db)):
+    controlador = UsuarioControlador(db)
+    return controlador.listar_todos()
 
 #Ruta para crear un nuevo usuario
-@router.post("/usuario/crear", tags=["Usuarios"])
+@router.post("/usuarios/crear", tags=["Usuarios"])
 def crear_usuario(
     usuario: UsuarioCreateSchema = Depends(UsuarioCreateSchema.as_form),
     db: Session = Depends(get_db)
 ):
-    clave_plana = secrets.token_urlsafe(10)
-    clave_hash = pwd_context.hash(clave_plana)
+    controlador = UsuarioControlador(db)
+    return controlador.crear(usuario)
 
-    data = usuario.model_dump()
-    data["clave"] = clave_hash
-
-    def notificar_usuario(usuario_creado):
-        enviar_correo(
-            destinatario=usuario_creado.correo,
-            asunto="Tu cuenta ha sido creada",
-            template_name="email_pass.html",
-            nombre=usuario_creado.nombre_usuario,
-            clave=clave_plana  # esta variable debe estar disponible en el scope
-        )
-
-    return crear_recurso(
-        model_class=Usuario,
-        data=data,
-        db=db,
-        redirect_url="/usuarios?create=1",
-        error_url="/usuarios",
-        on_success=notificar_usuario
-    )
 
 #Ruta para actualizar los datos del Usuario
 @router.put("/usuario/editar/{usuario_id}", tags=["Usuarios"])
 def editar_usuario(
     usuario_id: int,
-    usuario_data: UsuarioUpdateSchema = Depends(UsuarioUpdateSchema.as_form),
+    usuario_data: UsuarioCreateSchema = Depends(UsuarioCreateSchema.as_form),
     db: Session = Depends(get_db)
 ):
-    usuario = db.query(Usuario).filter(Usuario.id_usuario == usuario_id).first()
-    if not usuario:
-        return JSONResponse(content={"message": "error"})
+    controlador = UsuarioControlador(db)
+    return controlador.editar(usuario_id, usuario_data)
 
-    try:
-        # Actualizar los campos dinámicamente
-        for field, value in usuario_data.model_dump(exclude_none=True).items():
-            setattr(usuario, field, value)
-
-        db.commit()
-        return RedirectResponse(url="/usuarios?success=1", status_code=303)
-
-    except IntegrityError:
-        db.rollback()
-        return RedirectResponse(url="/usuarios?error=1", status_code=303)
-  
-    
+ 
 #Eliminar usuario...
 @router.delete("/usuario/eliminar/{id_usuario}", tags=["Usuarios"])
 def eliminar_usuario(
     id_usuario: int,
     db: Session = Depends(get_db)
 ):
-    usuario = db.query(Usuario).filter(Usuario.id_usuario == id_usuario).first()
-    if not usuario:
-        return JSONResponse(content={"message": "unfound"})
-    try: 
-        db.delete(usuario)
-        db.commit()
-        return JSONResponse(content={"message": "deleted"})
-    
-    except IntegrityError:
-        db.rollback()
-        return JSONResponse(content={"message": "error"})
+    controlador = UsuarioControlador(db)
+    return controlador.eliminar(id_usuario)

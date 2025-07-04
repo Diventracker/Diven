@@ -1,0 +1,116 @@
+{% extends "plantilla.html" %}
+
+<!-- etiqueta <head> -->
+{% block head_scripts %}
+    <!-- CSS de DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <!-- JS de jQuery y DataTables -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+{% endblock %}
+
+<!-- card principal -->
+{% set titulo = "Gestión de Ventas" %}
+{% set icono = "cash-coin" %}
+
+<!-- Tabs -->
+{% set tabs_view = true %}
+{% set tabs2 = true %}
+{% set tab1_icono = "cash-coin" %}
+{% set tab1_nombre = "Ventas de Productos" %}
+{% set tab2_icono = "tools" %}
+{% set tab2_nombre = "Servicios Facturados" %}
+
+<!-- Buscador -->
+{% set subtitulo2 = "Buscar Venta de Producto" %}
+{% set placeholder = "Buscar venta..." %}
+
+<!-- Segundo Buscador -->
+{% set subtitulo4 = "Buscar Servicio Facturado" %}
+{% set placeholder3 = "Buscar servicio..." %}
+
+<!-- Boton Crear Registro -->
+{% set btnRegistrar = true %}
+{% set icono_crear = "cash-coin" %}
+{% set boton_crear = "Nueva Venta" %}
+{% set modal_crear = "modalRegistro" %} <!-- Editarrrrr redirecion -->
+
+<!-- Tabla -->
+{% set subtitulo = "Lista de Ventas de Productos" %}
+{% set tabla_id = "tablaVentas" %}
+
+<!-- Segunda Tabla -->
+{% set subtitulo3 = "Lista de Servicios Facturados" %}
+{% set tabla_id2 = "tablaServicios" %}
+
+{% block columnas_tabla %}
+    <tr>
+        <th>ID Venta</th>
+        <th>Fecha</th>
+        <th>Cliente</th>
+        <th>Total</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+    </tr>
+{% endblock %}
+
+{% block columnas_tabla2 %}
+    <tr>
+        <th>ID Garantía</th>
+        <th>Cliente</th>
+        <th>Equipo</th>
+        <th>Fecha de Inicio</th>
+        <th>Fecha de Finalización</th>
+        <th>Descripción</th>
+    </tr>
+{% endblock %}
+
+{% block modales %}
+    <!-- Modal detalles -->
+    <div class="modal fade" id="modalDetalles" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        <div class="modal-header bg-teal text-white">
+            <h5 class="modal-title">Detalle de Venta</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row mb-3">
+            <div class="col-md-6">
+                <p><strong>Cliente:</strong> <span data-cliente></span></p>
+                <p><strong>Fecha:</strong> <span data-fecha></span></p>
+                <p><strong>Estado:</strong> Pagado</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Vendedor:</strong> <span data-vendedor></span></p>
+                <p><strong>Descripción:</strong> <em>(detalle de productos)</em></p>
+            </div>
+            </div>
+            <hr>
+            <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                <tr>
+                    <th>Producto</th>
+                    <th>Descripción</th>
+                </tr>
+                </thead>
+                <tbody id="detalle-modal-body">
+                <!-- Se llenará con JS -->
+                </tbody>
+            </table>
+            </div>
+            <p class="text-end mt-3"><strong>Total:</strong> <span data-total></span></p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+        </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

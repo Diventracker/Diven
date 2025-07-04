@@ -6,17 +6,13 @@ from access import routes as access_router
 from usuarios import routes as usuarios_router
 from clientes import routes as clientes_router
 from servicios import routes as servicios_router
-from producto import routes as producto_router
+from productos import routes as producto_router
 from proveedores import routes as proveedores_router
 from ventas import routes as ventas_router
 from garantias import routes as garantias_router
 from dashboard import routes as dashboard_router
 
-
-
-
 app = FastAPI()
-app.include_router(dashboard_router.router)
 
 # Middleware para evitar caché
 @app.middleware("http")
@@ -26,7 +22,6 @@ async def no_cache_middleware(request: Request, call_next):
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
     return response
-
 
 # Montamos la carpeta 'static'
 app.mount("/static", StaticFiles(directory="static"), name="static")

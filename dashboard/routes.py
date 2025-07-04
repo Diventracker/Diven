@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from database.database import get_db
 from utils.report_generator import generar_pdf_informe
-from producto.model import Producto
+from productos.model import Producto
 from clientes.model import Cliente
 from usuarios.model import Usuario
 from proveedores.model import Proveedor
@@ -12,8 +12,8 @@ from servicios.model import  ServicioTecnico
 from garantias.model import Garantia
 from datetime import datetime 
 from ventas.model import Venta
-from producto.model import Producto
-from producto.schema import ProductoOut
+from productos.model import Producto
+from productos.schema import ProductoOut
 from sqlalchemy import text , extract, func
 
 router = APIRouter()
