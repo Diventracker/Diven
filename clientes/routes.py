@@ -158,3 +158,14 @@ def buscar_cliente_por_documento(documento: str, db: Session = Depends(get_db)):
         "tipo_documento":cliente.tipo_documento 
         # Agrega más campos si los tienes
     }
+
+
+
+@router.get("/api/clientes/buscar", response_class=JSONResponse)
+def buscar_clientes(search: str = "", db: Session = Depends(get_db)):
+    clientes = db.query(Cliente).filter(
+        (Cliente.nombre_cliente.ilike(f"%{search}%")) |
+        (Cliente.numero_documento.ilike(f"%{search}%"))
+    ).limit(10).all()
+
+    return [{"id": c.id_cliente, "nombre": c.nombre_cliente, "documento": c.numero_documento} for c in clientes]

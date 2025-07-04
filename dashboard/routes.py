@@ -395,3 +395,48 @@ def servicios_por_equipo(db: Session = Depends(get_db)):
     """)
     resultados = db.execute(query).fetchall()
     return [{"equipo": r[0], "total": r[1]} for r in resultados]
+
+
+@router.post("/api/informe-por-cliente")
+async def informe_por_cliente(request: Request, db: Session = Depends(get_db)):
+    data = await request.json()
+    identificador = data.get("identificador")
+
+    #Buscar cliente
+    cliente = db.query(Cliente).filter(
+        (Cliente.id_cliente == identificador) |
+        (Cliente.numero_documento == identificador) |
+        (Cliente.nombre_cliente.ilike(f"%{identificador}$"))
+    ).first()
+
+
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente no encontrado.")
+
+    ventas = db.query(Venta).filter(Venta.id_cliente == cliente.id_cliente).order_by(Venta.fecha_venta.desc()).all()
+
+    #Prepara datos
+
+    columnas = ["ID Venta", "Fecha", "Total", "Cliente"]
+    datos = [{
+        "ID Venta": v.id_venta,
+        "Fecha": v.fecha_venta.strftime("%d/%m/%Y"),
+        "Total": f"${float(v.total_venta):,.2f}",
+        "Cliente": cliente.nombre_cliente
+    
+    }for v in ventas]
+
+    if not datos:
+        datos = [{"ID Ventas": "-", "Fecha": "-", "Total": "Sin ventas resgistradas"}]
+
+    path = generar_pdf_informe(
+    tipo="cliente",
+    fecha_inicio="N/A",
+    fecha_fin="N/A",
+    datos=datos,
+    columnas=columnas,
+    titulo_customizado=f"Informe de ventas - Cliente: {cliente.nombre_cliente} ({cliente.numero_documento})"
+)
+
+    return FileResponse(path, filename=f"informe_cliente_{cliente.id_cliente}.pdf", media_type="application/pdf")
+    
