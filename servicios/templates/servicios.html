@@ -169,8 +169,13 @@
                                                                         data-tipoServicio="{{ s.tipo_servicio }}"
                                                                         data-modelo="{{ s.modelo_equipo }}"
                                                                         data-descripcion="{{ s.descripcion_problema }}"
-                                                                        data-tecnico="{{ s.usuario.nombre_usuario }}"                                                                                                    
-                                                                        data-estado="{{ s.estado_servicio }}">                                                                        
+                                                                        data-tecnico="{{ s.usuario.nombre_usuario }}"                                                                                                   
+                                                                        data-estado="{{ s.estado_servicio }}"
+                                                                        {% if s.estado_servicio != 'En Progreso' %}
+                                                                            data-trabajo="{{ s.descripcion_trabajo }}"
+                                                                            data-garantia="{{ s.meses_garantia }}"
+                                                                        {% endif %}
+                                                                        >
                                                                         <i class="bi bi-pencil"></i>
                                                                     </button>
                                                                     <button data-id="{{ s.id_servicio }}"
@@ -305,7 +310,47 @@
                                 <label class="form-label"><i class="bi bi-file-text me-2"></i>Descripción del problema</label>
                                 <textarea class="form-control" id="editDescripcion" name="descripcion" placeholder="Descripción inicial del problema..." style="height: 100px" required maxlength="100"></textarea>                                
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3 d-none" id="detallesTrabajo">
+                                 <div class="mb-3">
+                                    <hr class="section-divider">
+                                </div>                                                                          
+                                <!-- campos a editar -->
+                                <div class="mb-3">
+                                    <label class="form-label"><i class="bi bi-clipboard-check me-2"></i>Descripción del Trabajo Realizado</label>
+                                    <div class="form-floating">
+                                        <textarea class="form-control" id="editTrabajo" style="height: 100px" placeholder="Describe detalladamente el trabajo realizado..."></textarea>
+                                        <label for="editTrabajo">
+                                            <i class="bi bi-pencil me-2"></i>
+                                            Detalla el trabajo realizado, problemas encontrados y soluciones aplicadas
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label"><i class="bi bi-shield-check me-2"></i>Meses de garantia</label>
+                                    <input type="text" class="form-control" name="meses_garantia" id="editGarantia" required min="0" value="0">
+                                </div>
+                            </div>
+                            <div class="mb-3 d-none" id="detalleCostos2">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h6 class="mb-0">
+                                                <i class="bi bi-calculator me-2"></i>
+                                                Detalle de Costos Adicionales
+                                            </h6>
+                                            <button type="button" class="btn btn-outline-enviar btn-sm" id="agregarCosto2">
+                                                <i class="bi bi-plus-circle me-1"></i> Agregar otro costo
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">                                    
+                                        <div id="grupoCostos2">
+                                            <!-- Aca se colocan los costos que estan en la bd -->                                            
+                                        </div>                                                                    
+                                    </div>
+                                </div> 
+                            </div>
+                            <div class="mb-3 d-none" id="totales2">
                                 <div class="card card-totales">
                                     <div class="card-body text-center">
                                         <div class="row text-center">
@@ -434,7 +479,7 @@
                                 </div>                            
                             </div>
                             <div class="mb-3 fade" id="costosAdicionales">
-                                 <div class="card">
+                            <div class="card">
                                 <div class="card-header">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="mb-0">
@@ -533,20 +578,45 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body text-center">
-            <p>¿Está seguro de que desea aprobar el servicio técnico?</p>
-            <small class="text-muted">Una vez aprobado, no podrá modificar el estado del servicio técnico.</small>
-            <a href="" id="verServicioLink" class="btn btn-outline-enviar btn-sm mt-3">
-                <i class="bi bi-eye me-1"></i> Ver servicio técnico
-            </a>
+                <p>Una vez aprobado, no podrá modificar el estado del servicio técnico.</p>
+                <a href="" id="verServicioLink" class="btn btn-outline-enviar btn-sm mb-3">
+                    <i class="bi bi-eye me-1"></i> Ver servicio técnico
+                </a><br>                
+                    <input class="form-check-input" type="checkbox" value="" id="confirmarAprobacion" onchange="toggleBotonAprobar()">
+                    <label class="form-check-label" for="confirmarAprobacion">
+                        He verificado que este servicio está correcto.
+                    </label>                
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-enviar">
-                <i class="bi bi-check-circle me-2"></i>
-                Confirmar
-            </button>
+                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalRechazo" onclick="prepararModalRechazo()"><i class="bi bi-x-circle me-2"></i>Rechazar</button>
+                <button type="button" id="btnAprobar" onclick="aprobarServicio()" class="btn btn-enviar" disabled><i class="bi bi-check-circle me-2"></i>Confirmar</button>
             </div>
         </div>
+        </div>
+    </div>
+
+    <!-- modal rechazo -->
+    <div class="modal fade" id="modalRechazo" tabindex="-1" aria-labelledby="modalRechazoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header text-white">
+                <h5 class="modal-title" id="modalRechazoLabel"><i class="bi bi-x-square me-2"></i>Rechazar servicio técnico</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-2">Por favor indica el motivo del rechazo:</p>
+                <textarea 
+                class="form-control" 
+                id="motivoRechazo" 
+                rows="3" 
+                placeholder="Ej: El técnico no dejo bien claro el trabajo realizado"
+                ></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalAprobar">Cancelar</button>
+                <button class="btn btn-enviar" onclick="confirmarRechazo()"><i class="bi bi-info-circle me-2"></i>Confirmar rechazo</button>
+            </div>
+            </div>
         </div>
     </div>
 
@@ -622,6 +692,7 @@
     <script src="/static/js/servicios/modales/registrar.js"></script>
     <script src="/static/js/servicios/modales/revision.js"></script>
     <script src="/static/js/servicios/modales/aprobar.js"></script>
+    <script src="/static/js/servicios/modales/añadirCostos.js"></script>
     <script src="/static/js/modulo_servicios.js"></script>
     <script src="/static/js/servicios/fetch/checkServicio.js"></script>
 

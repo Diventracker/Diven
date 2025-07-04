@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from fastapi import Form
-from typing import List
+from typing import List, Optional
 
 class ServicioCreate(BaseModel):
     cliente_id: int
@@ -55,3 +55,16 @@ class ServicioRevisionSchema(BaseModel):
             descripcion=descripcion,
             detalles=[DetalleGasto(**d) for d in detalles_list]
         )
+    
+class ServicioUpdate(BaseModel):
+    modelo_equipo: str
+    tipo_equipo: str
+    tipo_servicio: str
+    descripcion: str
+    descripcion_trabajo: Optional[str] = None
+    meses_garantia: Optional[int] = None
+    detalles: Optional[List[DetalleGasto]] = []
+
+class EstadoServicioInput(BaseModel):
+    nuevo_estado: str
+    motivo: str | None = None  # Solo requerido si el estado es "rechazado"

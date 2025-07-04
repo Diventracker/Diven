@@ -314,7 +314,8 @@ a {
 }
 
 .section-divider {
-    border-top: 2px solid var(--color3); /* Línea base con tono acento oscuro */    
+    border-top: 2px solid var(--color3); /* Línea base con tono acento oscuro */ 
+    margin: 0;   
 }
 
 .form-check-input:checked {

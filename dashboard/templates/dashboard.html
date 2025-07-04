@@ -177,19 +177,19 @@
                     </div>
 
 
-                    <!-- Alertas de inventario -->
+                    <!-- Alertas de producto -->
                     <div class="col-md-3">
                         <div class="card shadow-sm">
                             <div class="card-header">
                                 <h6 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Alertas de
-                                    Inventario
+                                    Productos
                                 </h6>
                             </div>
                             <div class="card-body p-0">
                                 <div class="list-group list-group-flush">
 
-                                    {% for prod in alertas_inventario[:5] %}
-                                    <a href="/inventario" class="list-group-item list-group-item-action py-3">
+                                    {% for prod in alertas_producto[:5] %}
+                                    <a href="/producto" class="list-group-item list-group-item-action py-3">
                                         <div class="d-flex w-100 justify-content-between">
                                             <h6 class="mb-1">{{ prod.nombre_producto }}</h6>
                                             <span
@@ -199,7 +199,7 @@
                                         <p class="mb-1 small text-muted">Quedan {{ prod.stock }} unidades</p>
                                     </a>
                                     {% else %}
-                                    <div class="text-center text-muted py-3">Sin alertas de inventario.</div>
+                                    <div class="text-center text-muted py-3">Sin alertas de productos.</div>
                                     {% endfor %}
                                 </div>
                             </div>
@@ -352,7 +352,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Tipo de Informe</label>
                                 <select class="form-select" name="tipo" required>
-                                    <option value="inventario">Inventario</option>
+                                    <option value="producto">Productos</option>
                                     <option value="clientes">Clientes</option>
                                     <option value="usuarios">Usuarios</option>
                                     <option value="proveedores">Proveedores</option>
