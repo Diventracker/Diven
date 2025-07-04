@@ -13,13 +13,11 @@ def listar_servicios(request: Request, db: Session = Depends(get_db)):
     controlador = ServicioControlador(db)
     return controlador.vista_principal(request)
 
-
 #Ruta que envia todos los servicios json
 @router.get("/servicios/data", tags=["servicio_tecnico"])
 def obtener_servicios_data(db: Session = Depends(get_db)):
     controlador = ServicioControlador(db)
     return controlador.obtener_datos()
-
 
 #Ruta para crear un nuevo servicio tecnico
 @router.post("/servicio/crear", tags=["servicio_tecnico"])

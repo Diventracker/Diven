@@ -66,4 +66,3 @@ def buscar_cliente_por_documento(documento: str, db: Session = Depends(get_db)):
 def filtrar_clientes(search: str = "", db: Session = Depends(get_db)):
     controlador = ClienteControlador(db)
     return controlador.filtrar_clientes(search)
-
