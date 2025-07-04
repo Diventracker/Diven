@@ -1,11 +1,9 @@
-from fastapi import APIRouter, Depends, Request, Form, HTTPException
-from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
+from fastapi import APIRouter, Depends, Request
+from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
 from database.database import get_db
 from productos.controller import ProductoControlador
-from productos.schema import ProductoCreate, ProductoOut, ProductoUpdate, StockUpdate
-from productos.model import Producto
+from productos.schema import ProductoCreate, ProductoUpdate, StockUpdate
 
 
 router = APIRouter()
