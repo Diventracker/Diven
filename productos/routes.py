@@ -6,10 +6,39 @@ from database.database import get_db
 from productos.controller import ProductoControlador
 from productos.schema import ProductoCreate, ProductoOut, ProductoUpdate, StockUpdate
 from productos.model import Producto
+from fastapi import UploadFile, File
+from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
+from datetime import datetime
+import os
 
 
 router = APIRouter()
 
+
+@router.post("/producto/crear")
+async def crear_producto(
+    datos: ProductoCreate = Depends(ProductoCreate.as_form),
+    imagen: UploadFile = File(None),
+    db: Session = Depends(get_db)
+):
+    ruta_imagen = None
+    if imagen:
+        carpeta_destino = "static/img/productos"
+        os.makedirs(carpeta_destino, exist_ok=True)
+
+        nombre_unico = f"{datetime.now().timestamp()}_{imagen.filename}"  # ✅ Aquí SÍ existe imagen
+        ruta_fisica = os.path.join(carpeta_destino, nombre_unico)
+
+        with open(ruta_fisica, "wb") as f:
+            contenido = await imagen.read()
+            f.write(contenido)
+
+        ruta_imagen = f"img/productos/{nombre_unico}"
+
+    # Lógica para guardar en DB
+    controlador = ProductoControlador(db)
+    return await controlador.crear(datos, ruta_imagen)
 
 # Vista principal que muestra el html de productos
 @router.get("/productos", response_class=HTMLResponse, tags=["Productos"])
@@ -148,3 +177,4 @@ def actualizar_stock(id_producto: int, datos: StockUpdate, db: Session = Depends
     db.refresh(producto)
 
     return {"mensaje": "Stock actualizado correctamente", "stock_final": producto.stock}
+
