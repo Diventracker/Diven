@@ -50,8 +50,8 @@
         <th>ID Venta</th>
         <th>Fecha</th>
         <th>Cliente</th>
+        <th>Cantidad</th>
         <th>Total</th>
-        <th>Estado</th>
         <th>Acciones</th>
     </tr>
 {% endblock %}
@@ -113,5 +113,11 @@
 {% endblock %}
 
 {% block scripts %}
+    <!-- Primero importar el js con las funciones -->
+    <script src="/static/js/funciones/alertas.js"></script>
+    <script src="/static/js/funciones/dataTables.js"></script>
+    <script src="/static/js/ventas/datosTabla.js"></script>
+
+    <script src="/static/js/ventas/verDetalles.js"></script>
 
 {% endblock %}

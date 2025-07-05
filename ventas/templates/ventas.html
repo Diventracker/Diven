@@ -120,6 +120,13 @@
                                         data-bs-target="#modaldetalle">
                                         <i class="bi bi-eye"></i> Detalles
                                       </button>
+                                      <button class="btn btn-sm btn-outline-danger"
+                                          data-bs-toggle="modal"
+                                          data-bs-target="#modalEliminar"
+                                          data-id="${row.id_usuario}"
+                                          data-nombre="${row.nombre_usuario}">
+                                          <i class="bi bi-trash"></i>
+                                      </button>
                                       <a href="/ventas/comprobante/{{ v.id_venta }}"
                                         class="btn btn-sm btn-outline-secondary">
                                         <i class="bi bi-receipt me-1"></i> Recibo

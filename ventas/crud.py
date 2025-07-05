@@ -1,12 +1,22 @@
-from datetime import datetime, timezone
+from clientes.repositorio import ClienteRepositorio
+from productos.repositorio import ProductoRepositorio
 from ventas.model import DetalleVenta, Venta
 from ventas.repositorio import VentaRepositorio
 from fastapi import HTTPException
+from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 
 class VentaCRUD:
-    def __init__(self, repo: VentaRepositorio):
-        self.repo = repo
+    def __init__(self, db: Session):
+        self.ventaRepo = VentaRepositorio(db)
+        self.repo = self.ventaRepo
+        self.producto_repo = ProductoRepositorio(db)
+        self.cliente_repo = ClienteRepositorio(db)
+
+    #lista todas las ventas para mostrar en la tabla
+    def listar_todas(self) -> list[Venta]:
+        return self.repo.listar_todas()
+
 
     def obtener_detalle_venta(self, id_venta: int):
         venta = self.repo.obtener_venta_con_relaciones(id_venta)
@@ -49,6 +59,10 @@ class VentaCRUD:
                 raise ValueError(f"Producto {id_producto} no encontrado")
             if producto.stock < cantidad:
                 raise ValueError(f"Stock insuficiente para {producto.nombre_producto}")
+            #Consulta si esta el cliente
+            cliente = self.cliente_repo.obtener_por_id(id_cliente)
+            if not cliente:
+                raise ValueError("Cliente no encontrado")
 
             precio_unitario = producto.precio_venta or producto.precio
             subtotal = cantidad * float(precio_unitario)
@@ -66,11 +80,10 @@ class VentaCRUD:
             nueva_venta = Venta(
                 id_cliente=id_cliente,
                 id_usuario=id_usuario,
-                fecha_venta=datetime.now(timezone.utc), #Eliminar esto y dejarla timestamp
                 total_venta=total_venta
             )
-            self.db.add(nueva_venta)
-            self.db.flush()  # para obtener id_venta
+            self.repo.db.add(nueva_venta)
+            self.repo.db.flush()  # para obtener id_venta
 
             for det in detalles:
                 detalle = DetalleVenta(
@@ -79,13 +92,13 @@ class VentaCRUD:
                     cantidad=det["cantidad"],
                     precio_unitario=det["precio_unitario"]
                 )
-                self.db.add(detalle)
+                self.repo.db.add(detalle)
 
-            self.db.commit()
+            self.repo.db.commit()
             return nueva_venta.id_venta
 
         except SQLAlchemyError:
-            self.db.rollback()
+            self.repo.db.rollback()
             raise Exception("Error al registrar la venta")
         
     #Para mostrar los datos del comprobante

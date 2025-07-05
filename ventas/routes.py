@@ -13,6 +13,13 @@ def gestionventas_get(request: Request, db: Session = Depends(get_db)):
     return controlador.vista_ventas(request)
 
 
+#Ruta que retorna todas la ventas en json
+@router.get("/ventas/data")
+async def obtener_datos_ventas(db: Session = Depends(get_db)):
+    controlador = VentaControlador(db)
+    return controlador.listar_todas()
+
+
 #Ruta para mostrar la vista de crear una nueva venta
 @router.get("/crear_venta", response_class=HTMLResponse, tags=["Ventas"])
 def ventas_get_endpoint(request: Request, db: Session = Depends(get_db)):

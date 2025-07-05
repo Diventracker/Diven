@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey, DateTime, DECIMAL
+from sqlalchemy import TIMESTAMP, Column, Integer, ForeignKey, DECIMAL
 from sqlalchemy.orm import relationship
 from database.database import Base
 from datetime import datetime, timezone
@@ -9,7 +9,7 @@ class Venta(Base):
     id_venta = Column(Integer, primary_key=True, autoincrement=True)
     id_cliente = Column(Integer, ForeignKey('cliente.id_cliente'), nullable=False)
     id_usuario = Column(Integer, ForeignKey('usuario.id_usuario'), nullable=False)
-    fecha_venta = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    fecha_venta = Column (TIMESTAMP, nullable=False, default=datetime.now)
     total_venta = Column(DECIMAL(10, 2), nullable=False)
 
     cliente = relationship("Cliente", back_populates="ventas")

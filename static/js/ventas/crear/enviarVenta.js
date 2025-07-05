@@ -35,10 +35,9 @@ async function generarVenta() {
   
       const respuesta = await res.json();
   
-      if (!res.ok) throw new Error(respuesta.detail || "Error al registrar la venta");
+      if (!res.ok) throw new Error(respuesta.error || "Error al registrar la venta");
   
       window.location.href = `/ventas/comprobante/${respuesta.id_venta}`; //Aqui enviar al formulario al momento de realizar la venta
-      // Aquí podrías limpiar la tabla o redireccionar, según necesites.
     } catch (error) {
       mostrarAlerta("alerta-warning", "Error: " + error.message);
     }
