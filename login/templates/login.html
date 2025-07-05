@@ -55,39 +55,18 @@
               Ingresa tus credenciales para acceder al sistema
             </p>
             
-            <form action="login" method="POST">
+            <form id="loginForm">
               <div class="mb-3">
-                <label for="email" class="form-label fw-medium text-dark">
-                  Correo Electrónico
-                </label>
-                <input 
-                  name="correo"
-                  type="email" 
-                  class="form-control border-sage-light" 
-                  id="email" 
-                  placeholder="correo@ejemplo.com"
-                  autocomplete="off"
-                  tabindex="1"
-                >
+                <label for="email" class="form-label fw-medium text-dark">Correo Electrónico</label>
+                <input name="correo" type="email" class="form-control border-sage-light" placeholder="correo@ejemplo.com" autocomplete="off" tabindex="1">
               </div>
               
               <div class="mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-1">
-                  <label for="password" class="form-label fw-medium mb-0 text-dark">
-                    Contraseña
-                  </label>
-                  <a href="#" class="text-decoration-none small text-primary" id="forgot-password-link">
-                    ¿Olvidaste tu contraseña?
-                  </a>
+                  <label for="password" class="form-label fw-medium mb-0 text-dark">Contraseña</label>
+                  <a href="#" class="text-decoration-none small text-primary" id="forgot-password-link">¿Olvidaste tu contraseña?</a>
                 </div>
-                <input 
-                  type="password"
-                  name="clave" 
-                  class="form-control border-sage-light" 
-                  id="password"
-                  autocomplete="new-password"
-                  tabindex="2"
-                >
+                <input type="password" name="clave" class="form-control border-sage-light" autocomplete="new-password" tabindex="2">
               </div>
               <input type="submit" class="btn btn-primary w-100 py-3 text-white fw-semibold" value="Iniciar Sesión">
               
@@ -195,7 +174,8 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/static/js/alertas.js"></script>
-  <script src="/static/js/login/login.js"></script>
+  <script src="/static/js/funciones/alertas.js"></script>
+  <script src="/static/js/login/recuperar.js"></script>
+  <script src="/static/js/login/iniciarSesion.js"></script>
 </body>
 </html>

@@ -7,8 +7,8 @@ from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse, HTMLResponse, RedirectResponse
 
 
-
 templates = Jinja2Templates(directory=["templates", "ventas/templates"])
+
 
 class VentaControlador:
     def __init__(self, db: Session):
