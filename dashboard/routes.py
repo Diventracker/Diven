@@ -9,33 +9,20 @@ from clientes.model import Cliente
 from usuarios.model import Usuario
 from proveedores.model import Proveedor
 from servicios.model import  ServicioTecnico
-from garantias.model import Garantia
 from datetime import datetime 
-from ventas.model import Venta
+from ventas.model import DetalleVenta, Venta
 from productos.model import Producto
 from productos.schema import ProductoOut
-from sqlalchemy import text , extract, func
+from sqlalchemy import desc, text , extract, func
 
 router = APIRouter()
 
 templates = Jinja2Templates(directory="dashboard/templates")
 
-
-#Ruta para la ventana del dashboard/y mostrar la informacion de ventas y servicios
-
-@router.get("/dashboard", response_class=HTMLResponse, tags=["dashboard"])
-def dashboard_get(request: Request, db: Session = Depends(get_db)):
-    ultimas_ventas = db.query(Venta).order_by(Venta.fecha_venta.desc()).limit(5).all()
-    ultimos_servicios = db.query(ServicioTecnico).order_by(ServicioTecnico.fecha_recepcion.desc()).limit(5).all()
-    alertas_producto = db.query(Producto).filter(Producto.stock < 10).all()
-
-    return templates.TemplateResponse("dashboard.html", {
-        "request": request,
-        "ultimas_ventas": ultimas_ventas,
-        "ultimos_servicios": ultimos_servicios,
-        "alertas_producto": alertas_producto
-    })
-
+#Ruta del html del dashboard
+@router.get("/dashboard", tags=["dashboard"])
+def dashboard_get(request: Request):
+    return templates.TemplateResponse("dashboard.html", {"request": request,})
 
 
 @router.post("/api/generar-informe")
@@ -157,24 +144,6 @@ async def generar_informe(request: Request, db: Session = Depends(get_db)):
 
     path = generar_pdf_informe(tipo, fecha_inicio_str, fecha_fin_str, datos, columnas)
     return FileResponse(path, filename=f"informe_{tipo}.pdf", media_type="application/pdf")
-
-
-@router.get("/stock/bajo", response_model=list[ProductoOut], tags=["Productos"])
-def productos_bajo_stock(db: Session = Depends(get_db)):
-    productos = db.query(Producto).filter(Producto.stock < 10).all()
-
-    return [
-        ProductoOut(
-            codigo=str(prod.id_producto),
-            nombre=prod.nombre_producto,
-            descripcion=prod.descripcion,
-            modelo=prod.modelo,
-            precio=prod.precio_venta,
-            stock=prod.stock,
-            proveedor=prod.proveedor.nombre_proveedor if prod.proveedor else None
-        )
-        for prod in productos
-    ]
 
 
 #ruta de fecha personalizada
@@ -339,62 +308,62 @@ def get_ventas_por_mes(db: Session = Depends(get_db)):
 
     datos_por_mes = {mes: total for mes, total in resultados}
 
-    labels = meses_nombres
-    datos = [datos_por_mes.get(i + 1, 0) for i in range(12)]
-
     return {
-        "labels": labels,
-        "datasets": [{
-            "label": "Total Ventas por Mes",
-            "data": datos,
-            "backgroundColor": '#5e9188',
-            "borderColor": '#5e9188',
-            "borderWidth": 2
-        }]
+        "labels": meses_nombres,
+        "data": [datos_por_mes.get(i + 1, 0) for i in range(12)]
     }
 
-
     
-#ruta para obtener el producto menos vendido
+#Ruta para obtener los productos más vendidos
 @router.get("/api/dashboard/productos-mas-vendidos")
-def productos_mas_vendidos(db=Depends(get_db)):
-    query = text("""
-        SELECT p.nombre_producto, SUM(dv.cantidad) AS total_vendido
-        FROM detalle_venta dv
-        JOIN producto p ON dv.id_producto = p.id_producto
-        GROUP BY p.nombre_producto
-        ORDER BY total_vendido DESC
-        LIMIT 6
-    """)
-    resultados = db.execute(query).fetchall()
+def productos_mas_vendidos(db: Session = Depends(get_db)):
+    resultados = (
+        db.query(
+            Producto.nombre_producto,
+            func.sum(DetalleVenta.cantidad).label("total_vendido")
+        )
+        .join(Producto, DetalleVenta.id_producto == Producto.id_producto)
+        .group_by(Producto.nombre_producto)
+        .order_by(desc("total_vendido"))
+        .limit(9)
+        .all()
+    )
+
     return [{"producto": r[0], "cantidad": r[1]} for r in resultados]
+
 
 # Ruta para obtener las ventas por vendedor
 @router.get("/api/dashboard/ventas-vendedor")
 def ventas_por_vendedor(db: Session = Depends(get_db)):
-    query = text("""
-        SELECT u.nombre_usuario, COALESCE(SUM(v.total_venta), 0) AS total_vendido
-        FROM usuario u
-        LEFT JOIN venta v ON u.id_usuario = v.id_usuario
-        WHERE u.rol = 'vendedor'
-        GROUP BY u.nombre_usuario
-        ORDER BY total_vendido DESC
-    """)
-    resultados = db.execute(query).fetchall()
+    resultados = (
+        db.query(
+            Usuario.nombre_usuario.label("vendedor"),
+            func.coalesce(func.sum(Venta.total_venta), 0).label("total")
+        )
+        .outerjoin(Venta, Usuario.id_usuario == Venta.id_usuario)
+        .filter(Usuario.rol == "Técnico")
+        .group_by(Usuario.nombre_usuario)
+        .order_by(desc("total"))
+        .limit(6)
+        .all()
+    )
 
-    return [{"vendedor": r[0], "total": r[1]} for r in resultados]
+    return [{"vendedor": r.vendedor, "total": r.total} for r in resultados]
 
-# tipo de equipo mas recibido
+# tipo de equipo mas recibido en servicios
 @router.get("/api/dashboard/servicios-por-equipo")
 def servicios_por_equipo(db: Session = Depends(get_db)):
-    query = text("""
-        SELECT tipo_equipo, COUNT(*) AS total
-        FROM servicio_tecnico
-        GROUP BY tipo_equipo
-        ORDER BY total DESC
-    """)
-    resultados = db.execute(query).fetchall()
-    return [{"equipo": r[0], "total": r[1]} for r in resultados]
+    resultados = (
+        db.query(
+            ServicioTecnico.tipo_equipo.label("equipo"),
+            func.count().label("total")
+        )
+        .group_by(ServicioTecnico.tipo_equipo)
+        .order_by(func.count().desc())
+        .all()
+    )
+    return [{"equipo": r.equipo, "total": r.total} for r in resultados]
+
 
 
 @router.post("/api/informe-por-cliente")

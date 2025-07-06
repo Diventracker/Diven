@@ -6,12 +6,17 @@ $(document).ready(function () {
     { data: 'id_venta' },
     { data: 'fecha_venta' },
     { data: 'nombre_cliente' },
-    { data: 'cantidad_productos' },
-    { data: 'valor_venta' }
+    {
+    data: 'cantidad_productos',
+        render: function(data, type, row) {
+            return data + ' Productos';
+        }
+    },
+    { data: 'valor_venta' },
+    { data: 'nombre_usuario' }
   ];
 
   // Agregar acciones solo si es administrador
-  if (esAdmin) {
     columnasVentas.push({
       data: null,
       orderable: false,
@@ -30,7 +35,6 @@ $(document).ready(function () {
         `;
       }
     });
-  }
 
   window.tablaVentas = inicializarDataTable('tablaVentas', '/ventas/data', columnasVentas);
 });

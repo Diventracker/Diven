@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Ventas - Dashboard</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/static/css/dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 </head>
-
-<body>
-
     <body>
         <!-- Page Content -->
         <div id="page-content-wrapper">
@@ -27,7 +25,7 @@
                                     <div>
                                         <label class="fw-bold me-2">Período:</label>
                                         <span class="text-teal-dark" id="mesActual"></span>
-                                    </div>                                    
+                                    </div>
                                     <div class="btn-group" role="group">
                                         <button class="btn btn-outline-teal" data-periodo="hoy">Hoy</button>
                                         <button class="btn btn-outline-teal" data-periodo="semana">Semana</button>
@@ -37,26 +35,30 @@
                                             data-bs-toggle="modal" data-bs-target="#modalFechaPersonalizada">
                                             <i class="bi bi-calendar3"></i> Personalizado
                                         </button>
-                                        <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalInformeCliente">
-  <i class="bi bi-person-lines-fill"></i> Informe por Cliente
-</button>
+                                        <button class="btn btn-outline-secondary" data-bs-toggle="modal"
+                                            data-bs-target="#modalInformeCliente">
+                                            <i class="bi bi-person-lines-fill"></i> Informe por Cliente
+                                        </button>
                                     </div>
+                                    <!-- Boton Generar Informe -->
                                     <div class="text-end mt-2 mt-lg-0">
                                         <button class="btn btn-outline-primary" data-bs-toggle="modal"
                                             data-bs-target="#modalGenerarInforme">
                                             <i class="bi bi-file-earmark-text"></i> Generar Informe
                                         </button>
-                                    </div>                                    
+                                    </div>
                                     <!-- Servicios Pendientes -->
                                     <div class="dropdown">
                                         <button class="btn btn-warning notification-badge" data-bs-toggle="dropdown">
                                             <i class="bi bi-tools"></i> Servicios en revisión
                                             <span class="notification-count" id="notificationCount">5</span>
                                         </button>
-                                        <div class="dropdown-menu dropdown-menu-end notification-dropdown" style="width: 350px;">
+                                        <div class="dropdown-menu dropdown-menu-end notification-dropdown"
+                                            style="width: 350px;">
                                             <div class="dropdown-header">
-                                                <h6 class="mb-0"><i class="bi bi-bell me-2"></i>Servicios Pendientes</h6>
-                                            </div>                                                                                                                                                                            
+                                                <h6 class="mb-0"><i class="bi bi-bell me-2"></i>Servicios Pendientes
+                                                </h6>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -67,6 +69,7 @@
 
                 <!-- Tarjetas de estadísticas -->
                 <div class="row mb-4">
+                    <!-- Card del total en ventas -->
                     <div class="col-md-4">
                         <div class="card stat-card shadow-sm">
                             <div class="card-body">
@@ -85,6 +88,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Card numero de Ventas -->
                     <div class="col-md-4">
                         <div class="card stat-card shadow-sm">
                             <div class="card-body">
@@ -103,6 +107,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Card Nuevos Clientes -->
                     <div class="col-md-4">
                         <div class="card stat-card shadow-sm">
                             <div class="card-body">
@@ -122,9 +127,9 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Gráficos y tablas -->
+                <!-- Fila 2 -->
                 <div class="row mb-4">
+                    <!-- Gráfico Periodo de Ventas -->
                     <div class="col-md-7">
                         <div class="card shadow-sm">
                             <div class="card-header">
@@ -149,8 +154,9 @@
                         </div>
                     </div>
                 </div>
+                <!-- Fila 3 -->
                 <div class="row mb-4">
-                    <!-- Gráfico de categorías -->
+                    <!-- Gráfico de Servicio Por Equipo -->
                     <div class="col-md-4">
                         <div class="card shadow-sm">
                             <div class="card-header">
@@ -158,11 +164,12 @@
                                 </h6>
                             </div>
                             <div class="card-body">
-                                <canvas id="graficoTipoEquipo" height="200"></canvas>
+                                <div style="max-height: 400px;">
+                                    <canvas id="graficoTipoEquipo"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
-
 
                     <!-- Ventas por vendedor -->
                     <div class="col-md-5">
@@ -171,11 +178,10 @@
                                 <h6 class="mb-0"><i class="bi bi-bar-chart me-2"></i>Ventas por Vendedor</h6>
                             </div>
                             <div class="card-body">
-                                <canvas id="graficoVentasVendedor" height="200"></canvas>
+                                <canvas id="graficoVentasVendedor" height="110"></canvas>
                             </div>
                         </div>
                     </div>
-
 
                     <!-- Alertas de producto -->
                     <div class="col-md-3">
@@ -186,35 +192,23 @@
                                 </h6>
                             </div>
                             <div class="card-body p-0">
-                                <div class="list-group list-group-flush">
-
-                                    {% for prod in alertas_producto[:5] %}
-                                    <a href="/producto" class="list-group-item list-group-item-action py-3">
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <h6 class="mb-1">{{ prod.nombre_producto }}</h6>
-                                            <span
-                                                class="badge {% if prod.stock < 5 %}bg-danger{% else %}bg-warning text-dark{% endif %}">Stock
-                                                bajo</span>
-                                        </div>
-                                        <p class="mb-1 small text-muted">Quedan {{ prod.stock }} unidades</p>
-                                    </a>
-                                    {% else %}
-                                    <div class="text-center text-muted py-3">Sin alertas de productos.</div>
-                                    {% endfor %}
+                                <div class="list-group list-group-flush" id="productosBajoStock">
+                                    <!-- Aca se colocan los productos con js -->
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- Ultimos Servicios -->
                 <div class="row mb-4">
                     <div class="col-12">
                         <div class="card shadow-sm">
                             <div class="card-header">
-                                <h6 class="mb-0"><i class="bi bi-clock-history me-2"></i>Últimas Servicios</h6>
+                                <h6 class="mb-0"><i class="bi bi-clock-history me-2"></i>Últimos Servicios</h6>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-hover">
+                                    <table class="table table-hover" id="tablaServicios">
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
@@ -226,24 +220,8 @@
                                                 <th>Estado</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="ultimos_servicios">
-                                            {% for s in ultimos_servicios %}
-                                            <tr>
-                                                <td>{{ s.id_servicio }}</td>
-                                                <td>{{ s.tipo_equipo }}</td>
-                                                <td>{{ s.modelo_equipo }}</td>
-                                                <td>{{ s.descripcion_problema }}</td>
-                                                <td>{{ s.fecha_recepcion.strftime("%Y-%m-%d") }}</td>
-                                                <td>
-                                                    {% if s.fecha_entrega %}
-                                                        {{ s.fecha_entrega.strftime('%d/%m/%Y') }}
-                                                    {% else %}
-                                                        <span class="text-muted">Sin entregar</span>
-                                                    {% endif %}
-                                                </td>
-                                                <td>{{ s.estado_servicio }}</td>
-                                            </tr>
-                                            {% endfor %}
+                                        <tbody>
+                                            <!-- DataTables Inserta Aca -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -263,7 +241,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-hover">
+                                    <table class="table table-hover" id="tablaVentas">
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
@@ -271,62 +249,11 @@
                                                 <th>Fecha</th>
                                                 <th>Productos</th>
                                                 <th>Total</th>
-                                                <th>Método de Pago</th>
                                                 <th>Vendedor</th>
-                                                <th>Estado</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>#VNT-2584</td>
-                                                <td>Juan Pérez</td>
-                                                <td>18/05/2025 10:45</td>
-                                                <td>3 productos</td>
-                                                <td>$1,139.83</td>
-                                                <td>Efectivo</td>
-                                                <td>María López</td>
-                                                <td><span class="badge bg-success">Completada</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>#VNT-2583</td>
-                                                <td>Ana Martínez</td>
-                                                <td>18/05/2025 09:30</td>
-                                                <td>2 productos</td>
-                                                <td>$579.98</td>
-                                                <td>Tarjeta de Crédito</td>
-                                                <td>Carlos Rodríguez</td>
-                                                <td><span class="badge bg-success">Completada</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>#VNT-2582</td>
-                                                <td>Roberto Gómez</td>
-                                                <td>17/05/2025 16:20</td>
-                                                <td>5 productos</td>
-                                                <td>$349.95</td>
-                                                <td>Transferencia</td>
-                                                <td>María López</td>
-                                                <td><span class="badge bg-success">Completada</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>#VNT-2581</td>
-                                                <td>Laura Sánchez</td>
-                                                <td>17/05/2025 14:15</td>
-                                                <td>1 producto</td>
-                                                <td>$899.99</td>
-                                                <td>Tarjeta de Crédito</td>
-                                                <td>Pedro Díaz</td>
-                                                <td><span class="badge bg-success">Completada</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>#VNT-2580</td>
-                                                <td>Carlos Mendoza</td>
-                                                <td>17/05/2025 11:50</td>
-                                                <td>4 productos</td>
-                                                <td>$159.96</td>
-                                                <td>Efectivo</td>
-                                                <td>Ana Martínez</td>
-                                                <td><span class="badge bg-success">Completada</span></td>
-                                            </tr>
+                                            <!-- DataTables lo coloca aca -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -339,8 +266,10 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal para generar informe -->
         <div class="modal fade" id="modalGenerarInforme" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <form id="form-informe">
                         <div class="modal-header">
@@ -374,9 +303,11 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal para fechas personalizadas -->
         <div class="modal fade" id="modalFechaPersonalizada" tabindex="-1" aria-labelledby="modalLabel"
             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <form id="form-control-fecha">
                         <div class="modal-header">
@@ -402,40 +333,49 @@
         </div>
 
         <!-- Modal para Informe por Cliente -->
-<div class="modal fade" id="modalInformeCliente" tabindex="-1" aria-labelledby="modalClienteLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <form id="form-informe-cliente">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalClienteLabel">Informe por Cliente</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <div class="modal fade" id="modalInformeCliente" tabindex="-1" aria-labelledby="modalClienteLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="form-informe-cliente">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalClienteLabel">Informe por Cliente</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Nombre, Cédula o ID del Cliente</label>
+                                <input type="text" name="identificador" id="inputCliente" list="clientesList"
+                                    class="form-control" autocomplete="off" required>
+                                <datalist id="clientesList"></datalist>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Generar Informe</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-          <div class="mb-3">
-            <label class="form-label">Nombre, Cédula o ID del Cliente</label>
-            <input type="text" name="identificador" id="inputCliente" list="clientesList" class="form-control" autocomplete="off" required>
-<datalist id="clientesList"></datalist>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-success">Generar Informe</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
 
 
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>    
 
-
-
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="/static/js//dashboard/graficos.js"></script>
+        <!-- Tablas -->
+        <script src="/static/js/dashboard/tablaVentas.js"></script>
+        <script src="/static/js/dashboard/tablaServicios.js"></script>
+        <!-- Productos Bajo Stock -->
+        <script src="/static/js/dashboard/alertasProductos.js"></script>
+        <!-- Graficos -->
+        <script src="/static/js/dashboard/graficos/graficoVendedores.js"></script>
+        <script src="/static/js/dashboard/graficos/graficoCategorias.js"></script>
+        <script src="/static/js/dashboard/graficos/graficoProductos.js"></script>
+        <script src="/static/js/dashboard/graficos/graficoVentas.js"></script>
+        
         <script src="/static/js//dashboard/informe.js"></script>
         <script src="/static/js/dashboard/cards.js"></script>
         <script src="/static/js/dashboard/serviciosPendientes.js"></script>
         <script src="/static/js/dashboard/informe_cliente.js"></script>
     </body>
-
 </html>

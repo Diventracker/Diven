@@ -20,12 +20,14 @@
 {% set icono = "box-seam" %}
 
 <!-- Tabs -->
-{% set tabs_view = true %}
-{% set tabs2 = flase %}
-{% set tab1_icono = "grid" %}
-{% set tab1_nombre = "Productos" %}
-{% set tab2_icono = "clipboard-data" %}
-{% set tab2_nombre = "Control de Stock" %}
+{% if rol == "Administrador" %}  <!-- Mostrar las tabs, si el rol es admin -->
+    {% set tabs_view = true %}
+    {% set tabs2 = flase %}
+    {% set tab1_icono = "grid" %}
+    {% set tab1_nombre = "Productos" %}
+    {% set tab2_icono = "clipboard-data" %}
+    {% set tab2_nombre = "Control de Stock" %}
+{% endif %}
 
 <!-- Buscador -->
 {% set subtitulo2 = "Buscar Productos" %}
@@ -43,69 +45,71 @@
 {% set tabla_id = "tablaProductos" %}
 
 {% block nueva_tab %}
-    <!-- Pestaña de Control de Stock -->
-    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="stock-tab">
-        <div class="row mb-4">
-            <div class="col-md-5">
-                <div class="card shadow-sm">
-                    <div class="card-header">
-                        <h6 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Alertas de Stock</h6>
+    {% if rol == "Administrador" %}
+        <!-- Pestaña de Control de Stock -->
+        <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="stock-tab">
+            <div class="row mb-4">
+                <div class="col-md-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Alertas de Stock</h6>
+                        </div>
+                        <div class="card-body p-0" style="max-height: 530px; overflow-y: auto;">
+                            <div class="list-group list-group-flush" id="productosBajoStock">
+                                <!-- Aca se colocan los roductos con js, no modificar pplis -->
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body p-0" style="max-height: 530px; overflow-y: auto;">
-                        <div class="list-group list-group-flush" id="productosBajoStock">
-                            <!-- Aca se colocan los roductos con js, no modificar pplis -->
+                </div>
+                <div class="col-md-7 mb-4 mb-md-0">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Registrar Movimiento de Stock</h6>
+                        </div>
+                        <div class="card-body">
+                            <form id="actualizar_stock">
+                                <div class="mb-3">
+                                    <label for="selectProducto" class="form-label">Producto</label>
+                                    <select id="selectProducto" name="id_producto" class="form-control" required>
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="proveedor" class="form-label">Proveedor</label>
+                                        <input type="text" class="form-control" id="proveedor" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="stockQuantity" class="form-label">Existencia actual</label>
+                                        <input type="number" class="form-control" id="stockQuantity" readonly>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="productoDescripcion" class="form-label">Descripcion</label>
+                                    <textarea class="form-control" id="productoDescripcion" rows="2" readonly></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="stockNew" class="form-label">Añadir Existencia</label>
+                                    <input type="number" class="form-control" name="newStock" id="stockNew" min="1">
+                                </div>
+                                <div class="card mb-3 bg-warning-subtle border-warning d-none" id="previewCard">
+                                    <div class="card-body py-2 px-3">
+                                        <h6 class="card-title mb-1">Vista previa del movimiento</h6>
+                                        <p class="mb-0 small" id="previewCantidad"></p>
+                                        <p class="mb-0 small" id="previewFinal"></p>
+                                    </div>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" id="btnActualizarStock" class="btn btn-enviar" disabled>Registrar
+                                        Movimiento</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-7 mb-4 mb-md-0">
-                <div class="card shadow-sm">
-                    <div class="card-header">
-                        <h6 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Registrar Movimiento de Stock</h6>
-                    </div>
-                    <div class="card-body">
-                        <form id="actualizar_stock">
-                            <div class="mb-3">
-                                <label for="selectProducto" class="form-label">Producto</label>
-                                <select id="selectProducto" name="id_producto" class="form-control" required>
-                                    <option></option>
-                                </select>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="proveedor" class="form-label">Proveedor</label>
-                                    <input type="text" class="form-control" id="proveedor" readonly>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="stockQuantity" class="form-label">Existencia actual</label>
-                                    <input type="number" class="form-control" id="stockQuantity" readonly>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="productoDescripcion" class="form-label">Descripcion</label>
-                                <textarea class="form-control" id="productoDescripcion" rows="2" readonly></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="stockNew" class="form-label">Añadir Existencia</label>
-                                <input type="number" class="form-control" name="newStock" id="stockNew" min="1">
-                            </div>
-                            <div class="card mb-3 bg-warning-subtle border-warning d-none" id="previewCard">
-                                <div class="card-body py-2 px-3">
-                                    <h6 class="card-title mb-1">Vista previa del movimiento</h6>
-                                    <p class="mb-0 small" id="previewCantidad"></p>
-                                    <p class="mb-0 small" id="previewFinal"></p>
-                                </div>
-                            </div>
-                            <div class="d-grid">
-                                <button type="submit" id="btnActualizarStock" class="btn btn-enviar" disabled>Registrar
-                                    Movimiento</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}
 
 {% block modales %}

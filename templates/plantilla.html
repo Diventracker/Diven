@@ -77,17 +77,19 @@
                             </div>
 
                             <!-- Botón registrar -->
-                            {% if rol == "Administrador" and btnRegistrar %}
+                            {% if btnRegistrar %}
                             <div class="mb-2 col-12 col-md-6 col-lg-2 ms-md-auto text-md-end">
                               {% if btnLink %}
                                 <button class="btn btn-enviar w-100" onclick="location.href='/crear_venta'">
                                   <i class="bi bi-cash-coin me-1"></i> Nueva Venta
                                 </button>
                               {% else %}
-                                <button class="btn btn-enviar w-100 w-md-auto" data-bs-toggle="modal"
-                                  data-bs-target="#{{ modal_crear }}">
-                                  <i class="bi bi-{{ icono_crear }} me-1"></i>{{ boton_crear }}
-                                </button>
+                                {% if rol == "Administrador" or btnRegistrar %}
+                                  <button class="btn btn-enviar w-100 w-md-auto" data-bs-toggle="modal"
+                                    data-bs-target="#{{ modal_crear }}">
+                                    <i class="bi bi-{{ icono_crear }} me-1"></i>{{ boton_crear }}
+                                  </button>
+                                {% endif %}
                               {% endif %}
                             </div>
                             {% endif %}

@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputCliente = document.getElementById("inputCliente");
     const datalist = document.getElementById("clientesList");
 
-    // 🎯 Autocompletado por cédula o nombre
+    // Autocompletado por cédula o nombre
     inputCliente.addEventListener("input", async () => {
         const search = inputCliente.value.trim();
         if (search.length < 2) return;
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // 📄 Enviar el formulario
+    // Enviar el formulario
     formCliente.addEventListener("submit", async (e) => {
         e.preventDefault();
 

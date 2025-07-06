@@ -170,11 +170,9 @@ body {
     flex-grow: 1;
 }
 
-.product-item .product-bar {
-    height: 8px;
+.product-item .progress-bar {
     background-color: var(--color-teal);
-    border-radius: 4px;
-    margin-left: 10px;
+    border-radius: 9px;
 }
 
 .product-item .product-value {
@@ -251,4 +249,15 @@ body {
 .btn.btn-outline-enviar:hover{
     background-color: var(--color-teal); /* Color de fondo */
     color: white; /* Color del texto */
+}
+
+/* Evita scroll innecesario si no hace falta */
+.table-responsive {
+  overflow-x: auto;
+}
+
+/* Corrige el ancho para que DataTables no lo fuerce */
+#tablaVentas, #tablaServicios {
+  width: 100% !important;
+  table-layout: auto;
 }

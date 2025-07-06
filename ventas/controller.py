@@ -17,7 +17,7 @@ class VentaControlador:
 
     def vista_ventas(self, request: Request) -> HTMLResponse:
         usuario = request.state.usuario
-        return templates.TemplateResponse("ventas2.html", {
+        return templates.TemplateResponse("ventas.html", {
             "request": request,
             "rol": usuario["rol"]
         })
@@ -30,7 +30,8 @@ class VentaControlador:
                 "fecha_venta": v.fecha_venta.strftime("%Y-%m-%d"),
                 "nombre_cliente": v.cliente.nombre_cliente if v.cliente else "—",
                 "cantidad_productos": sum(d.cantidad for d in v.detalles),
-                "valor_venta": f"${v.total_venta:,.0f}"
+                "valor_venta": f"${v.total_venta:,.0f}",
+                "nombre_usuario": v.usuario.nombre_usuario,
             }
             for v in ventas
         ])

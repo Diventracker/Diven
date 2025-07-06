@@ -1,241 +1,124 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends "plantilla.html" %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestión de ventas</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="/static/css/modulos.css">
-</head>
+<!-- etiqueta <head> -->
+{% block head_scripts %}
+    <!-- CSS de DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <!-- JS de jQuery y DataTables -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+{% endblock %}
 
-<body>
+<!-- card principal -->
+{% set titulo = "Gestión de Ventas" %}
+{% set icono = "cash-coin" %}
 
-  <main>
-    <!-- Page Content -->
-    <div id="page-content-wrapper">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-            <div class="card shadow-sm">
-              <div class="card-header bg-white py-3">
-                <h5 class="mb-0 text-teal-dark"><i class="bi bi-cash-coin me-2"></i>Ventas</h5>
-              </div>
-              <div class="card-body">
+<!-- Tabs -->
+{% set tabs_view = true %}
+{% set tabs2 = true %}
+{% set tab1_icono = "cash-coin" %}
+{% set tab1_nombre = "Ventas de Productos" %}
+{% set tab2_icono = "tools" %}
+{% set tab2_nombre = "Servicios Facturados" %}
 
-                <!-- Pestañas de navegación -->
-                <ul class="nav nav-tabs mb-4" id="ventasTabs" role="tablist">
-                  <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="ventas-tab" data-bs-toggle="tab" data-bs-target="#ventas"
-                      type="button" role="tab">Ventas de Productos</button>
-                  </li>
-                  <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="servicios-tab" data-bs-toggle="tab" data-bs-target="#servicios"
-                      type="button" role="tab">Servicios Facturados</button>
-                  </li>
-                </ul>
-                <!-- Contenido de las pestañas -->
-                <div class="tab-content" id="ventasTabsContent">
-                  <!-- Pestaña de Ventas de Productos -->
-                  <div class="tab-pane fade show active" id="ventas" role="tabpanel">
-                    <!-- Búsqueda y filtros -->
-                    <div class="row mb-4">
-                      <div class="col-12">
-                        <div class="card card-move shadow-sm">
-                          <div class="card-header">
-                            <h6 class="mb-0"><i class="bi bi-search me-2"></i>Buscar Venta</h6>
-                          </div>
-                          <div class="card-body">
-                            <div class="row">
-                              <div class="mb-2 col-md-4">
-                                <form action="/ventas" method="get">
-                                  <div class="input-group">
-                                    <input name="search" value="{{ search | default('') }}" type="search"
-                                      class="form-control" placeholder="Buscar por id o cliente">
-                                    <button class="btn btn-outline-enviar" type="submit"><i
-                                        class="bi bi-search"></i></button>
-                                  </div>
-                                </form>
-                              </div>
-                              <div class="mb-2 col-md-3 col-lg-3">
-                                <div class="input-group">
-                                  <select class="form-select ordenar-tabla" data-tabla="tablaVentas">
-                                    <option disabled selected>Ordenar por</option>
-                                    <option value="2-asc">Cliente (A-Z)</option>
-                                    <option value="2-desc">Cliente (Z-A)</option>
-                                    <option value="1-desc">Fecha (más reciente)</option>
-                                    <option value="1-asc">Fecha (más antigua)</option>
-                                    <option value="3-asc">Total (menor a mayor)</option>
-                                    <option value="3-desc">Total (mayor a menor)</option>
-                                  </select>
-                                  <button class="btn btn-outline-enviar" onclick="location.href='/ventas'"><i
-                                      class="bi bi-arrow-repeat"></i></button>
-                                </div>
-                              </div>
-                              <div class="col-md-1 col-lg-2 col-xl-3"></div>
-                              <div class="col-md-4 col-lg-3 col-xl-2">
-                                <button class="btn btn-enviar w-100" onclick="location.href='/crear_venta'">
-                                  <i class="bi bi-cash-coin me-1"></i> Nueva Venta
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+<!-- Buscador -->
+{% set subtitulo2 = "Buscar Venta de Producto" %}
+{% set placeholder = "Buscar venta..." %}
 
-                    <!-- Tabla de Ventas -->
-                    <div class="row">
-                      <div class="col-12">
-                        <div class="card card-move shadow-sm">
-                          <div class="card-header">
-                            <h6 class="mb-0"><i class="bi bi-grid me-2"></i>Lista de Ventas</h6>
-                          </div>
-                          <div class="card-body pb-0">
-                            <div class="table-responsive">
-                              <table class="table table-striped m-0 table-hover" id="tablaVentas">
-                                <thead>
-                                  <tr>
-                                    <th>ID Venta</th>
-                                    <th>Fecha</th>
-                                    <th>Cliente</th>
-                                    <th>Total</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {% for v in ventas %}
-                                  <tr>
-                                    <td>{{ v.id_venta }}</td>
-                                    <td>{{ v.fecha_venta }}</td>
-                                    <td>{{ v.cliente.nombre_cliente }}</td>
-                                    <td data-valor="{{ v.total_venta }}">${{ "{:,.0f}".format(v.total_venta) |
-                                      replace(",", ".") }}</td>
-                                    <td>Pagado</td>
-                                    <td class="py-1">
-                                      <button class="btn btn-sm btn-outline-secondary "
-                                        onclick="verDetalles('{{ v.id_venta }}')" data-bs-toggle="modal"
-                                        data-bs-target="#modaldetalle">
-                                        <i class="bi bi-eye"></i> Detalles
-                                      </button>
-                                      <button class="btn btn-sm btn-outline-danger"
-                                          data-bs-toggle="modal"
-                                          data-bs-target="#modalEliminar"
-                                          data-id="${row.id_usuario}"
-                                          data-nombre="${row.nombre_usuario}">
-                                          <i class="bi bi-trash"></i>
-                                      </button>
-                                      <a href="/ventas/comprobante/{{ v.id_venta }}"
-                                        class="btn btn-sm btn-outline-secondary">
-                                        <i class="bi bi-receipt me-1"></i> Recibo
-                                      </a>
-                                    </td>
-                                  </tr>
-                                  {% endfor %}
-                                </tbody>
-                              </table>
-                            </div>
-                            <!-- Paginación -->
-                            {# Macro para construir URLs de paginación con search opcional #}
-                            {% macro pagina_url(ruta, pagina, search) -%}
-                            {{ ruta }}?page={{ pagina }}{% if search %}&search={{ search }}{% endif %}
-                            {%- endmacro %}
+<!-- Segundo Buscador -->
+{% set subtitulo4 = "Buscar Servicio Facturado" %}
+{% set placeholder3 = "Buscar servicio..." %}
 
-                            {# Paginación visual #}
-                            <nav aria-label="Paginación de Servicios">
-                              <ul class="pagination justify-content-center mt-4">
-                                <!-- Botón Anterior -->
-                                <li class="page-item {% if page <= 1 %}disabled{% endif %}">
-                                  <a class="page-link"
-                                    href="{% if page > 1 %}{{ pagina_url(ruta_base, page - 1, search) }}{% else %}#{% endif %}">
-                                    Anterior
-                                  </a>
-                                </li>
+<!-- Boton Crear Registro -->
+{% set btnRegistrar = true %}
+{% set btnLink = true %}
+{% set icono_crear = "cash-coin" %}
+{% set boton_crear = "Nueva Venta" %}
+{% set modal_crear = "modalRegistro" %} <!-- Editarrrrr redirecion -->
 
-                                <!-- Números de página -->
-                                {% for s in range(1, total_pages + 1) %}
-                                <li class="page-item {% if s == page %}active{% endif %}">
-                                  <a class="page-link" href="{{ pagina_url(ruta_base, s, search) }}">{{ s }}</a>
-                                </li>
-                                {% endfor %}
+<!-- Tabla -->
+{% set subtitulo = "Lista de Ventas de Productos" %}
+{% set tabla_id = "tablaVentas" %}
 
-                                <!-- Botón Siguiente -->
-                                <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
-                                  <a class="page-link"
-                                    href="{% if page < total_pages %}{{ pagina_url(ruta_base, page + 1, search) }}{% else %}#{% endif %}">
-                                    Siguiente
-                                  </a>
-                                </li>
-                              </ul>
-                            </nav>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+<!-- Segunda Tabla -->
+{% set subtitulo3 = "Lista de Servicios Facturados" %}
+{% set tabla_id2 = "tablaServicios" %}
 
-                  <!-- Servicios facturados (sección vacía de ejemplo) -->
-                  <div class="tab-pane fade" id="servicios" role="tabpanel">
-                    <p class="text-muted">Aquí se mostrarán los servicios facturados.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
+{% block columnas_tabla %}
+    <tr>
+        <th>ID Venta</th>
+        <th>Fecha</th>
+        <th>Cliente</th>
+        <th>Cantidad</th>
+        <th>Total</th>
+        <th>Vendedor</th>
+        <th>Acciones</th>
+    </tr>
+{% endblock %}
 
-  <!-- Modal -->
-  <div class="modal fade" id="modaldetalle" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
+{% block columnas_tabla2 %}
+    <tr>
+        <th>ID Garantía</th>
+        <th>Cliente</th>
+        <th>Equipo</th>
+        <th>Fecha de Inicio</th>
+        <th>Fecha de Finalización</th>
+        <th>Descripción</th>
+    </tr>
+{% endblock %}
+
+{% block modales %}
+    <!-- Modal detalles -->
+    <div class="modal fade" id="modalDetalles" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-      <div class="modal-content">
+        <div class="modal-content">
         <div class="modal-header bg-teal text-white">
-          <h5 class="modal-title">Detalle de Venta</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            <h5 class="modal-title">Detalle de Venta</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
-          <div class="row mb-3">
+            <div class="row mb-3">
             <div class="col-md-6">
-              <p><strong>Cliente:</strong> <span data-cliente></span></p>
-              <p><strong>Fecha:</strong> <span data-fecha></span></p>
-              <p><strong>Estado:</strong> Pagado</p>
+                <p><strong>Cliente:</strong> <span data-cliente></span></p>
+                <p><strong>Fecha:</strong> <span data-fecha></span></p>
+                <p><strong>Estado:</strong> Pagado</p>
             </div>
             <div class="col-md-6">
-              <p><strong>Vendedor:</strong> <span data-vendedor></span></p>
-              <p><strong>Descripción:</strong> <em>(detalle de productos)</em></p>
+                <p><strong>Vendedor:</strong> <span data-vendedor></span></p>
+                <p><strong>Descripción:</strong> <em>(detalle de productos)</em></p>
             </div>
-          </div>
-          <hr>
-          <div class="table-responsive">
+            </div>
+            <hr>
+            <div class="table-responsive">
             <table class="table table-bordered">
-              <thead class="table-dark">
+                <thead class="table-dark">
                 <tr>
-                  <th>Producto</th>
-                  <th>Descripción</th>
+                    <th>Producto</th>
+                    <th>Descripción</th>
                 </tr>
-              </thead>
-              <tbody id="detalle-modal-body">
+                </thead>
+                <tbody id="detalle-modal-body">
                 <!-- Se llenará con JS -->
-              </tbody>
+                </tbody>
             </table>
-          </div>
-          <p class="text-end mt-3"><strong>Total:</strong> <span data-total></span></p>
+            </div>
+            <p class="text-end mt-3"><strong>Total:</strong> <span data-total></span></p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
         </div>
-      </div>
+        </div>
     </div>
-  </div>
+    </div>
+{% endblock %}
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/static/js/funciones.js"></script>
-  <script src="/static/js/ventas/verDetalles.js"></script>
-</body>
+{% block scripts %}
+    <!-- Primero importar el js con las funciones -->
+    <script src="/static/js/funciones/alertas.js"></script>
+    <script src="/static/js/funciones/dataTables.js"></script>
+    <script src="/static/js/ventas/datosTabla.js"></script>
 
-</html>
+    <script src="/static/js/ventas/verDetalles.js"></script>
+
+{% endblock %}
