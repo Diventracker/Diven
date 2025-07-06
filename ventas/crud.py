@@ -110,3 +110,14 @@ class VentaCRUD:
         detalles = self.repo.obtener_detalles_por_venta(id_venta)
 
         return venta, venta.cliente, detalles
+    
+    def obtener_totales_por_mes(self):
+        return self.repo.obtener_totales_por_mes()
+    
+    def obtener_productos_mas_vendidos(self, limite: int = 8):
+        return self.repo.obtener_productos_mas_vendidos(limite)
+    
+    def obtener_ventas_por_vendedor(self, limite: int = 6):
+        return self.repo.obtener_ventas_por_vendedor(limite)
+
+

@@ -1,6 +1,6 @@
 // === TOTAL POR VENDEDOR ===
 function cargarGraficoVentasPorVendedor() {
-  fetch("/api/dashboard/ventas-vendedor")
+  fetch("/ventas/ventas-vendedor")
     .then(res => res.json())
     .then(data => {
       const nombres = data.map(d => d.vendedor);

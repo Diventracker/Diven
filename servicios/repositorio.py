@@ -1,3 +1,5 @@
+from datetime import date
+from sqlalchemy import func
 from servicios.model import DetalleServicio, ServicioTecnico
 from sqlalchemy.orm import joinedload
 
@@ -31,3 +33,22 @@ class ServicioRepositorio:
             .order_by(DetalleServicio.id_detalle.desc())
             .all()
         )
+    
+    #Contar Servicios segun el tipo de equipo
+    def contar_por_tipo_equipo(self):
+        return (
+            self.db.query(
+                ServicioTecnico.tipo_equipo.label("equipo"),
+                func.count().label("total")
+            )
+            .group_by(ServicioTecnico.tipo_equipo)
+            .order_by(func.count().desc())
+            .all()
+        )
+    
+    #Filtrar servicios rango de fechas
+    def filtrar_por_rango(self, inicio: date, fin: date) -> list[ServicioTecnico]:
+        return self.db.query(ServicioTecnico)\
+            .filter(ServicioTecnico.fecha_recepcion.between(inicio, fin))\
+            .options(joinedload(ServicioTecnico.cliente))\
+            .order_by(ServicioTecnico.fecha_recepcion.desc()).all()

@@ -81,4 +81,30 @@ class VentaControlador:
         except ValueError as e:
             return HTMLResponse(content=str(e), status_code=404)
     
+    #Grafico de ventas Mensuales
+    def obtener_datos_grafico_mensual(self):
+        resultados = self.crud.obtener_totales_por_mes()
+
+        meses_nombres = [
+            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        ]
+
+        datos_por_mes = {mes: float(total) for mes, total in resultados}
+
+        return {
+            "labels": meses_nombres,
+            "data": [datos_por_mes.get(i + 1, 0) for i in range(12)]
+        }
+    
+    def productos_mas_vendidos(self, limite: int = 8):
+      resultados = self.crud.obtener_productos_mas_vendidos(limite)
+      return [{"producto": nombre, "cantidad": cantidad} for nombre, cantidad in resultados]
+    
+    #Ventas por tecnico
+    def ventas_por_vendedor(self, limite: int = 6):
+        resultados = self.crud.obtener_ventas_por_vendedor(limite)
+        return [{"vendedor": r.vendedor, "total": float(r.total)} for r in resultados]
+
+
     

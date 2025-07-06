@@ -4,9 +4,9 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from database.database import get_db
 from garantias.controller import GarantiaControlador
-from garantias.model import Garantia
-from servicios.model import ServicioTecnico
-from clientes.model import Cliente
+from garantias.model import GarantiaServicio
+
+
 
 router = APIRouter()
 templates = Jinja2Templates(directory="garantias/templates")

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    const res = await fetch("/api/datos", { method: "POST" });
+    const res = await fetch("/ventas/data/mes", { method: "POST" });
     const datos = await res.json();
 
     const ctx = document.getElementById('salesChart').getContext('2d');

@@ -150,4 +150,10 @@ class ServicioControlador:
         
         except ValueError as e:
             return JSONResponse(content={"success": False, "error": str(e)}, status_code=400)
+        
+    #graficas del dashboard
+    def servicios_por_equipo(self):
+        resultados = self.crud.obtener_conteo_por_equipo()
+        return [{"equipo": r.equipo, "total": r.total} for r in resultados]
+
 

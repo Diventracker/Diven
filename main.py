@@ -12,6 +12,7 @@ from proveedores import routes as proveedores_router
 from ventas import routes as ventas_router
 from garantias import routes as garantias_router
 from dashboard import routes as dashboard_router
+from informes import routes as informes_router
 
 app = FastAPI()
 
@@ -38,3 +39,4 @@ app.include_router(proveedores_router.router)
 app.include_router(ventas_router.router)
 app.include_router(garantias_router.router)
 app.include_router(dashboard_router.router)
+app.include_router(informes_router.router)

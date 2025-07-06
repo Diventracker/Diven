@@ -1,6 +1,6 @@
 // === TOTAL POR CATEGORÍA ===
 function cargarGraficoTipoEquipo() {
-  fetch("/api/dashboard/servicios-por-equipo")
+  fetch("/servicios/servicios-por-equipo")
     .then(res => res.json())
     .then(data => {
       const etiquetas = data.map(item => item.equipo);

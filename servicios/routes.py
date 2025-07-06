@@ -99,3 +99,9 @@ def cambiar_estado_servicio(
 ):
     controlador = ServicioControlador(db)
     return controlador.actualizar_estado(servicio_id, datos)
+
+#Rutas dashboard grafica de numero de servicios
+@router.get("/servicios/servicios-por-equipo", tags=["servicio_tecnico"])
+def servicios_por_equipo(db: Session = Depends(get_db)):
+    controlador = ServicioControlador(db)
+    return controlador.servicios_por_equipo()

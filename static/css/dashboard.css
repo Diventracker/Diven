@@ -261,3 +261,18 @@ body {
   width: 100% !important;
   table-layout: auto;
 }
+
+/*Modales*/
+.modal-header{
+    background-color: var(--color-teal);
+}
+
+.modal-title{
+    color: white;
+}
+
+/*Cambiar el estilo al input cuando se le da click*/
+.form-control:focus, .form-select:focus {
+    border-color: var(--color-teal);
+    box-shadow: 0 0 0 0.25rem rgba(94, 145, 136, 0.25);
+}

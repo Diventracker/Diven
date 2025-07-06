@@ -51,3 +51,21 @@ def ver_comprobante_endpoint(id_venta: int, request: Request, db: Session = Depe
     controlador = VentaControlador(db)
     return controlador.ver_comprobante(id_venta, request)
 
+#Ruta para ventas por mes
+@router.post("/ventas/data/mes")
+def get_ventas_por_mes(db: Session = Depends(get_db)):
+    controlador = VentaControlador(db)
+    return controlador.obtener_datos_grafico_mensual()
+
+#Productos mas vendidos
+@router.get("/ventas/productos-mas-vendidos", tags=["Ventas"])
+def productos_mas_vendidos(db: Session = Depends(get_db)):
+    controlador = VentaControlador(db)
+    return controlador.productos_mas_vendidos()
+
+#Ventas Por vendedor
+@router.get("/ventas/ventas-vendedor", tags=["Ventas"])
+def ventas_por_vendedor(db: Session = Depends(get_db)):
+    controlador = VentaControlador(db)
+    return controlador.ventas_por_vendedor()
+

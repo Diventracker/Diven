@@ -1,6 +1,6 @@
 // === GRÁFICO DE PRODUCTOS MÁS VENDIDOS ===
 function cargarProductosMasVendidos() {
-  fetch("/api/dashboard/productos-mas-vendidos")
+  fetch("/ventas/productos-mas-vendidos")
     .then(res => res.json())
     .then(data => {
       const contenedor = document.getElementById("productosMasVendidos");
