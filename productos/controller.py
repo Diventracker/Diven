@@ -11,10 +11,10 @@ class ProductoControlador:
         self.crud = ProductoCRUD(db)
 
     def mostrar_vista(self, request: Request):
-        rol = request.cookies.get("rol")
+        usuario = request.state.usuario
         return templates.TemplateResponse("productos.html", {
             "request": request,
-            "rol": rol
+            "rol": usuario["rol"]
         })
 
     def crear(self, datos: ProductoCreate):

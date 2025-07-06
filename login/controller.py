@@ -1,9 +1,9 @@
 from fastapi import HTTPException, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from sqlalchemy.orm import Session
 from usuarios.crud import UsuarioCRUD
 from usuarios.repositorio import UsuarioRepositorio
-from access.sesiones import session_manager
+from login.sesiones import session_manager
 from usuarios.schema import CambiarClaveSchema
 from utils.email import enviar_correo
 from utils.token import generar_token
@@ -108,3 +108,13 @@ class LoginControlador:
         self.crud.cambiar_clave(usuario, data.nueva_clave)
 
         return JSONResponse(content={"msg": "Contraseña actualizada correctamente"})
+    
+    #metodo para cerrar session
+    def logout(self, request: Request) -> RedirectResponse:
+        session_id = request.cookies.get("session_id")
+        if session_id:
+            session_manager.eliminar_sesion(session_id)
+
+        response = RedirectResponse(url="/login", status_code=303)
+        response.delete_cookie(key="session_id")
+        return response

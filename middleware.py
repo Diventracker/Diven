@@ -1,7 +1,7 @@
 import json
 from fastapi import Request, Response
 from fastapi.responses import RedirectResponse
-from access.sesiones import session_manager
+from login.sesiones import session_manager
 
 # Rutas completamente libres (coincidencia exacta)
 rutas_libres_exacto = ["/", "/login", "/logout", "/cambiar-clave"]

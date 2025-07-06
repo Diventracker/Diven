@@ -46,3 +46,9 @@ def validar_token(data: TokenValidacionSchema, db: Session = Depends(get_db)):
 def cambiar_clave(request: Request, data: CambiarClaveSchema, db: Session = Depends(get_db)):
     controlador = LoginControlador(db)
     return controlador.cambiar_clave(request, data)
+
+#Ruta para cerra session
+@router.post("/logout", tags=["Login"])
+def logout(request: Request):
+    controlador = LoginControlador(None)  # No necesita db
+    return controlador.logout(request)

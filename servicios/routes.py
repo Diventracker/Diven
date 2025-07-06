@@ -46,7 +46,7 @@ def actualizar_servicio(
 ):
     controlador = ServicioControlador(db)
     try:
-        usuario_id = int(request.cookies.get("usuario_id"))
+        usuario_id = request.state.usuario["usuario_id"]
     except:
         return JSONResponse(content={"success": False, "error": "Usuario inválido"}, status_code=400)
 
@@ -62,7 +62,7 @@ async def registrar_revision(
 ):
     controlador = ServicioControlador(db)
     try:
-        usuario_id = int(request.cookies.get("usuario_id"))
+        usuario_id = request.state.usuario["usuario_id"]
     except:
         return JSONResponse(content={"success": False, "error": "ID de usuario inválido"}, status_code=400)
 

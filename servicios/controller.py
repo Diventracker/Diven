@@ -15,10 +15,10 @@ class ServicioControlador:
         self.db = db
 
     def vista_principal(self, request: Request):
-        rol = request.cookies.get("rol")
+        usuario = request.state.usuario
         return templates.TemplateResponse("servicios.html", {
             "request": request,
-            "rol": rol
+            "rol": usuario["rol"]
         })
     
     def obtener_datos(self):
@@ -48,7 +48,7 @@ class ServicioControlador:
 
     def crear(self, request: Request, datos: ServicioCreate):
         try:
-            usuario_id = request.cookies.get("usuario_id")
+            usuario_id = request.state.usuario["usuario_id"]
             if not usuario_id:
                 raise ValueError("Usuario no autenticado")
             

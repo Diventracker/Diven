@@ -16,10 +16,10 @@ class VentaControlador:
         self.usuario_repo = UsuarioRepositorio(db)
 
     def vista_ventas(self, request: Request) -> HTMLResponse:
-        rol = request.cookies.get("rol")
+        usuario = request.state.usuario
         return templates.TemplateResponse("ventas2.html", {
             "request": request,
-            "rol": rol
+            "rol": usuario["rol"]
         })
     
     def listar_todas(self):
@@ -40,12 +40,12 @@ class VentaControlador:
         return JSONResponse(content=datos)
 
     def vista_crear_venta(self, request: Request) -> HTMLResponse | RedirectResponse:
-        usuario_id = request.cookies.get("usuario_id")
+        usuario = request.state.usuario
 
-        if not usuario_id:
+        if not usuario:
             return RedirectResponse(url="/login?error=2", status_code=303)
 
-        usuario = self.usuario_repo.obtener_por_id(int(usuario_id))  # usamos repositorio
+        usuario = self.usuario_repo.obtener_por_id(int(usuario["usuario_id"]))  # usamos repositorio
         if not usuario:
             return RedirectResponse(url="/login?error=2", status_code=303)
 
@@ -55,7 +55,7 @@ class VentaControlador:
             "request": request,
             "fecha_actual": fecha_actual,
             "nombre_usuario": usuario.nombre_usuario,
-            "id_usuario": usuario_id
+            "id_usuario": usuario.id_usuario
         })
     
     #Funcion que registra la venta
