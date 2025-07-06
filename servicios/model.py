@@ -26,7 +26,7 @@ class ServicioTecnico(Base):
     # Relaciones opcionales si las necesitas
     cliente = relationship("Cliente")
     usuario = relationship("Usuario")
-    garantias = relationship("Garantia", back_populates="servicio", cascade="all, delete-orphan")
+    garantias = relationship("GarantiaServicio", back_populates="servicio", cascade="all, delete-orphan")
     detalles = relationship('DetalleServicio', back_populates='servicio', cascade="all, delete-orphan")
 
 class DetalleServicio(Base):

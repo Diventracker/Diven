@@ -125,3 +125,7 @@ class ServicioCRUD:
         self.repo.db.commit()
 
         return servicio
+    
+    #Grafica del dashboard
+    def obtener_conteo_por_equipo(self):
+        return self.repo.contar_por_tipo_equipo()

@@ -95,7 +95,7 @@ Antes de comenzar, asegúrate de tener instalado:
 | Backend (API y lógica de negocio)| 🐍 FastAPI                                   | Framework en Python para crear APIs rápidas y eficientes.                                |
 | Base de datos                   | 🐬 MySQL        | Sistema de gestión de bases de datos relacional (SQL).                                   |
 | ORM                             | 🔗 SQLAlchemy                                | Librería en Python para manejar bases de datos con objetos y consultas SQL.               |
-| Autenticación                   | 🔒 JWT con `passlib`                 | Manejo de sesiones seguras con tokens JWT.                                                |
+| Autenticación                   | 🔒 Cookies de sesión + `passlib`     | Sistema de autenticación con cookies HTTP-only para sesiones; `passlib` para manejo seguro de contraseñas. |
 | Frontend                        | 🌐 HTML, CSS, Bootstrap                      | Estructura y diseño visual de la aplicación.                                              |
 | Interactividad en el Cliente    | ⚡ JavaScript (fetch API, eventos DOM)        | Conexión con la API, gestión del inventario en la interfaz.                               |
 | Servidor web y ejecución        | 🚀 Uvicorn                                   | Servidor ASGI para ejecutar FastAPI.                                                      |

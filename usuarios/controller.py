@@ -14,8 +14,8 @@ class UsuarioControlador:
         self.crud = UsuarioCRUD(repo)
 
     def vista_principal(self, request: Request):
-        rol = request.cookies.get("rol")
-        return templates.TemplateResponse("usuarios.html", {"request": request, "rol": rol})
+        usuario = request.state.usuario
+        return templates.TemplateResponse("usuarios.html", {"request": request, "rol": usuario["rol"]})
 
     def listar_todos(self):
         usuarios = self.crud.listar_todos()

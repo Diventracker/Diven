@@ -17,10 +17,10 @@ class ClienteControlador:
         
 
     def vista_clientes(self, request: Request) -> HTMLResponse:
-        rol = request.cookies.get("rol")
+        usuario = request.state.usuario
         return templates.TemplateResponse("clientes.html", {
             "request": request,
-            "rol": rol
+            "rol": usuario["rol"]
         })
     
     

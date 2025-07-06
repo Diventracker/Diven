@@ -11,10 +11,10 @@ class ProductoControlador:
         self.crud = ProductoCRUD(db)
 
     def mostrar_vista(self, request: Request):
-        rol = request.cookies.get("rol")
+        usuario = request.state.usuario
         return templates.TemplateResponse("productos.html", {
             "request": request,
-            "rol": rol
+            "rol": usuario["rol"]
         })
 
     def crear(self, datos: ProductoCreate):
@@ -65,3 +65,70 @@ class ProductoControlador:
             return JSONResponse(status_code=400, content={"success": False, "error": str(e)})
         except Exception:
             return JSONResponse(status_code=500, content={"success": False, "error": "Ocurrió un error inesperado."})
+
+    def buscar(self, termino: str) -> JSONResponse:
+        try:
+            producto = self.crud.buscar(termino)
+            return JSONResponse(content={
+                "codigo": str(producto.id_producto),
+                "nombre": producto.nombre_producto,
+                "descripcion": producto.descripcion,
+                "precio": int(producto.precio_venta),
+                "stock": int(producto.stock)
+            })
+        except ValueError as e:
+            return JSONResponse(status_code=404, content={"success": False, "error": str(e)})
+        except Exception:
+            return JSONResponse(status_code=500, content={"success": False, "error": "Error interno al buscar el producto."})
+        
+    #Lista para el modal de crear venta
+    def listar_api(self, search: str = "", con_stock: bool = True) -> JSONResponse:
+        try:
+            productos = self.crud.obtener_todos(search, con_stock)
+            return JSONResponse(content=[
+                {
+                    "codigo": str(prod.id_producto),
+                    "nombre": prod.nombre_producto,
+                    "descripcion": prod.descripcion,
+                    "modelo": prod.modelo,
+                    "precio": prod.precio_venta,
+                    "stock": prod.stock,
+                    "proveedor": prod.proveedor.nombre_proveedor
+                }
+                for prod in productos
+            ])
+        except Exception:
+            return JSONResponse(status_code=500, content={"success": False, "error": "Error al obtener productos."})
+        
+
+    def bajo_stock(self) -> JSONResponse:
+        try:
+            productos = self.crud.obtener_bajo_stock()
+            return JSONResponse(content=[
+                {
+                    "codigo": str(prod.id_producto),
+                    "nombre": prod.nombre_producto,
+                    "descripcion": prod.descripcion,
+                    "modelo": prod.modelo,
+                    "precio": prod.precio_venta,
+                    "stock": prod.stock,
+                    "proveedor": prod.proveedor.nombre_proveedor if prod.proveedor else None
+                }
+                for prod in productos
+            ])
+        except Exception:
+            return JSONResponse(status_code=500, content={"success": False, "error": "Error al obtener productos con bajo stock."})
+
+    #Actualizar stock de un producto 
+    def actualizar_stock(self, id_producto: int, cantidad: int) -> JSONResponse:
+        try:
+            stock_final = self.crud.actualizar_stock(id_producto, cantidad)
+            return JSONResponse(content={
+                "success": True,
+                "mensaje": "Stock actualizado correctamente",
+                "stock_final": stock_final
+            })
+        except ValueError as e:
+            return JSONResponse(status_code=404, content={"success": False, "error": str(e)})
+        except Exception:
+            return JSONResponse(status_code=500, content={"success": False, "error": "Error al actualizar el stock."})
