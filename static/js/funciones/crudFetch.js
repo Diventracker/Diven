@@ -5,6 +5,28 @@ function handleFormSubmit({ formId, url, modalId, tablaVariable = null }) {
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
         const formData = new FormData(form);
+        
+        // Adjuntar imágenes si existen
+        if (typeof selectedImages !== "undefined" && selectedImages.length > 0) {
+            console.log("Enviando imágenes:", selectedImages);
+            const maxSizeMB = 10;
+            const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+            for (const file of selectedImages) {
+                if (!file.type.startsWith("image/")) {
+                    mostrarAlerta("alerta-warning", `❌ "${file.name}" no es una imagen válida.`);
+                    return; // Cancelar envío
+                }
+
+                if (file.size > maxSizeBytes) {
+                    mostrarAlerta("alerta-warning", `❌ La imagen "${file.name}" supera los ${maxSizeMB}MB.`);
+                    return; // Cancelar envío
+                }
+
+                formData.append("imagenes", file);  // Usa este mismo nombre en tu backend
+            }
+        }
+
         try {
             const response = await fetch(url, {
                 method: 'POST',

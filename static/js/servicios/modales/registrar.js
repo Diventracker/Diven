@@ -15,31 +15,112 @@ initSelect2Modal({
   }
 });
 
-//Funcion que muestra el valor base, segun el select
-document.addEventListener('DOMContentLoaded', function () {
-const select = document.getElementById('tipo_servicio');
-const preview = document.getElementById('previewPrecio');
-const hiddenInput = document.querySelector('input[name="precio_servicio"]');
+document.addEventListener('DOMContentLoaded', () => {
+    const inputMostrar = document.getElementById('precio_mostrar');
+    const inputReal = document.getElementById('precio_real');
+    const preview = document.getElementById('previewPrecio');
 
-select.addEventListener('change', function () {
-    const selectedOption = select.options[select.selectedIndex];
+    // Obtener la instancia de AutoNumeric ya inicializada
+    const autoInstance = AutoNumeric.getAutoNumericElement(inputMostrar);
 
-    if (this.value !== "") {
-    // Extraer la parte del precio desde el texto del option
-    const texto = selectedOption.textContent;
-    const precioTexto = texto.split('-')[1]?.trim(); // "$150.000"
-    
-    // Quitar símbolos y puntos, y convertir a entero
-    const precioNumerico = parseInt(precioTexto.replace(/[\$.]/g, ''), 10);
+    inputMostrar.addEventListener('input', () => {
+        const valorNumerico = autoInstance.getNumber(); // sin $
+        inputReal.value = valorNumerico;
+        preview.textContent = `$${Number(valorNumerico).toLocaleString('es-CO')}`;
+    });
 
-    // Mostrar en vista previa
-    preview.textContent = precioTexto;
+    // También actualizar al cargar si ya tiene valor
+    const inicial = autoInstance.getNumber();
+    inputReal.value = inicial;
+    preview.textContent = `$${Number(inicial).toLocaleString('es-CO')}`;
+});
 
-    // Guardar valor limpio en el input hidden
-    hiddenInput.value = precioNumerico;
-    } else {
-    preview.textContent = '$0';
-    hiddenInput.value = '';
+let selectedImages = [];
+
+const dragArea = document.getElementById('dragArea');
+const fileInput = document.getElementById('fileInput');
+const imagePreview = document.getElementById('imagePreview');
+
+// Clic en zona para abrir explorador
+dragArea.addEventListener('click', () => fileInput.click());
+
+// Arrastrar sobre la zona
+dragArea.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dragArea.classList.add('dragover');
+});
+
+dragArea.addEventListener('dragleave', () => {
+  dragArea.classList.remove('dragover');
+});
+
+dragArea.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dragArea.classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+});
+
+// Selección manual de archivos
+fileInput.addEventListener('change', (e) => {
+  handleFiles(e.target.files);
+});
+
+
+function handleFiles(files) {
+  const maxSizeMB = 10;
+  const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+  [...files].forEach(file => {
+    if (!file.type.startsWith('image/')) {
+      mostrarAlerta("alerta-warning", `El archivo "${file.name}" no es una imagen válida.`);
+      return;
     }
-});
-});
+
+    if (file.size > maxSizeBytes) {
+      mostrarAlerta("alerta-warning", `La imagen "${file.name}" supera los ${maxSizeMB}MB.`);
+      return;
+    }
+
+    selectedImages.push(file);
+  });
+
+  updateImagePreview();
+}
+
+
+function updateImagePreview() {
+  imagePreview.innerHTML = '';
+  if (selectedImages.length === 0) {
+    imagePreview.style.display = 'none';
+    return;
+  }
+
+  imagePreview.style.display = 'flex';
+
+  selectedImages.forEach((file, index) => {
+    const col = document.createElement('div');
+    col.className = 'col-6 col-md-4';
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      col.innerHTML = `
+        <div class="image-preview border position-relative">
+          <img src="${e.target.result}" alt="Preview ${index + 1}" class="img-fluid rounded">
+          <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1"
+            onclick="removeImage(${index})">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+        <small class="text-muted d-block mt-1 text-truncate">${file.name}</small>
+      `;
+    };
+    reader.readAsDataURL(file);
+
+    imagePreview.appendChild(col);
+  });
+}
+
+function removeImage(index) {
+  selectedImages.splice(index, 1);
+  updateImagePreview();
+}

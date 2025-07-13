@@ -17,6 +17,8 @@
     <!-- JS de DataTables -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <!-- Script monedas en los inputs -->
+    <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.6.0/dist/autoNumeric.min.js"></script>
 {% endblock %}
 
 <!-- card principal -->
@@ -64,9 +66,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="registrarServicio">
+                    <form id="registrarServicio" enctype="multipart/form-data">
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-12 mb-3">
                                 <label for="selectClientes" class="form-label"><i class="bi bi-person me-2"></i>Cliente</label>
                                 <select id="selectClientes" name="cliente_id" required>
                                     <option></option>
@@ -91,25 +93,49 @@
                                 <label for="tipo_servicio" class="form-label"><i class="bi bi-wrench me-2"></i>Tipo de servicio</label>
                                 <select class="form-control" id="tipo_servicio" name="tipo_servicio" required>
                                     <option value="" disabled selected hidden>Seleccionar tipo de servicio...</option>
-                                    <option value="Mantenimiento">Mantenimiento - $150.000</option>
-                                    <option value="Reparación">Reparación - $250.000</option>
-                                    <option value="Diagnóstico">Diagnóstico - $50.000</option>
-                                    <option value="Instalación">Instalación - $90.000</option>                                    
+                                    <option value="Mantenimiento">Mantenimiento</option>
+                                    <option value="Reparación">Reparación</option>
+                                    <option value="Diagnóstico">Diagnóstico</option>
+                                    <option value="Instalación">Instalación</option>                                    
                                 </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="precio_mostrar" class="form-label"><i class="bi bi-coin me-2"></i>Precio</label>
+                                <input class="form-control formato-moneda" type="text" id="precio_mostrar">
+                                <input type="hidden" name="precio_servicio" id="precio_real">
                             </div>
                             <div class="mb-3">
                                 <div class="card bg-warning-subtle border-warning mx-auto" style="max-width: 300px;" id="previewCard">
                                     <div class="card-body text-center py-2 px-3">
                                     <h6 class="card-title mb-1">Precio Base</h6>
-                                    <p class="mb-0" id="previewPrecio">$0</p>
-                                    <input type="hidden" name="precio_servicio">                                  
+                                    <p class="mb-0" id="previewPrecio">$0</p>                               
                                     </div>
                                 </div> 
                             </div>                                            
                             <div class="mb-3">
                                 <label class="form-label"><i class="bi bi-file-text me-2"></i>Descripción del problema</label>
                                 <textarea class="form-control" name="descripcion" placeholder="Descripción inicial del problema..." style="height: 100px" required maxlength="100"></textarea>                                
-                            </div>                                                                                 
+                            </div>
+                            <!-- Adjuntar imágenes -->
+                            <div class="mb-4">
+                                <label class="form-label"><i class="bi bi-images me-2"></i>Adjuntar imágenes</label>
+
+                                <!-- Zona de carga -->
+                                <div class="drag-area" id="dragArea">
+                                    <i class="bi bi-cloud-upload-fill mb-3 fs-1"></i>
+                                    <p class="mb-2">
+                                        Arrastra las imágenes aquí o 
+                                        <span class="text-verde fw-bold" style="cursor: pointer;" onclick="document.getElementById('fileInput').click()">
+                                            selecciona archivos
+                                        </span>
+                                    </p>
+                                    <small class="text-muted">PNG, JPG, GIF hasta 10MB</small>
+                                    <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
+                                </div>
+
+                                <!-- Vista previa de imágenes -->
+                                <div id="imagePreview" class="row g-3 mt-3" style="display: none;"></div>
+                            </div>                                                                               
                         </div>
                         <button type="submit" class="btn btn-enviar w-100">Registrar servicio</button>
                     </form>
@@ -507,6 +533,7 @@
     <script src="/static/js/funciones/alertas.js"></script>
     <script src="/static/js/funciones/select2.js"></script>
     <script src="/static/js/funciones/dataTables.js"></script>
+    <script src="/static/js/funciones/formatoMoneda.js"></script>
 
     <script src="/static/js/funciones/setupDatos.js"></script>
     <script src="/static/js/funciones/crudFetch.js"></script>

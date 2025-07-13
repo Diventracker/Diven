@@ -1,7 +1,7 @@
 from datetime import datetime
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi import Request
+from fastapi import Request, UploadFile
 from servicios.schema import EstadoServicioInput, ServicioCreate, ServicioRevisionSchema, ServicioUpdate
 from servicios.repositorio import ServicioRepositorio
 from servicios.crud import ServicioCRUD
@@ -46,14 +46,15 @@ class ServicioControlador:
         return JSONResponse(content=resultado)
 
 
-    def crear(self, request: Request, datos: ServicioCreate):
+    async def crear(self, request: Request, datos: ServicioCreate, imagenes: list[UploadFile]):
         try:
-            usuario_id = request.state.usuario["usuario_id"]
-            if not usuario_id:
-                raise ValueError("Usuario no autenticado")
-            
-            usuario_id = int(usuario_id)
+            usuario_id = int(request.state.usuario["usuario_id"])
             servicio = self.crud.crear(datos, usuario_id)
+
+            if not imagenes or len(imagenes) == 0:
+                return JSONResponse(status_code=400, content={"success": False, "error": "Debes subir al menos una imagen."})
+
+            self.crud.guardar_imagenes(imagenes, servicio.id_servicio)
 
             return JSONResponse(content={"success": True, "mensaje": "Servicio creado correctamente", "servicio_id": servicio.id_servicio})
 
@@ -62,6 +63,7 @@ class ServicioControlador:
 
         except Exception as e:
             return JSONResponse(content={"success": False, "error": "Error interno al crear servicio"}, status_code=500)
+
         
     def eliminar(self, id_servicio: int):
         try:
