@@ -39,7 +39,7 @@ function cargarProductosMasVendidos() {
       // Botón "ver todos"
       const verMas = document.createElement("div");
       verMas.className = "mt-3 text-center";
-      verMas.innerHTML = `<a class="btn btn-outline-teal" href="/inventario">ver todos los productos</a>`;
+      verMas.innerHTML = `<a class="btn btn-outline-teal" href="/productos">ver todos los productos</a>`;
       contenedor.appendChild(verMas);
     })
     .catch(err => {

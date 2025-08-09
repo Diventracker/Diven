@@ -1,0 +1,294 @@
+:root {
+    /* Colores personalizados */
+    --color-white: #ffffff;
+    --color-teal: #5e9188;
+    --color-teal-dark: #3e5954;
+    --color-blue-dark: #253342;
+    --color-almost-black: #232226;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+}
+
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8f4f2 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.comprobante-container {
+    max-width: 900px;
+    margin: 20px auto;
+    background: var(--color-white);
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(35, 34, 38, 0.1);
+    overflow: hidden;
+    position: relative;
+}
+
+.btn-close2 {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    border: none;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    color: var(--color-almost-black);
+}
+
+.btn-close2:hover {
+    background: rgba(220, 53, 69, 0.1);
+    color: var(--danger-color);
+    transform: scale(1.1);
+}
+
+.comprobante-header {
+    background: linear-gradient(135deg, var(--color-teal) 0%, var(--color-teal-dark) 100%);
+    color: var(--color-white);
+    padding: 2rem;
+    text-align: center;
+}
+
+.comprobante-header h3 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+
+.comprobante-header p {
+    margin: 0.5rem 0 0 0;
+    opacity: 0.9;
+}
+
+.comprobante-body {
+    padding: 2rem;
+}
+
+.info-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid var(--color-teal);
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--color-teal-dark);
+    min-width: 150px;
+}
+
+.info-value {
+    flex: 1;
+    text-align: right;
+    font-weight: 500;
+    color: var(--color-almost-black);
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.status-completado {
+    background: linear-gradient(135deg, var(--color-teal), var(--color-teal-dark));
+    color: var(--color-white);
+}
+
+.status-proceso {
+    background: linear-gradient(135deg, #ffc107, #fd7e14);
+    color: var(--color-white);
+}
+
+.status-revision {
+    background: linear-gradient(135deg, var(--color-blue-dark), var(--color-almost-black));
+    color: var(--color-white);
+}
+
+.images-section, .descripcion-section {
+    background: rgba(94, 145, 136, 0.05);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border: 1px solid rgba(94, 145, 136, 0.2);
+}
+
+.table-custom {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(35, 34, 38, 0.1);
+}
+
+.table-custom thead {
+    background: linear-gradient(135deg, var(--color-teal), var(--color-teal-dark));
+    color: var(--color-white);
+}
+
+.table-custom tbody tr:hover {
+    background-color: rgba(94, 145, 136, 0.05);
+}
+
+.totals-section {
+    background: linear-gradient(135deg, rgba(94, 145, 136, 0.1) 0%, rgba(62, 89, 84, 0.1) 100%);
+    border-radius: 10px;
+    padding: 1.5rem;
+    border: 2px solid rgba(94, 145, 136, 0.2);
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    color: var(--color-almost-black);
+}
+
+.total-row:last-child {
+    border-bottom: none;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-teal-dark);
+    border-top: 2px solid var(--color-teal);
+    padding-top: 1rem;
+    margin-top: 0.5rem;
+}
+
+.comprobante-footer {
+    background: #f8f9fa;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    border-top: 1px solid #dee2e6;
+}
+
+.btn-custom {
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.btn-print {
+    background: linear-gradient(135deg, var(--color-blue-dark), var(--color-almost-black));
+    color: var(--color-white);
+    border-color: var(--color-blue-dark);
+}
+
+.btn-print:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(37, 51, 66, 0.4);
+    color: var(--color-white);
+}
+
+.btn-download {
+    background: linear-gradient(135deg, var(--color-teal), var(--color-teal-dark));
+    color: var(--color-white);
+    border-color: var(--color-teal);
+}
+
+.btn-download:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(94, 145, 136, 0.4);
+    color: var(--color-white);
+}
+
+.btn-email {
+    background: linear-gradient(135deg, var(--color-teal-dark), var(--color-blue-dark));
+    color: var(--color-white);
+    border-color: var(--color-teal-dark);
+}
+
+.btn-email:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(62, 89, 84, 0.4);
+    color: var(--color-white);
+}
+
+.company-info {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: rgba(94, 145, 136, 0.05);
+    border-radius: 10px;
+}
+
+.company-info h4 {
+    color: var(--color-teal-dark);
+}
+
+.company-info p {
+    color: var(--color-almost-black);
+}
+
+.service-number {
+    background: linear-gradient(135deg, var(--color-teal), var(--color-teal-dark));
+    color: var(--color-white);
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+@media print {
+    .comprobante-footer,
+    .btn-close {
+    display: none !important;
+    }
+    
+    .comprobante-container {
+    box-shadow: none;
+    margin: 0;
+    max-width: none;
+    }
+    
+    body {
+    background: var(--color-white);
+    }
+}
+
+.garantia-info {
+    background: linear-gradient(135deg, rgba(94, 145, 136, 0.1) 0%, rgba(62, 89, 84, 0.1) 100%);
+    border-radius: 10px;
+    padding: 1rem;
+    border-left: 4px solid var(--color-teal);
+    margin: 1rem 0;
+}
+
+.garantia-info h6 {
+    color: var(--color-teal-dark);
+}
+
+.images-section, .descripcion-section h5 {
+    color: var(--color-teal-dark);
+}
+
+.info-section h5 {
+    color: var(--color-teal-dark);
+}

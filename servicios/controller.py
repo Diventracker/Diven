@@ -65,7 +65,7 @@ class ServicioControlador:
             return JSONResponse(content={"success": False, "error": "Error interno al crear servicio"}, status_code=500)
 
         
-    def eliminar(self, id_servicio: int):
+    def eliminar(self, id_servicio: int): 
         try:
             self.crud.eliminar(id_servicio)
             return JSONResponse(content={"success": True, "mensaje": "Servicio eliminado correctamente"})
