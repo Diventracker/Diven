@@ -63,6 +63,7 @@ class ServicioUpdate(BaseModel):
     descripcion: str
     descripcion_trabajo: Optional[str] = None
     meses_garantia: Optional[int] = None
+    precio_servicio: int
     detalles: Optional[List[DetalleGasto]] = []
 
 class EstadoServicioInput(BaseModel):

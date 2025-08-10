@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, File, Request, UploadFile
 from fastapi.responses import JSONResponse 
 from sqlalchemy.orm import Session
 from database.database import get_db
@@ -21,13 +21,14 @@ def obtener_servicios_data(db: Session = Depends(get_db)):
 
 #Ruta para crear un nuevo servicio tecnico
 @router.post("/servicio/crear", tags=["servicio_tecnico"])
-def crear_servicio(
+async def crear_servicio(
     request: Request,
     datos: ServicioCreate = Depends(ServicioCreate.as_form),
+    imagenes: list[UploadFile] = File(...),  # Nuevas imágenes opcionales
     db: Session = Depends(get_db)
 ):
     controlador = ServicioControlador(db)
-    return controlador.crear(request, datos)
+    return await controlador.crear(request, datos, imagenes)
 
 
 #Ruta para eliminar un servicio Tecnico

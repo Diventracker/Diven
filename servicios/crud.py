@@ -1,4 +1,7 @@
-from servicios.model import DetalleServicio, ServicioTecnico
+import os
+import shutil
+from fastapi import UploadFile
+from servicios.model import DetalleServicio, ImagenServicio, ServicioTecnico
 from servicios.schema import ServicioRevisionSchema, ServicioUpdate
 
 class ServicioCRUD:
@@ -24,13 +27,28 @@ class ServicioCRUD:
         self.repo.db.refresh(nuevo)
         return nuevo
 
+    def guardar_imagenes(self, imagenes: list[UploadFile], servicio_id: int) -> None:
+        from utils.uploads import guardar_imagen  # Import aquí para evitar ciclos
+
+        for img in imagenes:
+            ruta = guardar_imagen(img, servicio_id)
+            imagen = ImagenServicio(id_servicio=servicio_id, ruta_archivo=ruta)
+            self.repo.db.add(imagen)
+
+        self.repo.db.commit()
+
     def eliminar(self, id_servicio: int):
         servicio = self.repo.obtener_por_id(id_servicio)
         if not servicio:
             raise ValueError("Servicio no encontrado")
+        
+        # Eliminar carpeta de imágenes
+        ruta_carpeta = os.path.join("static", "img", "servicios", str(id_servicio))
+        if os.path.exists(ruta_carpeta):
+            shutil.rmtree(ruta_carpeta)
 
-        self.repo.db.delete(servicio)
-        self.repo.db.commit()
+            self.repo.db.delete(servicio)
+            self.repo.db.commit()
 
     #Funcion que actualiza el estado del servicio a en revision
     def registrar_revision(self, data: ServicioRevisionSchema, usuario_id: int):
@@ -67,6 +85,7 @@ class ServicioCRUD:
         servicio.tipo_equipo = datos.tipo_equipo
         servicio.tipo_servicio = datos.tipo_servicio
         servicio.descripcion_problema = datos.descripcion
+        servicio.precio_servicio = datos.precio_servicio
         if datos.descripcion_trabajo is not None:
             servicio.descripcion_trabajo = datos.descripcion_trabajo
         if datos.meses_garantia is not None:
@@ -86,7 +105,7 @@ class ServicioCRUD:
 
         self.repo.db.commit()
 
-    #Retorna los servicioos con el estado en revision
+    #Retorna los servicios con el estado en revision
     def obtener_servicios_en_revision(self):
         return self.repo.obtener_en_revision()
     
