@@ -34,6 +34,7 @@ class ServicioControlador:
                 "descripcion_problema": s.descripcion_problema,
                 "descripcion_trabajo": s.descripcion_trabajo,
                 "meses_garantia": s.meses_garantia,
+                "precio_servicio": s.precio_servicio,
                 "fecha_recepcion": s.fecha_recepcion.strftime("%Y-%m-%d") if s.fecha_recepcion else None,
                 "fecha_entrega": s.fecha_entrega.strftime("%Y-%m-%d") if s.fecha_entrega else None,
                 "usuario": {

@@ -64,7 +64,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const estado = button.getAttribute('data-estado');
 
     if (estado === 'En Progreso') {
-      console.log('No se cargan detalles porque el servicio está en progreso.');
       return; // No hace fetch
     }
 
@@ -138,6 +137,7 @@ document.getElementById('saveChanges').addEventListener('click', async function 
     const modelo_equipo = form.querySelector('input[name="modelo_equipo"]').value;
     const tipo_equipo = form.querySelector('select[name="tipo_equipo"]').value;
     const tipo_servicio = form.querySelector('select[name="tipo_servicio"]').value;
+    const precio_servicio = form.querySelector('input[name="precio_servicio"]').value;
     const descripcion_problema = form.querySelector('textarea[name="descripcion"]').value;
 
     // Campos opcionales
@@ -159,6 +159,7 @@ document.getElementById('saveChanges').addEventListener('click', async function 
         modelo_equipo,
         tipo_equipo,
         tipo_servicio,
+        precio_servicio,
         descripcion: descripcion_problema,
         descripcion_trabajo,
         meses_garantia,

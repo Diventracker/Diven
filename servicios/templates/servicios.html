@@ -183,13 +183,13 @@
                                 <hr class="section-divider">
                             </div>                                                                            
                             <!-- campos a editar -->
+                            <div class="mb-3">
+                                <label class="form-label"><i class="bi bi-person me-2"></i>Modelo del equipo</label>
+                                <input type="text" id="editModeloEquipo" class="form-control" name="modelo_equipo" required maxlength="20">
+                            </div>
                              <div class="col-md-6 mb-3">
                                 <label class="form-label"><i class="bi bi-laptop me-2"></i>Técnico</label>
                                 <input type="text" id="editTecnico" class="form-control" disabled>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label"><i class="bi bi-person me-2"></i>Modelo del equipo</label>
-                                <input type="text" id="editModeloEquipo" class="form-control" name="modelo_equipo" required maxlength="20">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="editTipoEquipo" class="form-label"><i class="bi bi-list me-2"></i>Tipo de equipo</label>
@@ -206,12 +206,17 @@
                                 <label for="editTipoServicio" class="form-label"><i class="bi bi-wrench me-2"></i>Tipo de servicio</label>
                                 <select class="form-control" id="editTipoServicio" name="tipo_servicio" required>
                                     <option value="" disabled selected hidden>Seleccionar tipo de servicio...</option>
-                                    <option value="Mantenimiento">Mantenimiento - $150.000</option>
-                                    <option value="Reparación">Reparación - $250.000</option>
-                                    <option value="Diagnóstico">Diagnóstico - $50.000</option>
-                                    <option value="Instalación">Instalación - $90.000</option>                                    
+                                    <option value="Mantenimiento">Mantenimiento</option>
+                                    <option value="Reparación">Reparación</option>
+                                    <option value="Diagnóstico">Diagnóstico</option>
+                                    <option value="Instalación">Instalación</option>                                    
                                 </select>
-                            </div>                            
+                            </div> 
+                            <div class="col-md-6 mb-3">
+                                <label for="precio_mostrar" class="form-label"><i class="bi bi-coin me-2"></i>Precio</label>
+                                <input class="form-control formato-moneda" type="text" id="editPrecio"> 
+                                <input type="hidden" name="precio_servicio" id="ediPrecioReal">
+                            </div>
                             <div class="mb-3">
                                 <label class="form-label"><i class="bi bi-file-text me-2"></i>Descripción del problema</label>
                                 <textarea class="form-control" id="editDescripcion" name="descripcion" placeholder="Descripción inicial del problema..." style="height: 100px" required maxlength="100"></textarea>                                
@@ -265,21 +270,21 @@
                                                     <i class="bi bi-tag me-2"></i>
                                                     <strong>Precio Base</strong>
                                                 </div>
-                                                <div class="h5 text-primary mb-0">$150.00</div>
+                                                <div class="h5 text-primary mb-0" id="precioBase2"></div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div>
                                                     <i class="bi bi-plus-circle me-2"></i>
                                                     <strong>Adicionales</strong>
                                                 </div>
-                                                <div class="h5 text-warning mb-0" id="totalAdicionales">$0.00</div>
+                                                <div class="h5 text-warning mb-0" id="totalAdicionales2"></div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div>
                                                     <i class="bi bi-calculator me-2"></i>
                                                     <strong>Total</strong>
                                                 </div>
-                                                <div class="h4 text-success mb-0" id="totalFinal">$150.00</div>
+                                                <div class="h4 text-success mb-0" id="totalFinal2"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -445,21 +450,21 @@
                                                     <i class="bi bi-tag me-2"></i>
                                                     <strong>Precio Base</strong>
                                                 </div>
-                                                <div class="h5 text-primary mb-0">$150.00</div>
+                                                <div class="h5 text-primary mb-0" id="precioBase"></div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div>
                                                     <i class="bi bi-plus-circle me-2"></i>
                                                     <strong>Adicionales</strong>
                                                 </div>
-                                                <div class="h5 text-warning mb-0" id="totalAdicionales">$0.00</div>
+                                                <div class="h5 text-warning mb-0" id="totalAdicionales"></div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div>
                                                     <i class="bi bi-calculator me-2"></i>
                                                     <strong>Total</strong>
                                                 </div>
-                                                <div class="h4 text-success mb-0" id="totalFinal">$150.00</div>
+                                                <div class="h4 text-success mb-0" id="totalFinal"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -534,6 +539,7 @@
     <script src="/static/js/funciones/select2.js"></script>
     <script src="/static/js/funciones/dataTables.js"></script>
     <script src="/static/js/funciones/formatoMoneda.js"></script>
+    <script src="/static/js/funciones/vincularPrecios.js"></script>
 
     <script src="/static/js/funciones/setupDatos.js"></script>
     <script src="/static/js/funciones/crudFetch.js"></script>

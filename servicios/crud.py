@@ -85,6 +85,7 @@ class ServicioCRUD:
         servicio.tipo_equipo = datos.tipo_equipo
         servicio.tipo_servicio = datos.tipo_servicio
         servicio.descripcion_problema = datos.descripcion
+        servicio.precio_servicio = datos.precio_servicio
         if datos.descripcion_trabajo is not None:
             servicio.descripcion_trabajo = datos.descripcion_trabajo
         if datos.meses_garantia is not None:
@@ -104,7 +105,7 @@ class ServicioCRUD:
 
         self.repo.db.commit()
 
-    #Retorna los servicioos con el estado en revision
+    #Retorna los servicios con el estado en revision
     def obtener_servicios_en_revision(self):
         return self.repo.obtener_en_revision()
     
