@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Depends, File, Request, UploadFile
 from fastapi.responses import JSONResponse 
 from sqlalchemy.orm import Session
@@ -59,6 +60,7 @@ def actualizar_servicio(
 async def registrar_revision(
     request: Request,
     data: ServicioRevisionSchema = Depends(ServicioRevisionSchema.as_form),
+    imagenes: List[UploadFile] = File(...),
     db: Session = Depends(get_db)
 ):
     controlador = ServicioControlador(db)
@@ -67,7 +69,7 @@ async def registrar_revision(
     except:
         return JSONResponse(content={"success": False, "error": "ID de usuario inválido"}, status_code=400)
 
-    return controlador.registrar_revision(data, usuario_id)
+    return controlador.registrar_revision(data, usuario_id, imagenes)
     
     
 #Ruta que retorna los servicios con revision pendiente

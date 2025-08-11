@@ -28,7 +28,7 @@ class ServicioCRUD:
         return nuevo
 
     def guardar_imagenes(self, imagenes: list[UploadFile], servicio_id: int) -> None:
-        from utils.uploads import guardar_imagen  # Import aquí para evitar ciclos
+        from utils.uploads import guardar_imagen  # evitar ciclos
 
         for img in imagenes:
             ruta = guardar_imagen(img, servicio_id)
@@ -36,6 +36,7 @@ class ServicioCRUD:
             self.repo.db.add(imagen)
 
         self.repo.db.commit()
+
 
     def eliminar(self, id_servicio: int):
         servicio = self.repo.obtener_por_id(id_servicio)
@@ -56,7 +57,7 @@ class ServicioCRUD:
         if not servicio:
             raise ValueError("Servicio no encontrado")
 
-        # Actualizar datos
+        # Actualizar datos principales
         servicio.meses_garantia = data.meses_garantia
         servicio.descripcion_trabajo = data.descripcion
         servicio.estado_servicio = "En Revisión"

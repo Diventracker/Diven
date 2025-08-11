@@ -78,9 +78,14 @@ class ServicioControlador:
             return JSONResponse(content={"success": False, "error": "Error al eliminar el servicio"}, status_code=500)
         
     #Controlador para mandar a revision servicio
-    def registrar_revision(self, datos: ServicioRevisionSchema, usuario_id: int):
+    def registrar_revision(self, datos: ServicioRevisionSchema, usuario_id: int, imagenes: list[UploadFile] = None):
         try:
             self.crud.registrar_revision(datos, usuario_id)
+
+            # Guardar imágenes si vienen
+            if imagenes and len(imagenes) > 0:
+                self.crud.guardar_imagenes(imagenes, datos.id_servicio)
+
             return JSONResponse(content={"success": True, "mensaje": "Servicio actualizado y detalles guardados."})
         
         except ValueError as e:
@@ -88,6 +93,7 @@ class ServicioControlador:
         
         except Exception as e:
             return JSONResponse(content={"success": False, "error": str(e)}, status_code=500)
+
         
     #Actualizar los servicios
     def actualizar(self, id_servicio: int, datos: ServicioUpdate, usuario_id: int):
@@ -141,7 +147,7 @@ class ServicioControlador:
         ]
         return JSONResponse(content=resultado)
     
-    #Aporbar/ rechazar el servicio
+    #Aprobar/ rechazar el servicio
     def actualizar_estado(self, id_servicio: int, datos: EstadoServicioInput):
         try:
             servicio = self.crud.cambiar_estado(

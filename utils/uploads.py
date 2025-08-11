@@ -2,7 +2,6 @@ import os
 from uuid import uuid4
 from pathlib import Path
 from fastapi import UploadFile
-from datetime import datetime
 
 def guardar_imagen(file: UploadFile, servicio_id: int, carpeta_base: str = "static/img/servicios") -> str:
     # Extrae extensión de forma segura
