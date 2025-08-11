@@ -16,29 +16,6 @@ import os
 router = APIRouter()
 
 
-@router.post("/producto/crear")
-async def crear_producto(
-    datos: ProductoCreate = Depends(ProductoCreate.as_form),
-    imagen: UploadFile = File(None),
-    db: Session = Depends(get_db)
-):
-    ruta_imagen = None
-    if imagen:
-        carpeta_destino = "static/img/productos"
-        os.makedirs(carpeta_destino, exist_ok=True)
-
-        nombre_unico = f"{datetime.now().timestamp()}_{imagen.filename}"  # ✅ Aquí SÍ existe imagen
-        ruta_fisica = os.path.join(carpeta_destino, nombre_unico)
-
-        with open(ruta_fisica, "wb") as f:
-            contenido = await imagen.read()
-            f.write(contenido)
-
-        ruta_imagen = f"img/productos/{nombre_unico}"
-
-    # Lógica para guardar en DB
-    controlador = ProductoControlador(db)
-    return await controlador.crear(datos, ruta_imagen)
 
 # Vista principal que muestra el html de productos
 @router.get("/productos", response_class=HTMLResponse, tags=["Productos"])
@@ -54,24 +31,25 @@ def obtener_productos(db: Session = Depends(get_db)):
 
 
 # Ruta que recibe el formulario de agregar Porducto
-@router.post("/producto/crear", tags=["Productos"])
-def crear_producto(
+@router.post("/producto/crear")
+async def crear_producto(
     datos: ProductoCreate = Depends(ProductoCreate.as_form),
+    imagen: UploadFile = File(None),
     db: Session = Depends(get_db)
 ):
     controlador = ProductoControlador(db)
-    return controlador.crear(datos)
-
+    return await controlador.crear(datos, imagen)
 
 #Ruta que recibe el fetch de js para editar producto
 @router.put("/producto/editar/{producto_id}", tags=["Productos"])
-def editar_producto(
+async def editar_producto(
     producto_id: int,
     datos: ProductoUpdate = Depends(ProductoUpdate.as_form),
+    imagen: UploadFile = File(None),           
     db: Session = Depends(get_db)
 ):
     controlador = ProductoControlador(db)
-    return controlador.editar_producto(producto_id, datos)
+    return await controlador.editar(producto_id, datos, imagen)
 
 
 

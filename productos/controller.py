@@ -3,6 +3,7 @@ from fastapi.templating import Jinja2Templates
 from productos.crud import ProductoCRUD
 from productos.schema import ProductoCreate, ProductoUpdate
 from fastapi.responses import JSONResponse
+from utils.imagenes import guardar_imagen
 
 templates = Jinja2Templates(directory=["templates", "productos/templates"])
 
@@ -17,14 +18,24 @@ class ProductoControlador:
             "rol": rol
         })
 
-    def crear(self, datos: ProductoCreate):
+    async def crear(self, datos: ProductoCreate, imagen):
         try:
-            producto = self.crud.crear(datos)
-            return JSONResponse(content={"success": True, "mensaje": "Producto creado exitosamente.", "id": producto.id_producto})
+            # Aquí usamos await correctamente
+            ruta_imagen = await guardar_imagen(imagen)
+
+            producto = self.crud.crear(datos, ruta_imagen)
+
+            return JSONResponse(content={
+                "success": True,
+                "mensaje": "Producto creado exitosamente.",
+                "id": producto.id_producto
+            })
+
         except ValueError as e:
             return JSONResponse(content={"success": False, "error": str(e)}, status_code=400)
-        except Exception as e:
+        except Exception:
             return JSONResponse(content={"success": False, "error": "Error interno al crear producto."}, status_code=500)
+
         
     #Pasa los productos mediante /data
     def obtener_productos(self):
@@ -43,14 +54,18 @@ class ProductoControlador:
                 "fecha_compra": p.fecha_compra.strftime("%Y-%m-%d"),
                 "id_proveedor": p.id_proveedor,
                 "proveedor": p.proveedor.nombre_proveedor if p.proveedor else "Desconocido",
-                "imagen_url": "/static/img/productos/sin-imagen.png"
+                "imagen_url": p.imagen if p.imagen else "/static/img/productos/sin-imagen.png"
             })
 
         return JSONResponse(content=datos)
     
-    def editar_producto(self, producto_id: int, datos: ProductoUpdate):
+    async def editar(self, producto_id: int, datos: ProductoUpdate, imagen):
         try:
-            self.crud.editar(producto_id, datos)
+            ruta_imagen = None
+            if imagen and getattr(imagen, "filename", None):
+                ruta_imagen = await guardar_imagen(imagen)  # 👈 guarda y devuelve /static/...
+
+            self.crud.editar(producto_id, datos, ruta_imagen)  # 👈 pásala al CRUD (puede ser None)
             return JSONResponse(content={"success": True, "mensaje": "Producto actualizado exitosamente."})
         except ValueError as e:
             return JSONResponse(content={"success": False, "error": str(e)}, status_code=404)
