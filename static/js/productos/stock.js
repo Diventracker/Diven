@@ -40,6 +40,13 @@ function obtenerProductosBajoStock() {
       const contenedor = document.querySelector("#productosBajoStock");
       contenedor.innerHTML = ""; // Limpiar
 
+      if (data.length === 0) {
+        contenedor.innerHTML = `
+          <span class="text-muted small">Todos los productos tienen stock suficiente.</span>
+        `;
+        return;
+      }
+
       data.forEach(producto => {
         let badgeClass = "bg-success";
         let textoEstado = "Stock suficiente";

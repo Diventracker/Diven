@@ -1,7 +1,4 @@
-function setupCostosAdicionales({
-    grupoCostosId,
-    botonAgregarId
-}) {
+function setupCostosAdicionales({ grupoCostosId, botonAgregarId }) {
     let costoCounter = document.querySelectorAll(`#${grupoCostosId} .costo-item`).length;
 
     const grupoCostos = document.getElementById(grupoCostosId);
@@ -31,13 +28,9 @@ function setupCostosAdicionales({
         const botonesEliminar = grupoCostos.querySelectorAll('.eliminar-costo');
 
         if (items.length > 1) {
-            botonesEliminar.forEach(btn => {
-                btn.style.display = 'block';
-            });
+            botonesEliminar.forEach(btn => btn.style.display = 'block');
         } else {
-            botonesEliminar.forEach(btn => {
-                btn.style.display = 'none';
-            });
+            botonesEliminar.forEach(btn => btn.style.display = 'none');
         }
     }
 
@@ -60,7 +53,7 @@ function setupCostosAdicionales({
                             <i class="bi bi-currency-dollar"></i>
                         </span>
                         <div class="form-floating">
-                            <input type="number" class="form-control costo-valor" placeholder="0.00" step="0.01" min="0">
+                            <input type="text" class="form-control costo-valor formato-moneda" min="0">
                             <label>Valor</label>
                         </div>
                     </div>
@@ -85,7 +78,25 @@ function setupCostosAdicionales({
         `;
 
         grupoCostos.appendChild(nuevoCosto);
+
+        // Asignar evento eliminar
         asignarBotonEliminar(nuevoCosto.querySelector('.eliminar-costo'));
+
+        // Formato moneda para el nuevo input
+        new AutoNumeric(nuevoCosto.querySelector('.formato-moneda'), {
+            currencySymbol: '$',
+            decimalPlaces: 0,
+            digitGroupSeparator: '.',
+            decimalCharacter: ',',
+            unformatOnSubmit: true,
+            modifyValueOnWheel: false,
+            watchExternalChanges: true,
+            showOnlyNumbersOnFocus: false,
+            currencySymbolPlacement: 'p',
+            minimumValue: '0',
+            emptyInputBehavior: 'zero'
+        });
+
         actualizarBotonesEliminar();
     });
 
@@ -93,32 +104,16 @@ function setupCostosAdicionales({
     actualizarBotonesEliminar();
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    setupCostosAdicionales({
-        grupoCostosId: 'grupoCostos',        // Primer modal
-        botonAgregarId: 'agregarCosto'
-    });
-
-    setupCostosAdicionales({
-        grupoCostosId: 'grupoCostos2',       // Segundo modal
-        botonAgregarId: 'agregarCosto2'
-    });
-});
-
-function resetCostosAdicionales({ 
-    toggleId, 
-    grupoCostosId, 
-    contenedorCostosId, 
-    botonAgregarId 
-}) {
-    // Ocultar sección
+function resetCostosAdicionales({ toggleId, grupoCostosId, contenedorCostosId }) {
     const toggle = document.getElementById(toggleId);
     const contenedor = document.getElementById(contenedorCostosId);
     const grupo = document.getElementById(grupoCostosId);
 
     if (toggle) toggle.checked = false;
-    if (contenedor) contenedor.classList.remove('show');
-    if (contenedor) contenedor.classList.add('d-none');
+    if (contenedor) {
+        contenedor.classList.remove('show');
+        contenedor.classList.add('d-none');
+    }
 
     if (grupo) {
         grupo.innerHTML = `
@@ -130,7 +125,7 @@ function resetCostosAdicionales({
                             <i class="bi bi-currency-dollar"></i>
                         </span>
                         <div class="form-floating">
-                            <input type="number" class="form-control costo-valor" min="0">
+                            <input type="text" class="form-control costo-valor formato-moneda" min="0">
                             <label>Valor</label>
                         </div>
                     </div>
@@ -155,7 +150,21 @@ function resetCostosAdicionales({
         </div>
         `;
 
-        // Reasignar comportamiento al botón eliminar
+        // Activar formato moneda en el inicial
+        new AutoNumeric(grupo.querySelector('.formato-moneda'), {
+            currencySymbol: '$',
+            decimalPlaces: 0,
+            digitGroupSeparator: '.',
+            decimalCharacter: ',',
+            unformatOnSubmit: true,
+            modifyValueOnWheel: false,
+            watchExternalChanges: true,
+            showOnlyNumbersOnFocus: false,
+            currencySymbolPlacement: 'p',
+            minimumValue: '0',
+            emptyInputBehavior: 'zero'
+        });
+
         grupo.querySelectorAll('.eliminar-costo').forEach(btn => {
             btn.addEventListener('click', function () {
                 const item = this.closest('.costo-item');
@@ -164,3 +173,15 @@ function resetCostosAdicionales({
         });
     }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    setupCostosAdicionales({
+        grupoCostosId: 'grupoCostos',
+        botonAgregarId: 'agregarCosto'
+    });
+
+    setupCostosAdicionales({
+        grupoCostosId: 'grupoCostos2',
+        botonAgregarId: 'agregarCosto2'
+    });
+});

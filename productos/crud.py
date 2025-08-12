@@ -64,3 +64,36 @@ class ProductoCRUD:
         except IntegrityError:
             self.repo.db.rollback()
             raise ValueError("No se puede eliminar el producto por restricciones de integridad")
+        
+    #Funcion busca solo un producto
+    def buscar(self, termino: str) -> Producto:
+        if termino.isdigit():
+            producto = self.repo.obtener_por_id(int(termino))
+            if producto:
+                return producto
+
+        producto = self.repo.buscar_por_nombre(termino)
+        if not producto:
+            raise ValueError("Producto no encontrado")
+
+        return producto
+    
+    def obtener_todos(self, search: str = "", con_stock: bool = True) -> list[Producto]:
+        return self.repo.buscar_productos(search, con_stock)
+    
+    #Para las alertas de bajo stock
+    def obtener_bajo_stock(self) -> list[Producto]:
+        return self.repo.productos_con_bajo_stock()
+    
+    #Actualiza el stock del producto en control de stock
+    def actualizar_stock(self, id_producto: int, cantidad: int) -> int:
+        producto = self.repo.obtener_por_id(id_producto)
+        if not producto:
+            raise ValueError("Producto no encontrado")
+
+        producto.stock += cantidad
+        self.repo.db.commit()
+        self.repo.db.refresh(producto)
+        return producto.stock
+    
+    

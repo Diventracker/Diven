@@ -23,21 +23,12 @@ setupEditButtons({
         tecnico: 'editTecnico',
         descripcion: 'editDescripcion',
         trabajo: 'editTrabajo',
+        precio: 'editPrecio',
         garantia: 'editGarantia'
-    }
-});
-
-//Funcion para cuando se le da click al btn check, y rellene los campos del modal revision
-setupEditButtons({
-    buttonSelector: '.check-button',
-    modalFields: {
-        id: 'serviceIdCheck',
-        tipoEquipo: 'checkTipoEquipo',
-        tipoServicio: 'checkTipoServicio',      
-        modelo: 'checkModeloEquipo',
-        tecnico: 'checkTecnico',
-        descripcion: 'checkDescripcion'     
-    }
+    },
+    vinculos: [
+        ['editPrecio', 'ediPrecioReal']
+    ]
 });
 
 //Rellenar los campos del modal eliminar

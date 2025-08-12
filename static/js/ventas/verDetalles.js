@@ -12,7 +12,7 @@ async function verDetalles(idVenta) {
 
     const data = await res.json();
 
-    document.querySelector("#modaldetalle .modal-title").textContent = `Venta #${idVenta}`;
+    document.querySelector("#modalDetalles .modal-title").textContent = `Venta #${idVenta}`;
     document.querySelector("[data-cliente]").textContent = data.cliente;
     document.querySelector("[data-fecha]").textContent = data.fecha;
     document.querySelector("[data-vendedor]").textContent = data.vendedor;
@@ -36,6 +36,6 @@ async function verDetalles(idVenta) {
 
   } catch (error) {
     console.error("❌ Error al obtener los detalles:", error);
-    alert("Error al obtener detalles de la venta");
+    mostrarAlerta("alerta-warning", "Error al obtener detalles de la venta");
   }
 }

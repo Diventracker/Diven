@@ -47,6 +47,7 @@ $(document).ready(function () {
                     data-bs-toggle="modal"
                     data-bs-target="#modalCheck"
                     data-id="${row.id_servicio}"
+                    data-precio="${row.precio_servicio}"
                     data-modelo="${row.modelo_equipo}">
             <i class="bi bi-clipboard2-check"></i>
             </button>
@@ -75,6 +76,7 @@ $(document).ready(function () {
                     data-modelo="${row.modelo_equipo}"
                     data-descripcion="${row.descripcion_problema}"
                     data-tecnico="${row.usuario.nombre_usuario}"
+                    data-precio="${row.precio_servicio}"
                     data-estado="${row.estado_servicio}"
                     ${row.estado_servicio !== 'En Progreso'
                     ? `data-trabajo="${row.descripcion_trabajo}"

@@ -26,8 +26,9 @@ class ServicioTecnico(Base):
     # Relaciones opcionales si las necesitas
     cliente = relationship("Cliente")
     usuario = relationship("Usuario")
-    garantias = relationship("Garantia", back_populates="servicio", cascade="all, delete-orphan")
+    garantias = relationship("GarantiaServicio", back_populates="servicio", cascade="all, delete-orphan")
     detalles = relationship('DetalleServicio', back_populates='servicio', cascade="all, delete-orphan")
+    imagenes = relationship("ImagenServicio", back_populates="servicio", cascade="all, delete-orphan")
 
 class DetalleServicio(Base):
     __tablename__ = 'detalle_servicio'
@@ -41,3 +42,13 @@ class DetalleServicio(Base):
     # Relaciones (opcional si deseas acceso a los objetos relacionados)
     servicio = relationship('ServicioTecnico', back_populates='detalles', passive_deletes=True)
     usuario = relationship('Usuario', back_populates='detalles_realizados', passive_deletes=True)
+
+
+class ImagenServicio(Base):
+    __tablename__ = "imagen_servicio"
+
+    id_imagen = Column(Integer, primary_key=True, autoincrement=True)
+    id_servicio = Column(Integer, ForeignKey("servicio_tecnico.id_servicio", ondelete="CASCADE"), nullable=False)
+    ruta_archivo = Column(String, nullable=False)
+
+    servicio = relationship("ServicioTecnico", back_populates="imagenes")

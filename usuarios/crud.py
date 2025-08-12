@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, timezone
 import secrets
 from usuarios.model import Usuario
 from usuarios.schema import UsuarioCreateSchema
@@ -49,3 +50,55 @@ class UsuarioCRUD:
 
         self.repo.db.delete(usuario)
         self.repo.db.commit()
+
+    #para validar la session del usuario
+    def autenticar(self, correo: str, clave: str) -> Usuario:
+        usuario = self.repo.obtener_por_correo(correo)
+        if not usuario or not pwd_context.verify(clave, usuario.clave):
+            raise ValueError("Credenciales inválidas")
+        return usuario
+    
+    #Para el token de recuperacion de cuenta
+    def asignar_token_recuperacion(self, correo: str, token: str):
+        usuario = self.repo.obtener_por_correo(correo)
+        if not usuario:
+            return  # No hacer nada si no existe
+
+        usuario.token_recuperacion = token
+        usuario.token_expiracion = datetime.now(timezone.utc) + timedelta(minutes=15)
+        self.repo.db.commit()
+
+        return usuario
+    
+    def validar_token_recuperacion(self, correo: str, token: str):
+        usuario = self.repo.obtener_por_correo(correo)
+        if not usuario:
+            raise ValueError("Correo no registrado")
+
+        if usuario.token_recuperacion != token:
+            raise ValueError("Token inválido")
+
+        if not usuario.token_expiracion or usuario.token_expiracion.replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
+            raise ValueError("Token expirado")
+
+        return usuario
+    
+    def cambiar_clave(self, usuario: Usuario, nueva_clave: str):
+        usuario.clave = pwd_context.hash(nueva_clave)
+        usuario.token_recuperacion = None
+        usuario.token_expiracion = None
+        self.repo.db.commit()
+
+    def obtener_por_token_valido(self, correo: str, token: str) -> Usuario | None:
+        usuario = self.repo.obtener_por_correo(correo)
+        if (
+            usuario and
+            usuario.token_recuperacion == token and
+            usuario.token_expiracion and
+            usuario.token_expiracion.replace(tzinfo=timezone.utc) >= datetime.now(timezone.utc)
+        ):
+            return usuario
+        return None
+
+    def verificar_clave_actual(self, usuario: Usuario, clave_actual: str) -> bool:
+        return pwd_context.verify(clave_actual, usuario.clave)

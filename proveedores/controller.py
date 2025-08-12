@@ -15,8 +15,8 @@ class ProveedorControlador:
         self.crud = ProveedorCRUD(repo)
 
     def mostrar_vista(self, request: Request):
-        rol = request.cookies.get("rol")
-        return templates.TemplateResponse("proveedores.html", {"request": request, "rol": rol})
+        usuario = request.state.usuario
+        return templates.TemplateResponse("proveedores.html", {"request": request, "rol": usuario["rol"]})
     
     def listar_todos(self):
         proveedores = self.crud.listar_todos()

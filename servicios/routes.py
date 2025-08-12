@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, File, Request, UploadFile
 from fastapi.responses import JSONResponse 
 from sqlalchemy.orm import Session
 from database.database import get_db
@@ -21,13 +21,14 @@ def obtener_servicios_data(db: Session = Depends(get_db)):
 
 #Ruta para crear un nuevo servicio tecnico
 @router.post("/servicio/crear", tags=["servicio_tecnico"])
-def crear_servicio(
+async def crear_servicio(
     request: Request,
     datos: ServicioCreate = Depends(ServicioCreate.as_form),
+    imagenes: list[UploadFile] = File(...),  # Nuevas imágenes opcionales
     db: Session = Depends(get_db)
 ):
     controlador = ServicioControlador(db)
-    return controlador.crear(request, datos)
+    return await controlador.crear(request, datos, imagenes)
 
 
 #Ruta para eliminar un servicio Tecnico
@@ -46,7 +47,7 @@ def actualizar_servicio(
 ):
     controlador = ServicioControlador(db)
     try:
-        usuario_id = int(request.cookies.get("usuario_id"))
+        usuario_id = request.state.usuario["usuario_id"]
     except:
         return JSONResponse(content={"success": False, "error": "Usuario inválido"}, status_code=400)
 
@@ -62,7 +63,7 @@ async def registrar_revision(
 ):
     controlador = ServicioControlador(db)
     try:
-        usuario_id = int(request.cookies.get("usuario_id"))
+        usuario_id = request.state.usuario["usuario_id"]
     except:
         return JSONResponse(content={"success": False, "error": "ID de usuario inválido"}, status_code=400)
 
@@ -99,3 +100,9 @@ def cambiar_estado_servicio(
 ):
     controlador = ServicioControlador(db)
     return controlador.actualizar_estado(servicio_id, datos)
+
+#Rutas dashboard grafica de numero de servicios
+@router.get("/servicios/servicios-por-equipo", tags=["servicio_tecnico"])
+def servicios_por_equipo(db: Session = Depends(get_db)):
+    controlador = ServicioControlador(db)
+    return controlador.servicios_por_equipo()

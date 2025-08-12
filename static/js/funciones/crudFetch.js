@@ -5,6 +5,27 @@ function handleFormSubmit({ formId, url, modalId, tablaVariable = null }) {
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
         const formData = new FormData(form);
+        
+        // Adjuntar imágenes si existen
+        if (typeof selectedImages !== "undefined" && selectedImages.length > 0) {
+            const maxSizeMB = 10;
+            const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+            for (const file of selectedImages) {
+                if (!file.type.startsWith("image/")) {
+                    mostrarAlerta("alerta-warning", `❌ "${file.name}" no es una imagen válida.`);
+                    return; // Cancelar envío
+                }
+
+                if (file.size > maxSizeBytes) {
+                    mostrarAlerta("alerta-warning", `❌ La imagen "${file.name}" supera los ${maxSizeMB}MB.`);
+                    return; // Cancelar envío
+                }
+
+                formData.append("imagenes", file);  // Usa este mismo nombre en tu backend
+            }
+        }
+
         try {
             const response = await fetch(url, {
                 method: 'POST',
@@ -23,20 +44,13 @@ function handleFormSubmit({ formId, url, modalId, tablaVariable = null }) {
 
                 mostrarAlerta("alerta-success", data.mensaje || "Registro exitoso");
 
-                if (tablaVariable) {
-                    const variable = window[tablaVariable];
-
-                    if (variable && typeof variable.ajax === "function") {
-                        // Es un DataTable
-                        variable.ajax.reload(null, false);
-                    } else {
-                        // Intenta llamar a una función actualizar[Nombre] (por ejemplo: actualizarProductos)
-                        const funcionNombre = "actualizar" + tablaVariable.charAt(0).toUpperCase() + tablaVariable.slice(1);
-                        if (typeof window[funcionNombre] === "function") {
-                            window[funcionNombre]();
-                        }
-                    }
+                if (tablaVariable && window[tablaVariable]) {
+                    // Es un DataTable
+                    window[tablaVariable].ajax?.reload(null, false);
+                } else if (typeof actualizarProductos === "function") {
+                    actualizarProductos(); // o cambiar dinámicamente si necesitas
                 }
+
             } else {
                 mostrarAlerta("alerta-warning", "Error: " + (data.error || "No se pudo completar la operación"));
             }
