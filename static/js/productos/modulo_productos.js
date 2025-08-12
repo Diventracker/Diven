@@ -12,7 +12,7 @@ handleFormSubmit({
   tablaVariable: 'productos'  
 });
 
-//Funcion para cuando se le da click al btn editar, y rellene los campos del form
+//Funcion para cuando se le da click al btn editar, rellene los campos del form
 setupEditButtons({
     buttonSelector: '.edit-button',
     modalFields: {
