@@ -1,4 +1,5 @@
 from datetime import datetime
+import os
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi import Request, UploadFile
@@ -21,6 +22,7 @@ class ServicioControlador:
             "rol": usuario["rol"]
         })
     
+    #Funcion manda todos los datos en json de los servicios
     def obtener_datos(self):
         servicios = self.crud.obtener_todos()
 
@@ -46,7 +48,7 @@ class ServicioControlador:
 
         return JSONResponse(content=resultado)
 
-
+    #Funcion para registrar un nuevo servicio
     async def crear(self, request: Request, datos: ServicioCreate, imagenes: list[UploadFile]):
         try:
             usuario_id = int(request.state.usuario["usuario_id"])
@@ -65,7 +67,7 @@ class ServicioControlador:
         except Exception as e:
             return JSONResponse(content={"success": False, "error": "Error interno al crear servicio"}, status_code=500)
 
-        
+    #Funcion que elimina un servicio con todo y carpeta de imagenes
     def eliminar(self, id_servicio: int): 
         try:
             self.crud.eliminar(id_servicio)
@@ -78,7 +80,7 @@ class ServicioControlador:
             return JSONResponse(content={"success": False, "error": "Error al eliminar el servicio"}, status_code=500)
         
     #Controlador para mandar a revision servicio
-    def registrar_revision(self, datos: ServicioRevisionSchema, usuario_id: int, imagenes: list[UploadFile] = None):
+    def registrar_revision(self, datos: ServicioRevisionSchema, usuario_id: int, imagenes: list[UploadFile]):
         try:
             self.crud.registrar_revision(datos, usuario_id)
 
@@ -94,11 +96,15 @@ class ServicioControlador:
         except Exception as e:
             return JSONResponse(content={"success": False, "error": str(e)}, status_code=500)
 
-        
     #Actualizar los servicios
-    def actualizar(self, id_servicio: int, datos: ServicioUpdate, usuario_id: int):
+    def actualizar(self, id_servicio: int, datos: ServicioUpdate, usuario_id: int, imagenes: list[UploadFile] = None):
         try:
             self.crud.actualizar(id_servicio, datos, usuario_id)
+
+            # Guardar imágenes si vienen
+            if imagenes and len(imagenes) > 0:
+                self.crud.guardar_imagenes(imagenes, id_servicio)
+
             return JSONResponse(content={"success": True, "mensaje": "Servicio actualizado correctamente."})
         except ValueError as e:
             return JSONResponse(content={"success": False, "error": str(e)}, status_code=404)
@@ -165,4 +171,28 @@ class ServicioControlador:
         resultados = self.crud.obtener_conteo_por_equipo()
         return [{"equipo": r.equipo, "total": r.total} for r in resultados]
 
+    #Funcion manda en json las imagenes de un servicio especifico
+    def obtener_imagenes(self, id_servicio: int):
+        imagenes = self.crud.obtener_imagenes_por_servicio(id_servicio)
 
+        if not imagenes:
+            return JSONResponse(content={"success": False, "error": "No se encontraron imágenes"}, status_code=404)
+
+        resultado = [
+            {
+                "id_imagen": img.id_imagen,
+                "ruta": img.ruta_archivo
+            }
+            for img in imagenes
+        ]
+
+        return JSONResponse(content=resultado)
+
+    #Funcion para eliminar imagenes de un servicio 
+    def eliminar_imagen(self, id_imagen: int):
+        exito, mensaje = self.crud.eliminar_imagen(id_imagen)
+
+        if not exito:
+            return JSONResponse(content={"success": False, "error": mensaje}, status_code=404)
+
+        return JSONResponse(content={"success": True, "message": mensaje})

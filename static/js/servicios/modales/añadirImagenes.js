@@ -3,7 +3,8 @@ document.querySelector("form").addEventListener("submit", function(e) {
 
     const inputsArchivos = [
         { input: document.getElementById("fileInput"), error: document.getElementById("errorImagenes") },
-        { input: document.getElementById("fileInput2"), error: document.getElementById("errorImagenes2") }
+        { input: document.getElementById("fileInput2"), error: document.getElementById("errorImagenes2") },
+        { input: document.getElementById("fileInput3"), error: document.getElementById("errorImagenes3") }
     ];
 
     inputsArchivos.forEach(({input, error}) => {
@@ -119,11 +120,20 @@ function initImageUploader(dragAreaId, fileInputId, imagePreviewId) {
         updateImagePreview();
     }
 
+    // 👇 Nuevo: limpiar imágenes desde fuera
+    function clearImages() {
+        selectedImages = [];
+        fileInput.value = "";  // reset input
+        updateImagePreview();
+    }
+
     return {
-        getImages: () => selectedImages
+        getImages: () => selectedImages,
+        clearImages
     };
 }
 
 // Inicializar los dos apartados
 const uploader1 = initImageUploader('dragArea', 'fileInput', 'imagePreview');
 const uploader2 = initImageUploader('dragArea2', 'fileInput2', 'imagePreview2');
+const uploader3 = initImageUploader('dragArea3', 'fileInput3', 'imagePreview3');
