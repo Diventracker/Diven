@@ -1,4 +1,5 @@
 //Carga los detalles del servicio tecnico a editar
+//Carga los detalles del servicio tecnico a editar
 export async function cargarDetalles(servicioId) {
   const contenedorDetalles = document.getElementById('grupoCostos2');
   if (!contenedorDetalles) return;
@@ -25,7 +26,7 @@ export async function cargarDetalles(servicioId) {
                 <i class="bi bi-currency-dollar"></i>
               </span>
               <div class="form-floating">
-                <input type="number" class="form-control costo-valor" value="${detalle.valor_adicional}" min="0">
+                <input type="text" class="form-control costo-valor formato-moneda" value="${detalle.valor_adicional}" min="0">
                 <label>Valor</label>
               </div>
             </div>
@@ -50,6 +51,21 @@ export async function cargarDetalles(servicioId) {
       `;
 
       contenedorDetalles.appendChild(item);
+
+      // Aplicar formato con AutoNumeric al input recién agregado
+      new AutoNumeric(item.querySelector('.formato-moneda'), {
+        currencySymbol: '$',
+        decimalPlaces: 0,
+        digitGroupSeparator: '.',
+        decimalCharacter: ',',
+        unformatOnSubmit: true,
+        modifyValueOnWheel: false,
+        watchExternalChanges: true,
+        showOnlyNumbersOnFocus: false,
+        currencySymbolPlacement: 'p',
+        minimumValue: '0',
+        emptyInputBehavior: 'zero'
+      });
     });
   } catch (err) {
     console.error(err);

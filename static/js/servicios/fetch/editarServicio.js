@@ -18,13 +18,61 @@ document.getElementById('saveChanges').addEventListener('click', async function 
     const meses_garantia_raw = document.getElementById('editGarantia')?.value || "";
     const meses_garantia = meses_garantia_raw !== "" ? meses_garantia_raw : "";
 
-    // Costos adicionales
-    const detalles = Array.from(document.querySelectorAll('#grupoCostos2 .costo-item')).map(item => {
-        return {
-            valor_adicional: parseInt(item.querySelector('.costo-valor').value) || 0,
-            motivo: item.querySelector('.costo-motivo').value.trim()
-        };
+    // ---- Costos adicionales ----
+    const costoItems = Array.from(document.querySelectorAll('#grupoCostos2 .costo-item'));
+    let validacionOk = true;
+
+    const detalles = costoItems.map(item => {
+        const valorInput = item.querySelector('.costo-valor');
+        let valor = 0;
+
+        try {
+            if (AutoNumeric.getAutoNumericElement(valorInput)) {
+                valor = AutoNumeric.getAutoNumericElement(valorInput).getNumber();
+            } else {
+                valor = parseInt(valorInput.value.replace(/\D/g, ''), 10) || 0;
+            }
+        } catch (err) {
+            const raw = (valorInput.value || '').replace(/[^\d-]/g, '');
+            valor = parseInt(raw) || 0;
+        }
+
+        const motivo = item.querySelector('.costo-motivo').value.trim();
+
+        if (valor <= 0 || motivo === "") {
+            validacionOk = false;
+        }
+
+        return { valor_adicional: valor, motivo: motivo };
     });
+
+    if (!validacionOk) {
+        mostrarAlerta("alerta-warning", "Debe completar todos los costos (valor y motivo) antes de continuar.");
+
+        // Re-formatear valores inválidos
+        document.querySelectorAll('#grupoCostos2 .costo-valor').forEach(el => {
+            try {
+                const inst = (typeof AutoNumeric !== 'undefined') ? AutoNumeric.getAutoNumericElement(el) : null;
+                if (inst && typeof inst.getNumber === 'function') {
+                    const n = inst.getNumber();
+                    const num = Number(n);
+                    setTimeout(() => inst.set(num), 0);
+                } else {
+                    const cleaned = (el.value || '').replace(/[^\d]/g, '');
+                    if (cleaned) {
+                        el.value = new Intl.NumberFormat('es-CO').format(Number(cleaned));
+                    }
+                }
+            } catch (err) {
+                console.warn('Reformat failed for element:', el, err);
+            }
+        });
+
+        const primerInvalido = document.querySelector('#grupoCostos2 .costo-item .costo-motivo');
+        if (primerInvalido) primerInvalido.focus();
+
+        return; // No enviamos si no pasa la validación
+    }
 
     // ---- FormData ----
     const formData = new FormData();
@@ -38,13 +86,16 @@ document.getElementById('saveChanges').addEventListener('click', async function 
         formData.append("meses_garantia", meses_garantia);
     }
 
-    // detalles como JSON string
-    formData.append("detalles", JSON.stringify(detalles));
+    if (detalles.length > 0) {
+        formData.append("detalles", JSON.stringify(detalles));
+    }
 
     // imágenes (uploader3)
-    uploader3.getImages().forEach(img => {
-        formData.append("imagenes", img);
-    });
+    if (uploader3 && typeof uploader3.getImages === "function") {
+        uploader3.getImages().forEach(img => {
+            formData.append("imagenes", img);
+        });
+    }
 
     try {
         const res = await fetch(`/servicio/editar/${id_servicio}`, {
@@ -62,7 +113,7 @@ document.getElementById('saveChanges').addEventListener('click', async function 
             if (window.tablaServicios) {
                 tablaServicios.ajax.reload(null, false);
             }
-            // Resetear imágenes del uploader3
+
             if (uploader3 && typeof uploader3.clearImages === "function") {
                 uploader3.clearImages();
             }
