@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Depends, File, Request, UploadFile
 from fastapi.responses import JSONResponse 
 from sqlalchemy.orm import Session
@@ -42,7 +43,8 @@ def eliminar_servicio(service_id: int, db: Session = Depends(get_db)):
 def actualizar_servicio(
     request: Request,
     id_servicio: int,
-    datos: ServicioUpdate,
+    datos: ServicioUpdate = Depends(ServicioUpdate.as_form),
+    imagenes: List[UploadFile] = File(None),
     db: Session = Depends(get_db)
 ):
     controlador = ServicioControlador(db)
@@ -51,7 +53,7 @@ def actualizar_servicio(
     except:
         return JSONResponse(content={"success": False, "error": "Usuario inválido"}, status_code=400)
 
-    return controlador.actualizar(id_servicio, datos, usuario_id)
+    return controlador.actualizar(id_servicio, datos, usuario_id, imagenes)
 
 
 #Ruta para mandar el request de la revision al administradr
@@ -59,6 +61,7 @@ def actualizar_servicio(
 async def registrar_revision(
     request: Request,
     data: ServicioRevisionSchema = Depends(ServicioRevisionSchema.as_form),
+    imagenes: List[UploadFile] = File(...),
     db: Session = Depends(get_db)
 ):
     controlador = ServicioControlador(db)
@@ -67,7 +70,7 @@ async def registrar_revision(
     except:
         return JSONResponse(content={"success": False, "error": "ID de usuario inválido"}, status_code=400)
 
-    return controlador.registrar_revision(data, usuario_id)
+    return controlador.registrar_revision(data, usuario_id, imagenes)
     
     
 #Ruta que retorna los servicios con revision pendiente
@@ -106,3 +109,15 @@ def cambiar_estado_servicio(
 def servicios_por_equipo(db: Session = Depends(get_db)):
     controlador = ServicioControlador(db)
     return controlador.servicios_por_equipo()
+
+#Ruta sirve para mandar en json las imagenes de un servicio
+@router.get("/servicio/{id_servicio}/imagenes", tags=["servicio_tecnico"])
+def obtener_imagenes_servicio(id_servicio: int, db: Session = Depends(get_db)):
+    controlador = ServicioControlador(db)
+    return controlador.obtener_imagenes(id_servicio)
+
+#Ruta es para eliminar imagenes especificas de un servicio
+@router.delete("/servicio/imagen/{id_imagen}", tags=["servicio_tecnico"])
+def eliminar_imagen_servicio(id_imagen: int, db: Session = Depends(get_db)):
+    controlador = ServicioControlador(db)
+    return controlador.eliminar_imagen(id_imagen)

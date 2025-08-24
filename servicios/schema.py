@@ -1,3 +1,4 @@
+import json
 from pydantic import BaseModel, Field
 from fastapi import Form
 from typing import List, Optional
@@ -65,6 +66,30 @@ class ServicioUpdate(BaseModel):
     meses_garantia: Optional[int] = None
     precio_servicio: int
     detalles: Optional[List[DetalleGasto]] = []
+
+    @classmethod
+    def as_form(
+        cls,
+        modelo_equipo: str = Form(...),
+        tipo_equipo: str = Form(...),
+        tipo_servicio: str = Form(...),
+        descripcion: str = Form(...),
+        precio_servicio: int = Form(...),
+        descripcion_trabajo: Optional[str] = Form(None),
+        meses_garantia: Optional[int] = Form(None),
+        detalles: Optional[str] = Form(None)  # 👈 llega como JSON string
+    ):
+        detalles_list = json.loads(detalles) if detalles else []
+        return cls(
+            modelo_equipo=modelo_equipo,
+            tipo_equipo=tipo_equipo,
+            tipo_servicio=tipo_servicio,
+            descripcion=descripcion,
+            precio_servicio=precio_servicio,
+            descripcion_trabajo=descripcion_trabajo,
+            meses_garantia=meses_garantia,
+            detalles=[DetalleGasto(**d) for d in detalles_list]
+        )
 
 class EstadoServicioInput(BaseModel):
     nuevo_estado: str

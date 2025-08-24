@@ -1,6 +1,6 @@
 from datetime import date
 from sqlalchemy import func
-from servicios.model import DetalleServicio, ServicioTecnico
+from servicios.model import DetalleServicio, ImagenServicio, ServicioTecnico
 from sqlalchemy.orm import joinedload
 
 
@@ -52,3 +52,15 @@ class ServicioRepositorio:
             .filter(ServicioTecnico.fecha_recepcion.between(inicio, fin))\
             .options(joinedload(ServicioTecnico.cliente))\
             .order_by(ServicioTecnico.fecha_recepcion.desc()).all()
+
+    #Para listar todas las imagenes de un servicio
+    def listar_imagenes_por_servicio(self, id_servicio: int):
+        return (
+            self.db.query(ImagenServicio)
+            .filter(ImagenServicio.id_servicio == id_servicio)
+            .all()
+        )
+    
+    #Obtener la imagen por id
+    def buscar_imagen_por_id(self, id_imagen: int):
+        return self.db.query(ImagenServicio).filter(ImagenServicio.id_imagen == id_imagen).first()

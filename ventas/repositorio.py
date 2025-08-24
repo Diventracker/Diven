@@ -61,7 +61,6 @@ class VentaRepositorio:
                 func.coalesce(func.sum(Venta.total_venta), 0).label("total")
             )
             .outerjoin(Venta, Usuario.id_usuario == Venta.id_usuario)
-            .filter(Usuario.rol == "Técnico")
             .group_by(Usuario.nombre_usuario)
             .order_by(desc("total"))
             .limit(limite)

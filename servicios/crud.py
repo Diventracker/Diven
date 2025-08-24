@@ -28,7 +28,7 @@ class ServicioCRUD:
         return nuevo
 
     def guardar_imagenes(self, imagenes: list[UploadFile], servicio_id: int) -> None:
-        from utils.uploads import guardar_imagen  # Import aquí para evitar ciclos
+        from utils.uploads import guardar_imagen  # evitar ciclos
 
         for img in imagenes:
             ruta = guardar_imagen(img, servicio_id)
@@ -37,6 +37,7 @@ class ServicioCRUD:
 
         self.repo.db.commit()
 
+    #Funcion que eliminar los registros con todo y carpeta de imagenes
     def eliminar(self, id_servicio: int):
         servicio = self.repo.obtener_por_id(id_servicio)
         if not servicio:
@@ -56,7 +57,7 @@ class ServicioCRUD:
         if not servicio:
             raise ValueError("Servicio no encontrado")
 
-        # Actualizar datos
+        # Actualizar datos principales
         servicio.meses_garantia = data.meses_garantia
         servicio.descripcion_trabajo = data.descripcion
         servicio.estado_servicio = "En Revisión"
@@ -75,6 +76,7 @@ class ServicioCRUD:
 
         self.repo.db.commit()
 
+    #Funcion que maneja la edicion de los servicios
     def actualizar(self, id_servicio: int, datos: ServicioUpdate, usuario_id: int):
         servicio = self.repo.obtener_por_id(id_servicio)
         if not servicio:
@@ -148,3 +150,30 @@ class ServicioCRUD:
     #Grafica del dashboard
     def obtener_conteo_por_equipo(self):
         return self.repo.contar_por_tipo_equipo()
+    
+    #Funcion para imagenes de un servicio
+    def obtener_imagenes_por_servicio(self, id_servicio: int):
+        return self.repo.listar_imagenes_por_servicio(id_servicio)
+    
+    def obtener_imagen_por_id(self, id_imagen: int):
+        return self.repo.buscar_imagen_por_id(id_imagen)
+
+    #Eliminar imagen
+    def eliminar_imagen(self, id_imagen: int):
+        imagen = self.repo.buscar_imagen_por_id(id_imagen)
+
+        if not imagen:
+            return False, "Imagen no encontrada"
+
+        # Eliminar archivo físico
+        ruta_fisica = os.path.join(os.getcwd(), imagen.ruta_archivo.lstrip("/"))
+        if os.path.exists(ruta_fisica):
+            os.remove(ruta_fisica)
+
+        # Eliminar de la BD
+        self.repo.db.delete(imagen)
+        self.repo.db.commit()
+
+        return True, "Imagen eliminada correctamente"
+
+

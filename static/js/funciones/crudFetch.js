@@ -1,29 +1,20 @@
 //Crear Registros
-function handleFormSubmit({ formId, url, modalId, tablaVariable = null }) {
+function handleFormSubmit({ formId, url, modalId, tablaVariable = null, uploaders = [] }) {
     const form = document.getElementById(formId);
 
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
         const formData = new FormData(form);
-        
-        // Adjuntar imágenes si existen
-        if (typeof selectedImages !== "undefined" && selectedImages.length > 0) {
-            const maxSizeMB = 10;
-            const maxSizeBytes = maxSizeMB * 1024 * 1024;
 
-            for (const file of selectedImages) {
-                if (!file.type.startsWith("image/")) {
-                    mostrarAlerta("alerta-warning", `❌ "${file.name}" no es una imagen válida.`);
-                    return; // Cancelar envío
+        // Adjuntar imágenes desde uploaders (si existen)
+        if (Array.isArray(uploaders) && uploaders.length > 0) {
+            uploaders.forEach(uploader => {
+                if (uploader && typeof uploader.getImages === "function") {
+                    uploader.getImages().forEach(file => {
+                        formData.append("imagenes", file); // Nombre esperado en backend
+                    });
                 }
-
-                if (file.size > maxSizeBytes) {
-                    mostrarAlerta("alerta-warning", `❌ La imagen "${file.name}" supera los ${maxSizeMB}MB.`);
-                    return; // Cancelar envío
-                }
-
-                formData.append("imagenes", file);  // Usa este mismo nombre en tu backend
-            }
+            });
         }
 
         try {
@@ -48,7 +39,7 @@ function handleFormSubmit({ formId, url, modalId, tablaVariable = null }) {
                     // Es un DataTable
                     window[tablaVariable].ajax?.reload(null, false);
                 } else if (typeof actualizarProductos === "function") {
-                    actualizarProductos(); // o cambiar dinámicamente si necesitas
+                    actualizarProductos();
                 }
 
             } else {
