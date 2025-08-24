@@ -17,6 +17,7 @@ class Producto(Base):
     id_proveedor = Column(Integer, ForeignKey("proveedor.id_proveedor"), nullable=False)
     meses_garantia = Column(Integer, nullable=True)
     fecha_compra = Column(TIMESTAMP, nullable=False, default=datetime.now)
+    imagen = Column(String(255), nullable=True)
 
     proveedor = relationship("Proveedor", back_populates="productos")
     # En Producto

@@ -2,17 +2,17 @@
 
 <!-- etiqueta <head> -->
 {% block head_scripts %}
-    <!-- CSS de Select2 -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- CSS de Select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-    <!-- JS de Select2 -->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<!-- JS de Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <!-- JS del list.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
+<!-- JS del list.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
 {% endblock %}
 
 <!-- card principal -->
@@ -28,6 +28,8 @@
     {% set tab2_icono = "clipboard-data" %}
     {% set tab2_nombre = "Control de Stock" %}
 {% endif %}
+
+
 
 <!-- Buscador -->
 {% set subtitulo2 = "Buscar Productos" %}
@@ -45,6 +47,71 @@
 {% set tabla_id = "tablaProductos" %}
 
 {% block nueva_tab %}
+
+<!-- Pestaña de Control de Stock -->
+<div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="stock-tab">
+    <div class="row mb-4">
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Alertas de Stock</h6>
+                </div>
+                <div class="card-body p-0" style="max-height: 530px; overflow-y: auto;">
+                    <div class="list-group list-group-flush" id="productosBajoStock">
+                        <!-- Aca se colocan los productos con js, no modificar pplis -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7 mb-4 mb-md-0">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Registrar Movimiento de Stock</h6>
+                </div>
+                <div class="card-body">
+                    <form id="actualizar_stock">
+                        <div class="mb-3">
+                            <label for="selectProducto" class="form-label">Producto</label>
+                            <select id="selectProducto" name="id_producto" class="form-control" required>
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="proveedor" class="form-label">Proveedor</label>
+                                <input type="text" class="form-control" id="proveedor" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="stockQuantity" class="form-label">Existencia actual</label>
+                                <input type="number" class="form-control" id="stockQuantity" readonly>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productoDescripcion" class="form-label">Descripcion</label>
+                            <textarea class="form-control" id="productoDescripcion" rows="2" readonly></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="stockNew" class="form-label">Añadir Existencia</label>
+                            <input type="number" class="form-control" name="newStock" id="stockNew" min="1">
+                        </div>
+                        <div class="card mb-3 bg-warning-subtle border-warning d-none" id="previewCard">
+                            <div class="card-body py-2 px-3">
+                                <h6 class="card-title mb-1">Vista previa del movimiento</h6>
+                                <p class="mb-0 small" id="previewCantidad"></p>
+                                <p class="mb-0 small" id="previewFinal"></p>
+                            </div>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" id="btnActualizarStock" class="btn btn-enviar" disabled>Registrar
+                                Movimiento</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
     {% if rol == "Administrador" %}
         <!-- Pestaña de Control de Stock -->
         <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="stock-tab">
@@ -109,150 +176,163 @@
             </div>
         </div>
     {% endif %}
+
 {% endblock %}
 
 {% block modales %}
-    <!-- Modal Crear un Nuevo Producto -->
-    <div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Agregar Nuevo Producto</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="registrarProducto">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="selectProveedor" class="form-label">Proveedor</label>
-                                <select id="selectProveedor" name="id_proveedor" required>
-                                    <option></option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Nombre</label>
-                                <input type="text" class="form-control" name="nombre_producto" required />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Modelo</label>
-                                <input type="text" class="form-control" name="modelo" required />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Descripción</label>
-                                <input type="text" class="form-control" name="descripcion" required />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Stock</label>
-                                <input type="number" class="form-control" name="stock" required />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Precio de compra</label>
-                                <input type="number" step="0.01" class="form-control" name="precio" required />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Precio de venta</label>
-                                <input type="number" step="0.01" class="form-control" name="precio_venta" required />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Meses de garantía</label>
-                                <input type="number" class="form-control" name="meses_garantia" min="0" value="0"
-                                    required />
-                            </div>
+<!-- Modal Crear un Nuevo Producto -->
+<div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Agregar Nuevo Producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="registrarProducto">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="selectProveedor" class="form-label">Proveedor</label>
+                            <select id="selectProveedor" name="id_proveedor" required>
+                                <option></option>
+                            </select>
                         </div>
-                        <button type="submit" class="btn btn-enviar w-100">Guardar Producto</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Editar un Producto -->
-    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Actualizar Producto</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="editProductoForm">
-                        <input type="hidden" id="productoId">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="selectProveedor2" class="form-label">Proveedor</label>
-                                <select id="selectProveedor2" name="id_proveedor" required>
-                                    <option></option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Nombre</label>
-                                <input type="text" class="form-control" id="editNombreProducto" name="nombre_producto"
-                                    required />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Modelo</label>
-                                <input type="text" class="form-control" id="editModelo" name="modelo" required />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Descripción</label>
-                                <input type="text" class="form-control" id="editDescripcion" name="descripcion" required />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Precio de compra</label>
-                                <input type="number" step="0.01" class="form-control" id="editPrecio" name="precio"
-                                    required />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Precio de venta</label>
-                                <input type="number" step="0.01" class="form-control" id="editPrecioVenta"
-                                    name="precio_venta" required />
-                            </div>
-
-                            <div class="col-12 mb-3">
-                                <label class="form-label">Meses de garantía</label>
-                                <input type="number" class="form-control" id="editGarantia" name="meses_garantia" min="0"
-                                    required />
-                            </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" class="form-control" name="nombre_producto" required />
                         </div>
-                        <button type="submit" id="saveChanges" class="btn btn-enviar w-100">Actualizar Producto</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Modelo</label>
+                            <input type="text" class="form-control" name="modelo" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Descripción</label>
+                            <input type="text" class="form-control" name="descripcion" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Stock</label>
+                            <input type="number" class="form-control" name="stock" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Precio de compra</label>
+                            <input type="number" step="0.01" class="form-control" name="precio" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Precio de venta</label>
+                            <input type="number" step="0.01" class="form-control" name="precio_venta" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Meses de garantía</label>
+                            <input type="number" class="form-control" name="meses_garantia" min="0" value="0"
+                                required />
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Imagen del producto</label>
+                            <input type="file" class="form-control" name="imagen" accept="image/*" />
+                        </div>
 
-    <!-- Modal Eliminar -->
-    <div class="modal fade" id="modalEliminar" aria-labelledby="modalEliminarLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalEliminarLabel">Eliminar Producto</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <p>¿Seguro que desea eliminar este producto?</p>
-                    <input type="hidden" id="productoIdToDelete" />
-                    <!-- Span que muestra el nombre del cliente -->
-                    <span id="nombreProducto" class="fw-bold d-block fs-4"></span>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
-                </div>
+                    </div>
+                    <button type="submit" class="btn btn-enviar w-100">Guardar Producto</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Modal Editar un Producto -->
+<div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Actualizar Producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editProductoForm">
+                    <input type="hidden" id="productoId">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="selectProveedor2" class="form-label">Proveedor</label>
+                            <select id="selectProveedor2" name="id_proveedor" required>
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="editNombreProducto" name="nombre_producto"
+                                required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Modelo</label>
+                            <input type="text" class="form-control" id="editModelo" name="modelo" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Descripción</label>
+                            <input type="text" class="form-control" id="editDescripcion" name="descripcion" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Precio de compra</label>
+                            <input type="number" step="0.01" class="form-control" id="editPrecio" name="precio"
+                                required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Precio de venta</label>
+                            <input type="number" step="0.01" class="form-control" id="editPrecioVenta"
+                                name="precio_venta" required />
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label">Meses de garantía</label>
+                            <input type="number" class="form-control" id="editGarantia" name="meses_garantia" min="0"
+                                required />
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Imagen del producto</label>
+                            <input type="file" class="form-control" id="editImagen" name="imagen" accept="image/*" />
+                        </div>
+
+                    </div>
+                    <button type="submit" id="saveChanges" class="btn btn-enviar w-100">Actualizar Producto</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar -->
+<div class="modal fade" id="modalEliminar" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEliminarLabel">Eliminar Producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p>¿Seguro que desea eliminar este producto?</p>
+                <input type="hidden" id="productoIdToDelete" />
+                <!-- Span que muestra el nombre del cliente -->
+                <span id="nombreProducto" class="fw-bold d-block fs-4"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
-    <script src="/static/js/funciones/alertas.js"></script>
-    <script src="/static/js/funciones/select2.js"></script>
-    <script src="/static/js/funciones/crudFetch.js"></script>
-    <script src="/static/js/funciones/setupDatos.js"></script>
+<script src="/static/js/funciones/alertas.js"></script>
+<script src="/static/js/funciones/select2.js"></script>
+<script src="/static/js/funciones/crudFetch.js"></script>
+<script src="/static/js/funciones/setupDatos.js"></script>
 
-    <script src="/static/js/productos/stock.js"></script>
-    <script src="/static/js/productos/dataCards.js"></script>
-    <script src="/static/js/productos/select2Modales.js"></script>
-    <script src="/static/js/productos/actualizarStock.js"></script>
-    <script src="/static/js/productos/modulo_productos.js"></script>
+<script src="/static/js/productos/stock.js"></script>
+<script src="/static/js/productos/dataCards.js"></script>
+<script src="/static/js/productos/select2Modales.js"></script>
+<script src="/static/js/productos/actualizarStock.js"></script>
+<script src="/static/js/productos/modulo_productos.js"></script>
+<script src="/static/js/productos/editarProducto.js"></script>
+
 {% endblock %}
+static/js/productos/modulo_productos.js

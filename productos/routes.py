@@ -3,10 +3,20 @@ from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from database.database import get_db
 from productos.controller import ProductoControlador
+#importaciones nuevas 
+from productos.schema import ProductoCreate, ProductoOut, ProductoUpdate, StockUpdate
+from productos.model import Producto
+from fastapi import UploadFile, File
+from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
+from datetime import datetime
+import os
 from productos.schema import ProductoCreate, ProductoUpdate, StockUpdate
 
 
+
 router = APIRouter()
+
 
 
 # Vista principal que muestra el html de productos
@@ -23,24 +33,25 @@ def obtener_productos(db: Session = Depends(get_db)):
 
 
 # Ruta que recibe el formulario de agregar Porducto
-@router.post("/producto/crear", tags=["Productos"])
-def crear_producto(
+@router.post("/producto/crear")
+async def crear_producto(
     datos: ProductoCreate = Depends(ProductoCreate.as_form),
+    imagen: UploadFile = File(None),
     db: Session = Depends(get_db)
 ):
     controlador = ProductoControlador(db)
-    return controlador.crear(datos)
-
+    return await controlador.crear(datos, imagen)
 
 #Ruta que recibe el fetch de js para editar producto
 @router.put("/producto/editar/{producto_id}", tags=["Productos"])
-def editar_producto(
+async def editar_producto(
     producto_id: int,
     datos: ProductoUpdate = Depends(ProductoUpdate.as_form),
+    imagen: UploadFile = File(None),           
     db: Session = Depends(get_db)
 ):
     controlador = ProductoControlador(db)
-    return controlador.editar_producto(producto_id, datos)
+    return await controlador.editar(producto_id, datos, imagen)
 
 
 #Eliminar Producto...
@@ -80,6 +91,20 @@ def productos_bajo_stock_endpoint(db: Session = Depends(get_db)):
 
 #Esta ruta Put es la que actualiza el stock, en la pestaña control Stock
 @router.put("/productos/{id_producto}/stock", tags=["Productos"])
+#funcion para actualizar stock junto a la imagen
+def actualizar_stock(id_producto: int, datos: StockUpdate, db: Session = Depends(get_db)):
+    producto = db.query(Producto).filter(Producto.id_producto == id_producto).first()
+
+    if not producto:
+        raise HTTPException(status_code=404, detail="Producto no encontrado")
+
+    producto.stock += datos.cantidad
+    db.commit()
+    db.refresh(producto)
+
+    return {"mensaje": "Stock actualizado correctamente", "stock_final": producto.stock}
+
+
 def actualizar_stock_endpoint(
     id_producto: int,
     datos: StockUpdate,
