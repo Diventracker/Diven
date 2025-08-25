@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-08-2025 a las 02:44:49
+-- Tiempo de generación: 25-08-2025 a las 03:55:14
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -72,7 +72,9 @@ INSERT INTO `cliente` (`id_cliente`, `nombre_cliente`, `numero_documento`, `dire
 (30, 'Daniela Suárez', '1212345670', 'Avenida 5 #30-70', '3111234567', 'danielas@example.com', 'Pasaporte', '2025-09-10'),
 (31, 'Joaquin Cañon', '1012443507', 'tv 77 i # 65 j 16 sur ', '3053970242', 'Danielcf97@hotmail.com', 'CC', '2025-06-12'),
 (32, 'Tamaluipas xd', '2312312312', 'Avenida siempre viva 100', '3124816449', 'monserratff@gmail.com', 'CC', '2025-06-30'),
-(43, 'Franky Style', '232321323123123', 'dasdasd1231231', '3123123131', 'asdasdasd@gmail.com', 'CC', '2025-07-05');
+(43, 'Franky Style', '232321323123123', 'dasdasd1231231', '3123123131', 'FrankyS@gmail.com', 'CC', '2025-07-05'),
+(45, 'Gustavo Paredes', '33218005', 'cra 76 hy 76 ju9', '3131231231', 'gustavop@gmail.com', 'CC', '2025-07-13'),
+(46, 'Carlos Marciano', '2131231232', 'Cra 879', '3222739273', 'carlosfsdfsd@gmail.com', 'CC', '2025-08-10');
 
 -- --------------------------------------------------------
 
@@ -93,10 +95,13 @@ CREATE TABLE `detalle_servicio` (
 --
 
 INSERT INTO `detalle_servicio` (`id_detalle`, `id_servicio`, `id_usuario`, `valor_adicional`, `motivo`) VALUES
-(10, 4, 1, 10000, 'keycaps nuevas'),
-(11, 4, 1, 20000, 'Cepillo'),
-(12, 4, 1, 30000, 'Pasta Termica'),
-(39, 33, 1, 165656, 'dfgdf');
+(45, 52, 1, 150000, 'camion'),
+(46, 52, 1, 60000, 'precio vacio'),
+(47, 52, 1, 70000, 'Precio nuevo'),
+(81, 62, 1, 60000, 'Limpiador'),
+(82, 62, 1, 300000, 'Teclado'),
+(83, 57, 1, 20000, 'Compra'),
+(84, 57, 1, 10000, 'Okey');
 
 -- --------------------------------------------------------
 
@@ -160,6 +165,35 @@ CREATE TABLE `garantia_servicio` (
   `fecha_inicio` date NOT NULL,
   `fecha_fin` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `imagen_servicio`
+--
+
+CREATE TABLE `imagen_servicio` (
+  `id_imagen` int(11) NOT NULL,
+  `id_servicio` int(11) NOT NULL,
+  `ruta_archivo` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `imagen_servicio`
+--
+
+INSERT INTO `imagen_servicio` (`id_imagen`, `id_servicio`, `ruta_archivo`) VALUES
+(11, 52, '/static/img/servicios/52/1b4fd2f368ca463faafe736808d6fa19.jpg'),
+(13, 54, '/static/img/servicios/54/c14c2099c08d491ab12f618fa1c8fd1f.jpg'),
+(14, 54, '/static/img/servicios/54/91bd477226944024887f95f1f52a2e6f.jpg'),
+(17, 57, '/static/img/servicios/57/7e4aa58f5094497188ef3849a35c0c67.jpg'),
+(26, 62, '/static/img/servicios/62/130e18dae14f444fb25271eb0694a06b.jpg'),
+(27, 52, '/static/img/servicios/52/7cc9fc760193463b9ad6f63487ce9e10.jpg'),
+(28, 52, '/static/img/servicios/52/1ad96206c9d349ae91dc50a1c9048277.jpg'),
+(29, 62, '/static/img/servicios/62/dd06d85932144360a9b288dd8bda54c1.jpg'),
+(30, 63, '/static/img/servicios/63/067b6535f762447a975edd53f0c20551.jpg'),
+(31, 64, '/static/img/servicios/64/3fbf2e5071d24183981c154b265a57e6.png'),
+(32, 65, '/static/img/servicios/65/670fd495ab714ed4b16535d7cc5dfa53.jpeg');
 
 -- --------------------------------------------------------
 
@@ -295,11 +329,13 @@ CREATE TABLE `servicio_tecnico` (
 --
 
 INSERT INTO `servicio_tecnico` (`id_servicio`, `id_cliente`, `id_usuario`, `tipo_equipo`, `modelo_equipo`, `descripcion_problema`, `fecha_recepcion`, `fecha_entrega`, `estado_servicio`, `meses_garantia`, `tipo_servicio`, `precio_servicio`, `descripcion_trabajo`) VALUES
-(3, 3, 1, 'Computador de mesa', 'Origami White', 'Ventilador se queda quieto', '2025-06-27 23:41:39', NULL, 'En Progreso', 0, 'Reparación', 90000, NULL),
-(4, 4, 1, 'Computador portatil', 'Reddragon kurama', 'Le fallan las teclas', '2025-06-28 00:32:34', NULL, 'Finalizado', 3, 'Mantenimiento', 150000, 'Lo desarme y limpie cada parte del teclado -- que mas? '),
-(31, 1, 1, 'Impresora laser', 'asdasda', 'dadsadas', '2025-07-03 05:40:45', NULL, 'Rechazado', 11, 'Reparación', 250000, 'dsadasdadsa'),
-(33, 3, 1, 'Computador de mesa', '321312wdasda', 'dsadas123', '2025-07-03 05:51:53', NULL, 'En Revisión', 11, 'Diagnóstico', 50000, 'asdasdas'),
-(34, 3, 1, 'Computador de mesa', 'dasdasdas', 'dasdasdas', '2025-07-04 02:37:23', NULL, 'En Progreso', 0, 'Diagnóstico', 50000, NULL);
+(52, 3, 1, 'Computador de mesa', 'Iceberg White', 'Fallo en los componentes de refrigeracion 5', '2025-08-09 21:29:33', NULL, 'En Progreso', 0, 'Mantenimiento', 100000, ''),
+(54, 2, 1, 'Computador de mesa', 'Iceberg Black', 'Va lento', '2025-08-11 00:24:25', NULL, 'En Progreso', 0, 'Mantenimiento', 90000, 'cadasdas'),
+(57, 3, 1, 'Computador de mesa', 'weqweqw', 'sadasdas', '2025-08-11 00:51:53', NULL, 'Finalizado', 11, 'Reparación', 200000, 'Campo no vacio'),
+(62, 1, 1, 'Computador portatil', 'Asus Rog Strix', 'Se encuentra sucio el teclado y fallan al presionar las teclas ', '2025-08-11 22:45:19', NULL, 'Finalizado', 7, 'Mantenimiento', 4000000, 'Se realizo una limpieza a profundida del teclado'),
+(63, 3, 1, 'Computador de mesa', 'lenovo', 'no enciende', '2025-08-24 23:25:55', NULL, 'Finalizado', 0, 'Mantenimiento', 60000, 'limpiar\r\n'),
+(64, 1, 1, 'Computador portatil', 'lenovo', 'no da imagen', '2025-08-24 23:27:10', NULL, 'Finalizado', 0, 'Diagnóstico', 20000, 'se le arreglo el boton'),
+(65, 31, 1, 'Computador portatil', 'asus', 'suena muy duro', '2025-08-25 01:21:43', NULL, 'Finalizado', 0, 'Reparación', 80000, 'ya');
 
 -- --------------------------------------------------------
 
@@ -419,6 +455,13 @@ ALTER TABLE `garantia_servicio`
   ADD KEY `id_servicio` (`id_servicio`);
 
 --
+-- Indices de la tabla `imagen_servicio`
+--
+ALTER TABLE `imagen_servicio`
+  ADD PRIMARY KEY (`id_imagen`),
+  ADD KEY `id_servicio` (`id_servicio`);
+
+--
 -- Indices de la tabla `producto`
 --
 ALTER TABLE `producto`
@@ -463,13 +506,13 @@ ALTER TABLE `venta`
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_servicio`
 --
 ALTER TABLE `detalle_servicio`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_venta`
@@ -490,6 +533,12 @@ ALTER TABLE `garantia_servicio`
   MODIFY `id_garantia` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `imagen_servicio`
+--
+ALTER TABLE `imagen_servicio`
+  MODIFY `id_imagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+
+--
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
@@ -505,7 +554,7 @@ ALTER TABLE `proveedor`
 -- AUTO_INCREMENT de la tabla `servicio_tecnico`
 --
 ALTER TABLE `servicio_tecnico`
-  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
@@ -548,6 +597,12 @@ ALTER TABLE `garantia_producto`
 --
 ALTER TABLE `garantia_servicio`
   ADD CONSTRAINT `Garantia_Servicio_ibfk_1` FOREIGN KEY (`id_servicio`) REFERENCES `servicio_tecnico` (`id_servicio`);
+
+--
+-- Filtros para la tabla `imagen_servicio`
+--
+ALTER TABLE `imagen_servicio`
+  ADD CONSTRAINT `imagen_servicio_ibfk_1` FOREIGN KEY (`id_servicio`) REFERENCES `servicio_tecnico` (`id_servicio`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `producto`

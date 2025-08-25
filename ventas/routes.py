@@ -3,6 +3,8 @@ from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from database.database import get_db
 from ventas.controller import VentaControlador
+from servicios.controller import ServicioControlador
+from servicios.schema import EstadoServicioInput, ServicioCreate, ServicioRevisionSchema, ServicioUpdate 
 
 router = APIRouter()
 
@@ -69,3 +71,9 @@ def ventas_por_vendedor(db: Session = Depends(get_db)):
     controlador = VentaControlador(db)
     return controlador.ventas_por_vendedor()
 
+
+#fragmento para mostrar los productos que estan en finalizado
+@router.get("/servicios/finalizado", tags=["servicio_tecnico"])
+def listar_estado_finalizado(db: Session = Depends(get_db)):
+    controlador = ServicioControlador(db)
+    return controlador.obtener_finalizados()

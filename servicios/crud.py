@@ -27,6 +27,10 @@ class ServicioCRUD:
         self.repo.db.refresh(nuevo)
         return nuevo
 
+#crud para filtrar todos los estados en finalizados al repo
+    def filtrar_finalizados(self):
+        return self.repo.listar_finalizados()
+
     def guardar_imagenes(self, imagenes: list[UploadFile], servicio_id: int) -> None:
         from utils.uploads import guardar_imagen  # Import aquí para evitar ciclos
 

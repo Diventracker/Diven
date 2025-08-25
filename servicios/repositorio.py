@@ -26,6 +26,14 @@ class ServicioRepositorio:
             .all()
         )
     
+    def listar_finalizados(self):
+        return (
+            self.db.query(ServicioTecnico)
+            .filter(ServicioTecnico.estado_servicio == "Finalizado")
+            .all()
+        )
+
+    
     def obtener_detalles(self, id_servicio: int):
         return (
             self.db.query(DetalleServicio)

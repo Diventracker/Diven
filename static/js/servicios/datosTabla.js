@@ -1,7 +1,7 @@
 $(document).ready(function () {
-  const rol = document.body.dataset.rol;
+const rol = document.body.dataset.rol;
 
- const columnasServicios = [
+const columnasServicios = [
     { data: 'id_servicio' },
     { data: 'tipo_equipo' },
     { data: 'modelo_equipo' },
@@ -107,5 +107,6 @@ $(document).ready(function () {
     }
     });
 
-  window.tablaServicios = inicializarDataTable('tablaServicios', '/servicios/data', columnasServicios);
+    window.tablaServicios = inicializarDataTable('tablaServicios', '/servicios/data', columnasServicios);
 });
+

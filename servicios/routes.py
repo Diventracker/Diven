@@ -19,6 +19,12 @@ def obtener_servicios_data(db: Session = Depends(get_db)):
     controlador = ServicioControlador(db)
     return controlador.obtener_datos()
 
+#ruta que envia los datos de los servicios finalizados json
+@router.get("/servicios/finalizado/{estado_servicio}", tags=["servicio_tecnico"])
+def listar_estado_finalizado(db: Session = Depends(get_db)):
+    controlador = ServicioControlador(db)
+    return controlador.obtener_finalizados()
+
 #Ruta para crear un nuevo servicio tecnico
 @router.post("/servicio/crear", tags=["servicio_tecnico"])
 async def crear_servicio(

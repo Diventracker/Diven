@@ -5,6 +5,9 @@ from ventas.repositorio import VentaRepositorio
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
+from fastapi import UploadFile
+from servicios.model import DetalleServicio, ImagenServicio, ServicioTecnico
+from servicios.schema import ServicioRevisionSchema, ServicioUpdate
 
 class VentaCRUD:
     def __init__(self, db: Session):
