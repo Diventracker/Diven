@@ -9,95 +9,95 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
   <link rel="stylesheet" href="/static/css/modulos.css">
 </head>
+
 <body>
-<main class="container mt-3">
+  <main class="container mt-3">
 
     <!-- Información General -->
     <section class="mb-3 p-3 border rounded bg-panel">
       <!-- Alertas -->
       <div id="alerta-warning"
-          class="alert alert-warning text-center small fade position-fixed start-50 translate-middle-x shadow-lg"
-          role="alert"
-          style="max-width: 400px; z-index: 1050; display: none;">
+        class="alert alert-warning text-center small fade position-fixed start-50 translate-middle-x shadow-lg"
+        role="alert" style="max-width: 400px; z-index: 1050; display: none;">
         <i class="bi bi-exclamation-triangle-fill me-2"></i> <span>¡Mensaje por defecto!</span>
       </div>
       <div id="alerta-exito"
-          class="alert alert-success text-center small fade position-fixed start-50 translate-middle-x shadow-lg"
-          role="alert"
-          style="max-width: 400px; z-index: 1050; display: none;">
+        class="alert alert-success text-center small fade position-fixed start-50 translate-middle-x shadow-lg"
+        role="alert" style="max-width: 400px; z-index: 1050; display: none;">
         <i class="bi bi-check-circle-fill me-2"></i> <span>¡Mensaje por defecto!</span>
       </div>
 
       <!-- Titulo -->
       <h2 class="text-center mb-3">Información General</h2>
       <div class="row">
-  <!-- DATOS DEL CLIENTE -->
-  <div class="col-md-8">
-    <div class="card h-100 shadow-sm">
-      <div class="card-header">
-        <h6 class="mb-0"><i class="bi bi-person-circle me-2"></i>Datos del Cliente</h6>
-      </div>
-      <div class="card-body">
-        <div class="row mb-3">
-          <div class="col-md-8">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Buscar cliente por N° documento" id="cc-input">
-              <button class="btn btn-outline-enviar" type="button" onclick="buscarCliente()"><i class="bi bi-search"></i></button>
+        <!-- DATOS DEL CLIENTE -->
+        <div class="col-md-8">
+          <div class="card h-100 shadow-sm">
+            <div class="card-header">
+              <h6 class="mb-0"><i class="bi bi-person-circle me-2"></i>Datos del Cliente</h6>
+            </div>
+            <div class="card-body">
+              <div class="row mb-3">
+                <div class="col-md-8">
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Buscar cliente por N° documento" id="cc-input">
+                    <button class="btn btn-outline-enviar" type="button" onclick="buscarCliente()"><i
+                        class="bi bi-search"></i></button>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <button class="btn btn-enviar w-100" data-bs-toggle="modal" data-bs-target="#modalRegistro">
+                    <i class="bi bi-plus-lg me-1"></i>Nuevo
+                  </button>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label">Nombre</label>
+                  <input type="hidden" id="id-cliente" value="55">
+                  <input id="nombre-cliente" type="text" class="form-control" value="Cliente Mostrador" readonly>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Tipo de Documento</label>
+                  <input id="tipo-documento-cliente" type="text" class="form-control" value="Cédula" readonly>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label">N° Documento</label>
+                  <input id="numero-documento-cliente" type="text" class="form-control" value="00000000" readonly>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Dirección</label>
+                  <input id="direccion-cliente" type="text" class="form-control" value="Dirección General" readonly>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="col-md-4">
-            <button class="btn btn-enviar w-100" data-bs-toggle="modal" data-bs-target="#modalRegistro">
-              <i class="bi bi-plus-lg me-1"></i>Nuevo
-            </button>
-          </div>
         </div>
 
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label class="form-label">Nombre</label>
-            <input type="hidden" id="id-cliente" value="55">
-            <input id="nombre-cliente" type="text" class="form-control" value="Cliente Mostrador" readonly>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Tipo de Documento</label>
-            <input id="tipo-documento-cliente" type="text" class="form-control" value="Cédula" readonly>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label class="form-label">N° Documento</label>
-            <input id="numero-documento-cliente" type="text" class="form-control" value="00000000" readonly>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Dirección</label>
-            <input id="direccion-cliente" type="text" class="form-control" value="Dirección General" readonly>
+        <!-- DATOS DE LA VENTA -->
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-header">
+              <h6 class="mb-0"><i class="bi bi-receipt-cutoff me-2"></i>Datos de la Venta</h6>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <label class="form-label">Fecha</label>
+                <input type="date" class="form-control" value="{{ fecha_actual }}" readonly>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Vendedor</label>
+                <input type="text" class="form-control" value="{{ nombre_usuario }}" readonly>
+                <input type="hidden" id="id-usuario" value="{{ id_usuario }}">
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- DATOS DE LA VENTA -->
-  <div class="col-md-4">
-    <div class="card h-100 shadow-sm">
-      <div class="card-header">
-        <h6 class="mb-0"><i class="bi bi-receipt-cutoff me-2"></i>Datos de la Venta</h6>
-      </div>
-      <div class="card-body">
-        <div class="mb-3">
-          <label class="form-label">Fecha</label>
-          <input type="date" class="form-control" value="{{ fecha_actual }}" readonly>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Vendedor</label>
-          <input type="text" class="form-control" value="{{ nombre_usuario }}" readonly>
-          <input type="hidden" id="id-usuario" value="{{ id_usuario }}">
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
     </section>
 
@@ -118,7 +118,8 @@
                 <div class="col-md-5">
                   <div class="input-group">
                     <input id="buscador-producto" type="text" class="form-control" placeholder="Buscar por ID o nombre">
-                    <button class="btn btn-outline-enviar" type="button" onclick="buscarProducto()"><i class="bi bi-search"></i></button>
+                    <button class="btn btn-outline-enviar" type="button" onclick="buscarProducto()"><i
+                        class="bi bi-search"></i></button>
                   </div>
                 </div>
                 <div class="col-md-5">
@@ -163,116 +164,138 @@
       </table>
 
       <div class="d-flex justify-content-end gap-2 py-3">
-        <button onclick="location.href='/ventas'" class="btn btn-outline-danger"><i class="bi bi-x-lg me-1"></i>Cancelar</button>
-        <button class="btn btn-enviar" onclick="generarVenta()" ><i class="bi bi-check-lg me-1"></i>Finalizar Venta</button>
+        <button onclick="location.href='/ventas'" class="btn btn-outline-danger"><i
+            class="bi bi-x-lg me-1"></i>Cancelar</button>
+        <button class="btn btn-enviar" onclick="generarVenta()"><i class="bi bi-check-lg me-1"></i>Finalizar
+          Venta</button>
       </div>
 
-</main>
+  </main>
 
-<!-- Modal para visualizar todos los productos (Versión Tabla) -->
-<div class="modal fade" id="productosModal" tabindex="-1">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"><i class="bi bi-list-ul me-2"></i>Catálogo de Productos</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Buscar producto" id="input-busqueda-modal">
-              <button class="btn btn-outline-enviar" onclick="cargarProductosDesdeUI()" type="button"><i class="bi bi-search"></i></button>
+  <!-- Modal para visualizar todos los productos (Versión Tabla) -->
+  <!-- se remplaso la tabla por un grid (rejilla de diseño)  -->
+  <div class="modal fade" id="productosModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="bi bi-grid me-2"></i>Catálogo de Productos</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- buscador y filtros siguen igual -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Buscar producto" id="input-busqueda-modal">
+                <button class="btn btn-outline-enviar" onclick="cargarProductosDesdeUI()" type="button">
+                  <i class="bi bi-search"></i>
+                </button>
+                <button class="btn btn-outline-secondary" id="btn-limpiar-busqueda" type="button" title="Limpiar">
+                  <i class="bi bi-x-circle"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-2">
+              <select class="form-select" id="filtro-stock">
+                <option value="true" selected>Con stock</option>
+                <option value="false">Todos</option>
+              </select>
             </div>
           </div>
-          <div class="col-md-4">
-            <!-- <select class="form-select">
-              <option selected>Todas las categorías</option>
-              <option>Electrónicos</option>
-              <option>Ropa</option>
-              <option>Alimentos</option>
-              <option>Hogar</option>
-            </select> -->
+
+          <!-- AQUÍ VA EL GRID DE PRODUCTOS -->
+          <div id="catalogoProductos" class="row g-3">
+            <!-- Tarjetas generadas con JS -->
           </div>
-          <div class="col-md-2">
-            <select class="form-select" id="filtro-stock" onchange="cargarProductosDesdeUI()">
-              <option value="true" selected>Con stock</option>
-              <option value="false">Todos</option>
-            </select>
-          </div>
+
+     
+        <!-- Paginación (flechas) -->
+        <div class="d-flex align-items-center justify-content-between mt-3">
+          <button class="btn btn-light" id="catalogoPrev" type="button" title="Anterior">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <div class="small text-muted" id="catalogoPageInfo">Página 1/1</div>
+          <button class="btn btn-light" id="catalogoNext" type="button" title="Siguiente">
+            <i class="bi bi-chevron-right"></i>
+          </button>
         </div>
-        
-        <div class="table-responsive">
-          <table id="tabla-productos-modal" class="table table-hover">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nombre del Producto</th>
-                <th>Modelo</th>
-                <th>Stock</th>
-                <th>Precio</th>
-                <th>Acción</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>P001</td>
-                <td>Smartphone Galaxy</td>
-                <td>S23</td>
-                <td><span class="badge bg-stock">15</span></td>
-                <td class="fw-bold">$899.99</td>
-                <td>
-                  <button class="btn btn-enviar btn-sm"><i class="bi bi-plus-lg me-1"></i>Agregar</button>
-                </td>
-              </tr>
-              <tr class="table-light">
-                <td>P112</td>
-                <td>Tablet Samsung</td>
-                <td>Galaxy Tab</td>
-                <td><span class="badge bg-stock">9</span></td>
-                <td class="fw-bold">$349.99</td>
-                <td>
-                  <button class="btn btn-enviar btn-sm"><i class="bi bi-check-lg me-1"></i>Seleccionado</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+
+        <hr class="my-3">
+
+
+        </div>
+        <div class="modal-footer">
+
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
         </div>
       </div>
+    </div>
+  </div>
+
+<!-- Modal Cantidad -->
+<div class="modal fade" id="qtyModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title">Cantidad</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-2">
+          <div class="small text-muted" id="qtyProductoNombre">Producto</div>
+          <div class="small" id="qtyProductoStock">Stock: 0</div>
+        </div>
+        <input id="qtyInput" type="number" min="1" value="1" class="form-control" />
+        <div class="form-text">Máximo permitido: <span id="qtyMax"></span></div>
+      </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-enviar" onclick="agregarSeleccionadosATabla()">Agregar seleccionados</button>
+        <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-enviar btn-sm" id="qtyConfirmBtn">Agregar</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Modal Registro de nuevo cliente -->
-<div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- Modal Registro de nuevo cliente -->
+  <div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalRegistroLabel">Registrar Nuevo Cliente</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalRegistroLabel">Registrar Nuevo Cliente</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Alertas modal -->
+          <div id="alerta-warning-modal"
+            class="alert alert-warning text-center small fade position-fixed start-50 translate-middle-x shadow-lg"
+            role="alert" style="max-width: 400px; z-index: 1050; display: none;">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> <span>¡Mensaje por defecto!</span>
+          </div>
+          <!-- Formulario Modal -->
+          <form id="form-cliente">
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre:</label>
+              <input type="text" class="form-control" id="nombre" name="nombre_cliente" required
+                pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" maxlength="50">
             </div>
-            <div class="modal-body">
-              <!-- Alertas modal -->
-              <div id="alerta-warning-modal"
-                  class="alert alert-warning text-center small fade position-fixed start-50 translate-middle-x shadow-lg"
-                  role="alert"
-                  style="max-width: 400px; z-index: 1050; display: none;">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i> <span>¡Mensaje por defecto!</span>
-              </div>
-              <!-- Formulario Modal -->
-              <form id="form-cliente">
-                <div class="mb-3">
-                  <label for="nombre" class="form-label">Nombre:</label>
-                  <input type="text" class="form-control" id="nombre" name="nombre_cliente" required
-                    pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" maxlength="50">
-                </div>
-                <div class="row mb-3">
-                  <div class="col-md-6">
-                    <label for="tipo_documento" class="form-label">Tipo de Documento:</label>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="tipo_documento" class="form-label">Tipo de Documento:</label>
                 <select id="tipo_documento" name="tipo_documento" class="form-select" required>
                   <option value="">Seleccione tipo</option>
                   <option value="CC">Cédula de Ciudadanía (CC)</option>
@@ -280,48 +303,48 @@
                   <option value="CE">Cédula de Extranjería (CE)</option>
                   <option value="Pasaporte">Pasaporte</option>
                 </select>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="numero_documento" class="form-label">N° Documento:</label>
-                    <input type="text" class="form-control" id="numero_documento" name="numero_documento" required pattern="\d+"
-                      maxlength="15">
-                  </div>
-                </div>
-              
-                <div class="mb-3">
-                  <label for="direccion" class="form-label">Dirección:</label>
-                  <input type="text" class="form-control" name="direccion_cliente" id="direccion" required>
-                </div>
-              
-                <div class="mb-3">
-                  <label for="telefono" class="form-label">Teléfono:</label>
-                  <input type="tel" class="form-control" id="telefono" name="telefono_cliente" required pattern="\d{10}"
-                    maxlength="10">
-                </div>
-              
-                <div class="mb-3">
-                  <label for="correo" class="form-label">Correo:</label>
-                  <input type="email" class="form-control" id="correo" name="email_cliente" required>
-                </div>
-              
-                <input type="hidden" name="lugar" value="ventas">
-                <button type="submit" class="btn btn-enviar w-100">Guardar Cliente</button>
-              </form>
-
+              </div>
+              <div class="col-md-6">
+                <label for="numero_documento" class="form-label">N° Documento:</label>
+                <input type="text" class="form-control" id="numero_documento" name="numero_documento" required
+                  pattern="\d+" maxlength="15">
+              </div>
             </div>
+
+            <div class="mb-3">
+              <label for="direccion" class="form-label">Dirección:</label>
+              <input type="text" class="form-control" name="direccion_cliente" id="direccion" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="telefono" class="form-label">Teléfono:</label>
+              <input type="tel" class="form-control" id="telefono" name="telefono_cliente" required pattern="\d{10}"
+                maxlength="10">
+            </div>
+
+            <div class="mb-3">
+              <label for="correo" class="form-label">Correo:</label>
+              <input type="email" class="form-control" id="correo" name="email_cliente" required>
+            </div>
+
+            <input type="hidden" name="lugar" value="ventas">
+            <button type="submit" class="btn btn-enviar w-100">Guardar Cliente</button>
+          </form>
+
         </div>
+      </div>
     </div>
-</div>
+  </div>
 
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/static/js/funciones/alertas.js"></script>
-<script src="/static/js/ventas/crear/buscarCliente.js"></script>
-<script src="/static/js/ventas/crear/tablaProductos.js"></script>
-<script src="/static/js/ventas/crear/buscarModal.js"></script>
-<script src="/static/js/ventas/crear/enviarVenta.js"></script>
-<script src="/static/js/ventas/crear/crearCliente.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/funciones/alertas.js"></script>
+  <script src="/static/js/ventas/crear/buscarCliente.js"></script>
+  <script src="/static/js/ventas/crear/tablaProductos.js"></script>
+  <script src="/static/js/ventas/crear/buscarModal.js"></script>
+  <script src="/static/js/ventas/crear/enviarVenta.js"></script>
+  <script src="/static/js/ventas/crear/crearCliente.js"></script>
 </body>
 
 </html>
