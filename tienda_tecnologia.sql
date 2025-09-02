@@ -2,6 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 25-08-2025 a las 03:55:14
 -- Servidor: localhost
 -- Tiempo de generación: 24-08-2025 a las 23:33:44
 -- Versión del servidor: 10.4.32-MariaDB
@@ -190,6 +192,10 @@ INSERT INTO `imagen_servicio` (`id_imagen`, `id_servicio`, `ruta_archivo`) VALUE
 (26, 62, '/static/img/servicios/62/130e18dae14f444fb25271eb0694a06b.jpg'),
 (27, 52, '/static/img/servicios/52/7cc9fc760193463b9ad6f63487ce9e10.jpg'),
 (28, 52, '/static/img/servicios/52/1ad96206c9d349ae91dc50a1c9048277.jpg'),
+(29, 62, '/static/img/servicios/62/dd06d85932144360a9b288dd8bda54c1.jpg'),
+(30, 63, '/static/img/servicios/63/067b6535f762447a975edd53f0c20551.jpg'),
+(31, 64, '/static/img/servicios/64/3fbf2e5071d24183981c154b265a57e6.png'),
+(32, 65, '/static/img/servicios/65/670fd495ab714ed4b16535d7cc5dfa53.jpeg');
 (29, 62, '/static/img/servicios/62/dd06d85932144360a9b288dd8bda54c1.jpg');
 
 -- --------------------------------------------------------
@@ -330,6 +336,11 @@ CREATE TABLE `servicio_tecnico` (
 INSERT INTO `servicio_tecnico` (`id_servicio`, `id_cliente`, `id_usuario`, `tipo_equipo`, `modelo_equipo`, `descripcion_problema`, `fecha_recepcion`, `fecha_entrega`, `estado_servicio`, `meses_garantia`, `tipo_servicio`, `precio_servicio`, `descripcion_trabajo`) VALUES
 (52, 3, 1, 'Computador de mesa', 'Iceberg White', 'Fallo en los componentes de refrigeracion 5', '2025-08-09 21:29:33', NULL, 'En Progreso', 0, 'Mantenimiento', 100000, ''),
 (54, 2, 1, 'Computador de mesa', 'Iceberg Black', 'Va lento', '2025-08-11 00:24:25', NULL, 'En Progreso', 0, 'Mantenimiento', 90000, 'cadasdas'),
+(57, 3, 1, 'Computador de mesa', 'weqweqw', 'sadasdas', '2025-08-11 00:51:53', NULL, 'Finalizado', 11, 'Reparación', 200000, 'Campo no vacio'),
+(62, 1, 1, 'Computador portatil', 'Asus Rog Strix', 'Se encuentra sucio el teclado y fallan al presionar las teclas ', '2025-08-11 22:45:19', NULL, 'Finalizado', 7, 'Mantenimiento', 4000000, 'Se realizo una limpieza a profundida del teclado'),
+(63, 3, 1, 'Computador de mesa', 'lenovo', 'no enciende', '2025-08-24 23:25:55', NULL, 'Finalizado', 0, 'Mantenimiento', 60000, 'limpiar\r\n'),
+(64, 1, 1, 'Computador portatil', 'lenovo', 'no da imagen', '2025-08-24 23:27:10', NULL, 'Finalizado', 0, 'Diagnóstico', 20000, 'se le arreglo el boton'),
+(65, 31, 1, 'Computador portatil', 'asus', 'suena muy duro', '2025-08-25 01:21:43', NULL, 'Finalizado', 0, 'Reparación', 80000, 'ya');
 (57, 3, 1, 'Computador de mesa', 'weqweqw', 'sadasdas', '2025-08-11 00:51:53', NULL, 'En Revisión', 11, 'Reparación', 200000, 'Campo no vacio'),
 (62, 1, 1, 'Computador portatil', 'Asus Rog Strix', 'Se encuentra sucio el teclado y fallan al presionar las teclas ', '2025-08-11 22:45:19', NULL, 'En Revisión', 7, 'Mantenimiento', 4000000, 'Se realizo una limpieza a profundida del teclado');
 
@@ -532,6 +543,7 @@ ALTER TABLE `garantia_servicio`
 -- AUTO_INCREMENT de la tabla `imagen_servicio`
 --
 ALTER TABLE `imagen_servicio`
+  MODIFY `id_imagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
   MODIFY `id_imagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
@@ -550,6 +562,7 @@ ALTER TABLE `proveedor`
 -- AUTO_INCREMENT de la tabla `servicio_tecnico`
 --
 ALTER TABLE `servicio_tecnico`
+  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
   MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --

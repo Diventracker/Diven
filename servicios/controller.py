@@ -47,6 +47,32 @@ class ServicioControlador:
         ]
 
         return JSONResponse(content=resultado)
+    
+    #controlador de la ruta del js que llama solo los estados con finalizado
+    def obtener_finalizados(self):
+        servicios = self.crud.filtrar_finalizados()
+        
+        resultado = [
+            {
+                "id_servicio": s.id_servicio,
+                "estado_servicio": s.estado_servicio,
+                "modelo_equipo": s.modelo_equipo,
+                "tipo_equipo": s.tipo_equipo,
+                "tipo_servicio": s.tipo_servicio,
+                "descripcion_problema": s.descripcion_problema,
+                "descripcion_trabajo": s.descripcion_trabajo,
+                "meses_garantia": s.meses_garantia,
+                "precio_servicio": s.precio_servicio,
+                "fecha_recepcion": s.fecha_recepcion.strftime("%Y-%m-%d") if s.fecha_recepcion else None,
+                "fecha_entrega": s.fecha_entrega.strftime("%Y-%m-%d") if s.fecha_entrega else None,
+                "usuario": {
+                    "nombre_usuario": s.usuario.nombre_usuario if s.usuario else None
+                }
+            }
+            for s in servicios
+        ]
+        
+        return JSONResponse(content=resultado)
 
     #Funcion para registrar un nuevo servicio
     async def crear(self, request: Request, datos: ServicioCreate, imagenes: list[UploadFile]):
