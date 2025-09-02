@@ -4,6 +4,8 @@
 --
 -- Servidor: 127.0.0.1
 -- Tiempo de generación: 25-08-2025 a las 03:55:14
+-- Servidor: localhost
+-- Tiempo de generación: 24-08-2025 a las 23:33:44
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -194,6 +196,7 @@ INSERT INTO `imagen_servicio` (`id_imagen`, `id_servicio`, `ruta_archivo`) VALUE
 (30, 63, '/static/img/servicios/63/067b6535f762447a975edd53f0c20551.jpg'),
 (31, 64, '/static/img/servicios/64/3fbf2e5071d24183981c154b265a57e6.png'),
 (32, 65, '/static/img/servicios/65/670fd495ab714ed4b16535d7cc5dfa53.jpeg');
+(29, 62, '/static/img/servicios/62/dd06d85932144360a9b288dd8bda54c1.jpg');
 
 -- --------------------------------------------------------
 
@@ -218,6 +221,7 @@ CREATE TABLE `producto` (
 --
 -- Volcado de datos para la tabla `producto`
 --
+
 
 INSERT INTO `producto` (`id_producto`, `nombre_producto`, `modelo`, `descripcion`, `precio`, `stock`, `id_proveedor`, `meses_garantia`, `fecha_compra`, `precio_venta`, `imagen`) VALUES
 (1, 'Teclado USB', 'KB-100', 'Teclado básico alámbrico USB', 30000, 25, 1, 12, '2025-01-10 05:00:00', 45000, ''),
@@ -255,6 +259,7 @@ INSERT INTO `producto` (`id_producto`, `nombre_producto`, `modelo`, `descripcion
 (37, 'impresora nueva', 'hp ink 755', 'imprime', 1500000, 5, 28, 5, '2025-08-11 20:58:56', 1500000, '/static/img/productos/1754954797.327559_images.jpg'),
 (38, 'impresora nueva xd', 'hp ink 7550', 'imprime', 750000, 3, 12, 10, '2025-08-11 21:01:48', 750000, '/static/img/productos/1754954808.611883_foto-ecotank-L8180-5-690x480.jpg'),
 (39, 'kinston', 'patriot', 'ubs 32 gb', 12000, 12, 10, 2, '2025-08-12 00:43:44', 25000, '/static/img/productos/1754959424.27827_memoria_usb.jpg');
+
 
 -- --------------------------------------------------------
 
@@ -336,6 +341,8 @@ INSERT INTO `servicio_tecnico` (`id_servicio`, `id_cliente`, `id_usuario`, `tipo
 (63, 3, 1, 'Computador de mesa', 'lenovo', 'no enciende', '2025-08-24 23:25:55', NULL, 'Finalizado', 0, 'Mantenimiento', 60000, 'limpiar\r\n'),
 (64, 1, 1, 'Computador portatil', 'lenovo', 'no da imagen', '2025-08-24 23:27:10', NULL, 'Finalizado', 0, 'Diagnóstico', 20000, 'se le arreglo el boton'),
 (65, 31, 1, 'Computador portatil', 'asus', 'suena muy duro', '2025-08-25 01:21:43', NULL, 'Finalizado', 0, 'Reparación', 80000, 'ya');
+(57, 3, 1, 'Computador de mesa', 'weqweqw', 'sadasdas', '2025-08-11 00:51:53', NULL, 'En Revisión', 11, 'Reparación', 200000, 'Campo no vacio'),
+(62, 1, 1, 'Computador portatil', 'Asus Rog Strix', 'Se encuentra sucio el teclado y fallan al presionar las teclas ', '2025-08-11 22:45:19', NULL, 'En Revisión', 7, 'Mantenimiento', 4000000, 'Se realizo una limpieza a profundida del teclado');
 
 -- --------------------------------------------------------
 
@@ -537,6 +544,7 @@ ALTER TABLE `garantia_servicio`
 --
 ALTER TABLE `imagen_servicio`
   MODIFY `id_imagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id_imagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
@@ -555,6 +563,7 @@ ALTER TABLE `proveedor`
 --
 ALTER TABLE `servicio_tecnico`
   MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`

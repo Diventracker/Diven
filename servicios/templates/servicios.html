@@ -125,12 +125,13 @@
                                     <i class="bi bi-cloud-upload-fill mb-3 fs-1"></i>
                                     <p class="mb-2">
                                         Arrastra las imágenes aquí o 
-                                        <span class="text-verde fw-bold" style="cursor: pointer;" onclick="document.getElementById('fileInput').click()">
+                                        <span class="text-verde fw-bold" style="cursor: pointer;" onclick="event.stopPropagation(); document.getElementById('fileInput').click()">
                                             selecciona archivos
                                         </span>
                                     </p>
                                     <small class="text-muted">PNG, JPG, GIF hasta 10MB</small>
-                                    <input type="file" id="fileInput" multiple accept="image/*" style="display: none;" required>
+                                    <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
+                                    <div id="errorImagenes" class="error-msg" style="color: red; display: none;">Debes seleccionar al menos una imagen.</div>
                                 </div>
 
                                 <!-- Vista previa de imágenes -->
@@ -220,6 +221,27 @@
                             <div class="mb-3">
                                 <label class="form-label"><i class="bi bi-file-text me-2"></i>Descripción del problema</label>
                                 <textarea class="form-control" id="editDescripcion" name="descripcion" placeholder="Descripción inicial del problema..." style="height: 100px" required maxlength="100"></textarea>                                
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label"><i class="bi bi-images me-2"></i>Adjuntar imágenes</label>
+
+                                <!-- Zona de carga -->
+                                <div class="drag-area" id="dragArea3">
+                                    <i class="bi bi-cloud-upload-fill mb-3 fs-1"></i>
+                                    <p class="mb-2">
+                                        Arrastra las imágenes aquí o 
+                                        <span class="text-verde fw-bold" style="cursor: pointer;" onclick="event.stopPropagation(); document.getElementById('fileInput3').click()">
+                                            selecciona archivos
+                                        </span>
+                                    </p>
+                                    <small class="text-muted">PNG, JPG, GIF hasta 10MB</small>
+                                    <input type="file" id="fileInput3" multiple accept="image/*" style="display: none;">
+                                    <div id="errorImagenes3" class="error-msg" style="color: red; display: none;">Debes seleccionar al menos una imagen.</div>
+                                </div>
+
+                                <!-- Vista previa de imágenes -->
+                                 <label class="form-label mt-3"><i class="bi bi-images me-2"></i>Imágenes Registradas</label>
+                                <div id="imagePreview3" class="row g-3" style="display: none;"></div>
                             </div>
                             <div class="mb-3 d-none" id="detallesTrabajo">
                                 <div class="mb-3">
@@ -368,6 +390,27 @@
                             <div class="mb-3">
                                 <label class="form-label"><i class="bi bi-shield-check me-2"></i>Meses de garantia</label>
                                 <input type="number" class="form-control" name="meses_garantiaCheck" required min="0" value="0">
+                            </div>
+                            <!-- Adjuntar imágenes -->
+                            <div class="mb-4">
+                                <label class="form-label"><i class="bi bi-images me-2"></i>Adjuntar imágenes</label>
+
+                                <!-- Zona de carga -->
+                                <div class="drag-area" id="dragArea2">
+                                    <i class="bi bi-cloud-upload-fill mb-3 fs-1"></i>
+                                    <p class="mb-2">
+                                        Arrastra las imágenes aquí o 
+                                        <span class="text-verde fw-bold" style="cursor: pointer;" onclick="event.stopPropagation(); document.getElementById('fileInput2').click()">
+                                            selecciona archivos
+                                        </span>
+                                    </p>
+                                    <small class="text-muted">PNG, JPG, GIF hasta 10MB</small>
+                                    <input type="file" id="fileInput2" multiple accept="image/*" style="display: none;">
+                                    <div id="errorImagenes2" class="error-msg" style="color: red; display: none;">Debes seleccionar al menos una imagen.</div>
+                                </div>
+
+                                <!-- Vista previa de imágenes -->
+                                <div id="imagePreview2" class="row g-3 mt-3" style="display: none;"></div>
                             </div>
                             <div class="mb-3">
                                 <div class="card bg-light">
@@ -540,6 +583,7 @@
     <script src="/static/js/funciones/dataTables.js"></script>
     <script src="/static/js/funciones/formatoMoneda.js"></script>
     <script src="/static/js/funciones/vincularPrecios.js"></script>
+    <script src="/static/js/servicios/modales/añadirImagenes.js"></script>
 
     <script src="/static/js/funciones/setupDatos.js"></script>
     <script src="/static/js/funciones/crudFetch.js"></script>
@@ -547,11 +591,16 @@
     <script src="/static/js/servicios/datosTabla.js"></script>
     <!-- Modales -->
     <script src="/static/js/servicios/modales/registrar.js"></script>
-    <script src="/static/js/servicios//modales/actualizar.js"></script>
+    <script type="module" src="/static/js/servicios/modales/editar/modalEditar.js"></script>
+    <script type="module" src="/static/js/servicios/modales/editar/cargarDetalles.js"></script>
+    <script type="module" src="/static/js/servicios/modales/editar/cargarImagenes.js"></script>
+    <script type="module" src="/static/js/servicios/modales/editar/eliminarImagen.js"></script>
+    <script src="/static/js/servicios/modales/editar/cargarTotales.js"></script>
     <script src="/static/js/servicios/modales/revision.js"></script>
     <script src="/static/js/servicios/modales/aprobar.js"></script>
 
     <script src="/static/js/servicios/modales/añadirCostos.js"></script>
     <script src="/static/js/servicios/fetch/checkServicio.js"></script>
+    <script src="/static/js/servicios/fetch/editarServicio.js"></script>
     <script src="/static/js/servicios/modulo_servicios.js"></script>
 {% endblock %}

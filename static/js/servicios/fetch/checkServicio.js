@@ -16,12 +16,10 @@ document.getElementById('checkServicioForm').addEventListener('submit', async fu
 
         detalles = costoItems.map(item => {
             const anElement = item.querySelector('.costo-valor');
-            // obtener número con AutoNumeric (más seguro que parseInt del value)
             let valor = 0;
             try {
                 valor = Number(AutoNumeric.getNumber(anElement)) || 0;
             } catch (err) {
-                // fallback: intentar parsear limpiando el string
                 const raw = (anElement.value || '').replace(/[^\d-]/g, '');
                 valor = parseInt(raw) || 0;
             }
@@ -37,18 +35,14 @@ document.getElementById('checkServicioForm').addEventListener('submit', async fu
         if (!validacionOk) {
             mostrarAlerta("alerta-warning", "Debe completar todos los costos (valor y motivo) antes de continuar.");
 
-            // Reaplicar formato CORRECTAMENTE: usar el número interno de AutoNumeric
             document.querySelectorAll('.costo-valor').forEach(el => {
                 try {
                     const inst = (typeof AutoNumeric !== 'undefined') ? AutoNumeric.getAutoNumericElement(el) : null;
                     if (inst && typeof inst.getNumber === 'function') {
-                        const n = inst.getNumber();           // devuelve número o string numérico
-                        const num = Number(n);                // aseguramos tipo number
-                        // re-aplicar con set usando valor numérico (no el value formateado)
-                        // usar setTimeout 0 para evitar conflictos de render/transition
+                        const n = inst.getNumber();
+                        const num = Number(n);
                         setTimeout(() => inst.set(num), 0);
                     } else {
-                        // fallback: si no hay AutoNumeric, opcionalmente normalizar el texto
                         const cleaned = (el.value || '').replace(/[^\d]/g, '');
                         if (cleaned) {
                             el.value = new Intl.NumberFormat('es-CO').format(Number(cleaned));
@@ -59,7 +53,6 @@ document.getElementById('checkServicioForm').addEventListener('submit', async fu
                 }
             });
 
-            // marcar visualmente el primer campo inválido (opcional, mejora UX)
             const primerInvalido = document.querySelector('.costo-item').querySelector('.costo-motivo');
             if (primerInvalido) primerInvalido.focus();
 
@@ -67,7 +60,13 @@ document.getElementById('checkServicioForm').addEventListener('submit', async fu
         }
     }
 
-    // ... siguiente bloque: crear FormData y enviar via fetch (igual que antes)
+    // 📌 Validar si hay imágenes
+    if (!uploader2 || typeof uploader2.getImages !== "function" || uploader2.getImages().length === 0) {
+        mostrarAlerta("alerta-warning", "Debe incluir al menos una imagen.");
+        return; // Evita el envío
+    }
+
+    // Crear FormData
     const formData = new FormData();
     formData.append("id_servicio", id_servicio);
     formData.append("meses_garantia", meses_garantia);
@@ -75,6 +74,11 @@ document.getElementById('checkServicioForm').addEventListener('submit', async fu
     if (incluirCostos && detalles.length > 0) {
         formData.append("detalles", JSON.stringify(detalles));
     }
+
+    // Adjuntar imágenes desde uploader2
+    uploader2.getImages().forEach(file => {
+        formData.append("imagenes", file); // mismo nombre esperado en backend
+    });
 
     try {
         const response = await fetch('/servicio/revision', {
@@ -87,13 +91,20 @@ document.getElementById('checkServicioForm').addEventListener('submit', async fu
         if (result.success) {
             if (modal) modal.hide();
             form.reset();
+
+            if (typeof uploader2.clearImages === "function") {
+                uploader2.clearImages();
+            }
+
             resetCostosAdicionales({
                 toggleId: 'toggleCostos',
                 grupoCostosId: 'grupoCostos',
                 contenedorCostosId: 'costosAdicionales',
                 botonAgregarId: 'agregarCosto'
             });
+
             mostrarAlerta("alerta-success", result.mensaje || "Servicio actualizado correctamente");
+
             if (window.tablaServicios) tablaServicios.ajax.reload(null, false);
         } else {
             console.error(result);

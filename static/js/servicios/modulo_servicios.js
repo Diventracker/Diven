@@ -9,7 +9,8 @@ handleFormSubmit({
     formId: 'registrarServicio',
     url: '/servicio/crear',
     modalId: 'modalRegistro',
-    tablaVariable: 'tablaServicios'
+    tablaVariable: 'tablaServicios',
+    uploaders: [uploader1, uploader2]
 });
 
 //Funcion para cuando se le da click al btn editar, y rellene los campos del form

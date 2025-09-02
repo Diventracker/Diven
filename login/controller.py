@@ -35,8 +35,12 @@ class LoginControlador:
         except ValueError:
             return JSONResponse(status_code=401, content={"success": False, "error": "Correo o contraseña incorrectos"})
 
-        except Exception:
-            return JSONResponse(status_code=500, content={"success": False, "error": "Error interno al procesar el login"})
+        # 👇 PARCHE: imprime el error real y lo relanza para que salga en consola
+        except Exception as e:
+            import traceback
+            print("=== LOGIN EXCEPTION ===")
+            traceback.print_exc()
+            raise
         
 
     def solicitar_recuperacion(self, correo: str) -> JSONResponse:

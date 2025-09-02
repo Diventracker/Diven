@@ -108,7 +108,10 @@ class ProductoControlador:
                     "modelo": prod.modelo,
                     "precio": prod.precio_venta,
                     "stock": prod.stock,
-                    "proveedor": prod.proveedor.nombre_proveedor
+                    "proveedor": prod.proveedor.nombre_proveedor,
+                     "imagen_url": prod.imagen if prod.imagen else "/static/img/productos/sin-imagen.png"  # Se agregó esta línea para visualizar imagen en catálogo. 
+                    
+                    
                 }
                 for prod in productos
             ])

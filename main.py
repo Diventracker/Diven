@@ -13,9 +13,15 @@ from ventas import routes as ventas_router
 from garantias import routes as garantias_router
 from dashboard import routes as dashboard_router
 from informes import routes as informes_router
-
+from fastapi import Request
+from fastapi.responses import JSONResponse
+import traceback
 app = FastAPI()
-
+@app.exception_handler(Exception)
+async def _debug_ex_handler(request: Request, exc: Exception):
+    print("=== EXCEPTION on", request.method, request.url.path, "===")
+    traceback.print_exc()
+    return JSONResponse({"detail": "internal error"}, status_code=500)
 
 app.middleware("http")(middleware_general)
 
