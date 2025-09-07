@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from homepage import routes as homepage_router
 from login import routes as login_router
-from access import routes as access_router
+from layout import routes as access_router
 from middleware import middleware_general
 from usuarios import routes as usuarios_router
 from clientes import routes as clientes_router

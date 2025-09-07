@@ -60,6 +60,14 @@ body {
     display: flex;
     flex: 1;
     overflow: hidden;
+    margin-left: 80px;
+}
+
+/* Para el margen en moviles */
+@media (max-width: 768px) {
+  .content-wrapper {
+    margin-left: 0;
+  }
 }
 
 
@@ -162,6 +170,10 @@ iframe {
 }
 
 #sidebar-wrapper:hover .menu-text {
+    opacity: 1;
+}
+
+#sidebar-wrapper.show .menu-text {
     opacity: 1;
 }
 

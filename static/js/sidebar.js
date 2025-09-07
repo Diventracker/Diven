@@ -11,6 +11,21 @@ window.addEventListener('resize', function() {
 }
 });
 
+//Para cuando hacen click fuera del sidebar se cierre
+document.addEventListener("click", function(event) {
+    if (window.innerWidth <= 768) {  // Solo aplica en móviles
+        const sidebar = document.getElementById("sidebar-wrapper");
+        const toggleBtn = document.getElementById("menu-toggle");
+
+        if (sidebar.classList.contains("show") &&
+            !sidebar.contains(event.target) &&
+            !toggleBtn.contains(event.target)) {
+            sidebar.classList.remove("show");
+        }
+    }
+});
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const links = document.querySelectorAll(".list-group-item");
     const iframe = document.getElementById("modulosIframe");

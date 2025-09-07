@@ -3,7 +3,7 @@ from fastapi.templating import Jinja2Templates
 
 router = APIRouter()
 
-templates = Jinja2Templates(directory="access/templates")  # Ruta donde están las vistas
+templates = Jinja2Templates(directory="layout/templates")  # Ruta donde están las vistas
 
 #Ruta para el layout
 @router.get("/diventracker", tags=["admin"])
