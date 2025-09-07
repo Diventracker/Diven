@@ -31,6 +31,12 @@ function inicializarDataTable(tablaId, urlDatos, columnas) {
     }
   });
 
+  // Botón buscar
+  $('#btn-buscar').on('click', function () {
+    const valor = $('#buscador').val();
+    tabla.search(valor).draw();
+  });
+
   // Limpiar filtros
   $('#btn-limpiar-filtros').on('click', function () {
     $('#buscador').val('');
