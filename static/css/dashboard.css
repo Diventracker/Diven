@@ -192,8 +192,8 @@ body {
 }
 #page-content-wrapper{
     margin-top: 5px;
-    margin-left: 80px;
 }
+
 /* Notficaciones de los servicios pendientes */
 .notification-badge {
     position: relative;
