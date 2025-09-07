@@ -1,12 +1,14 @@
-from sqlalchemy import create_engine #Funcion que usa alchemy para conectarse a la bd
-from sqlalchemy.orm import sessionmaker, declarative_base #mas funciones que es mejor preguntar xd
+import os
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
 
-# Valores para conectar la base de datos con MYSQL(xampp)
-DATABASE_URL = "mysql+pymysql://root:@localhost/tienda_tecnologia"
+# Lee la variable de entorno que configuraste en Railway
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-engine = create_engine(DATABASE_URL) #Crea la conexion
+# Crea la conexión
+engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 
 # Función para obtener una sesión de BD
 def get_db():
@@ -16,5 +18,4 @@ def get_db():
     finally:
         db.close()
 
-
-Base = declarative_base() #base para los modelos
+Base = declarative_base()

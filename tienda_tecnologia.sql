@@ -2,10 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 25-08-2025 a las 03:55:14
 -- Servidor: localhost
--- Tiempo de generación: 24-08-2025 a las 23:33:44
+-- Tiempo de generación: 06-07-2025 a las 19:55:40
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -74,9 +72,7 @@ INSERT INTO `cliente` (`id_cliente`, `nombre_cliente`, `numero_documento`, `dire
 (30, 'Daniela Suárez', '1212345670', 'Avenida 5 #30-70', '3111234567', 'danielas@example.com', 'Pasaporte', '2025-09-10'),
 (31, 'Joaquin Cañon', '1012443507', 'tv 77 i # 65 j 16 sur ', '3053970242', 'Danielcf97@hotmail.com', 'CC', '2025-06-12'),
 (32, 'Tamaluipas xd', '2312312312', 'Avenida siempre viva 100', '3124816449', 'monserratff@gmail.com', 'CC', '2025-06-30'),
-(43, 'Franky Style', '232321323123123', 'dasdasd1231231', '3123123131', 'FrankyS@gmail.com', 'CC', '2025-07-05'),
-(45, 'Gustavo Paredes', '33218005', 'cra 76 hy 76 ju9', '3131231231', 'gustavop@gmail.com', 'CC', '2025-07-13'),
-(46, 'Carlos Marciano', '2131231232', 'Cra 879', '3222739273', 'carlosfsdfsd@gmail.com', 'CC', '2025-08-10');
+(43, 'Franky Style', '232321323123123', 'dasdasd1231231', '3123123131', 'asdasdasd@gmail.com', 'CC', '2025-07-05');
 
 -- --------------------------------------------------------
 
@@ -97,13 +93,10 @@ CREATE TABLE `detalle_servicio` (
 --
 
 INSERT INTO `detalle_servicio` (`id_detalle`, `id_servicio`, `id_usuario`, `valor_adicional`, `motivo`) VALUES
-(45, 52, 1, 150000, 'camion'),
-(46, 52, 1, 60000, 'precio vacio'),
-(47, 52, 1, 70000, 'Precio nuevo'),
-(81, 62, 1, 60000, 'Limpiador'),
-(82, 62, 1, 300000, 'Teclado'),
-(83, 57, 1, 20000, 'Compra'),
-(84, 57, 1, 10000, 'Okey');
+(10, 4, 1, 10000, 'keycaps nuevas'),
+(11, 4, 1, 20000, 'Cepillo'),
+(12, 4, 1, 30000, 'Pasta Termica'),
+(39, 33, 1, 165656, 'dfgdf');
 
 -- --------------------------------------------------------
 
@@ -171,36 +164,6 @@ CREATE TABLE `garantia_servicio` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `imagen_servicio`
---
-
-CREATE TABLE `imagen_servicio` (
-  `id_imagen` int(11) NOT NULL,
-  `id_servicio` int(11) NOT NULL,
-  `ruta_archivo` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `imagen_servicio`
---
-
-INSERT INTO `imagen_servicio` (`id_imagen`, `id_servicio`, `ruta_archivo`) VALUES
-(11, 52, '/static/img/servicios/52/1b4fd2f368ca463faafe736808d6fa19.jpg'),
-(13, 54, '/static/img/servicios/54/c14c2099c08d491ab12f618fa1c8fd1f.jpg'),
-(14, 54, '/static/img/servicios/54/91bd477226944024887f95f1f52a2e6f.jpg'),
-(17, 57, '/static/img/servicios/57/7e4aa58f5094497188ef3849a35c0c67.jpg'),
-(26, 62, '/static/img/servicios/62/130e18dae14f444fb25271eb0694a06b.jpg'),
-(27, 52, '/static/img/servicios/52/7cc9fc760193463b9ad6f63487ce9e10.jpg'),
-(28, 52, '/static/img/servicios/52/1ad96206c9d349ae91dc50a1c9048277.jpg'),
-(29, 62, '/static/img/servicios/62/dd06d85932144360a9b288dd8bda54c1.jpg'),
-(30, 63, '/static/img/servicios/63/067b6535f762447a975edd53f0c20551.jpg'),
-(31, 64, '/static/img/servicios/64/3fbf2e5071d24183981c154b265a57e6.png'),
-(32, 65, '/static/img/servicios/65/670fd495ab714ed4b16535d7cc5dfa53.jpeg');
-(29, 62, '/static/img/servicios/62/dd06d85932144360a9b288dd8bda54c1.jpg');
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `producto`
 --
 
@@ -214,52 +177,46 @@ CREATE TABLE `producto` (
   `id_proveedor` int(11) NOT NULL,
   `meses_garantia` int(11) DEFAULT NULL,
   `fecha_compra` timestamp NOT NULL DEFAULT current_timestamp(),
-  `precio_venta` int(10) NOT NULL,
-  `imagen` varchar(500) NOT NULL
+  `precio_venta` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `producto`
 --
 
-
-INSERT INTO `producto` (`id_producto`, `nombre_producto`, `modelo`, `descripcion`, `precio`, `stock`, `id_proveedor`, `meses_garantia`, `fecha_compra`, `precio_venta`, `imagen`) VALUES
-(1, 'Teclado USB', 'KB-100', 'Teclado básico alámbrico USB', 30000, 25, 1, 12, '2025-01-10 05:00:00', 45000, ''),
-(2, 'Cable HDMI 2m', 'HDMI-2M', 'Cable HDMI de 2 metros', 15000, 2, 2, 6, '2025-01-17 05:00:00', 25000, ''),
-(3, 'Adaptador HDMI a VGA', 'AD-HDVGA', 'Convertidor HDMI a VGA con audio', 18000, 30, 13, 6, '2025-02-03 05:00:00', 28000, ''),
-(4, 'Memoria USB 32GB', 'USB-32', 'Memoria flash 32GB USB 3.0', 28000, 3, 10, 24, '2025-02-11 05:00:00', 40000, ''),
-(5, 'Disco duro externo 1TB', 'HDD-1TB', 'Disco portátil 1TB USB 3.1', 160000, 3, 20, 12, '2025-02-26 05:00:00', 200000, ''),
-(6, 'Teclado mecánico RGB', 'KBG-500', 'Teclado gamer mecánico con retroiluminación', 120000, 4, 14, 12, '2025-03-02 05:00:00', 165000, ''),
-(7, 'Cable VGA 1.5m', 'VGA-1.5', 'Cable VGA estándar de 1.5 metros', 10000, 45, 17, 6, '2025-03-09 05:00:00', 17000, ''),
-(8, 'Memoria USB 64GB', 'USB-64', 'Memoria flash USB 64GB 3.0', 40000, 34, 30, 24, '2025-03-20 05:00:00', 58000, ''),
-(9, 'Disco SSD 256GB', 'SSD-256', 'Unidad sólida 256GB SATA3', 95000, 20, 15, 24, '2025-03-30 05:00:00', 130000, ''),
-(10, 'Teclado inalámbrico', 'KB-WL', 'Teclado sin cables con receptor USB', 70000, 3, 25, 12, '2025-04-05 05:00:00', 95000, ''),
-(11, 'Cable HDMI 5m', 'HDMI-5M', 'Cable HDMI largo de 5 metros', 22000, 7, 26, 6, '2025-04-12 05:00:00', 32000, ''),
-(12, 'Adaptador VGA a HDMI', 'AD-VGAHD', 'Conversor VGA a HDMI con audio incluido', 25000, 30, 18, 6, '2025-04-23 05:00:00', 36000, ''),
-(13, 'Memoria RAM 8GB DDR4', 'RAM-8GB', 'RAM 8GB DDR4 2666MHz', 130000, 3, 23, 36, '2025-05-02 05:00:00', 180000, ''),
-(14, 'Disco duro 500GB', 'HDD-500', 'HDD interno 500GB SATA', 110000, 10, 22, 12, '2025-05-10 05:00:00', 110000, ''),
-(15, 'Teclado ergonómico', 'KB-ERGO', 'Teclado ergonómico para oficina', 95000, 18, 19, 12, '2025-05-18 05:00:00', 130000, ''),
-(16, 'Cable VGA 3m', 'VGA-3M', 'Cable VGA reforzado de 3 metros', 16000, 8, 29, 6, '2025-05-27 05:00:00', 22000, ''),
-(17, 'Memoria USB 128GB', 'USB-128', 'Memoria flash 128GB 3.0', 68000, 18, 24, 24, '2025-06-01 05:00:00', 85000, ''),
-(18, 'SSD 512GB', 'SSD-512', 'Unidad de estado sólido 512GB NVMe', 150000, 10, 12, 24, '2025-06-05 05:00:00', 200000, ''),
-(19, 'Teclado multimedia', 'KB-MULTI', 'Teclado con teclas multimedia dedicadas', 48000, 18, 28, 12, '2025-06-08 05:00:00', 65000, ''),
-(20, 'Adaptador USB a HDMI', 'AD-USBHD', 'Adaptador USB 3.0 a HDMI full HD', 33000, 20, 27, 6, '2025-06-10 05:00:00', 48000, ''),
-(21, 'Memoria RAM 16GB DDR4', 'RAM-16GB', 'RAM 16GB DDR4 3200MHz', 250000, 18, 21, 36, '2025-06-11 05:00:00', 330000, ''),
-(22, 'Cartucho HP 664 Negro', 'HP-664BK', 'Cartucho original HP 664 negro para impresoras DeskJet', 40000, 20, 7, 12, '2025-01-12 05:00:00', 58000, ''),
-(23, 'Cartucho HP 664 Tricolor', 'HP-664C', 'Cartucho original HP 664 tricolor (C/M/Y)', 42000, 18, 7, 12, '2025-01-25 05:00:00', 60000, ''),
-(24, 'Cartucho Canon PG-145 Negro', 'CN-145BK', 'Cartucho Canon PG-145 negro para PIXMA', 38000, 15, 12, 12, '2025-02-08 05:00:00', 55000, ''),
-(25, 'Cartucho Canon CL-146 Tricolor', 'CN-146C', 'Cartucho Canon CL-146 tricolor compatible con PIXMA', 41000, 12, 12, 12, '2025-02-18 05:00:00', 59000, ''),
-(26, 'Cartucho Epson T664 Negro', 'EP-T664BK', 'Botella de tinta Epson T664 negra para L220/L365', 35000, 30, 13, 24, '2025-03-03 05:00:00', 48000, ''),
-(27, 'Cartucho Epson T664 Tricolor', 'EP-T664C', 'Botellas de tinta Epson T664 C/M/Y para L-series', 36000, 28, 13, 24, '2025-03-15 05:00:00', 50000, ''),
-(28, 'Cartucho Brother LC-3011 Negro', 'BR-3011BK', 'Cartucho Brother negro LC3011 para DCP-T510W', 37000, 10, 21, 12, '2025-04-02 05:00:00', 52000, ''),
-(29, 'Cartucho Brother LC-3011 Tricolor', 'BR-3011C', 'Cartucho Brother tricolor LC3011 para multifuncionales', 39000, 10, 21, 12, '2025-04-11 05:00:00', 54000, ''),
-(30, 'Cartucho genérico HP 662 Negro', 'HP-662GEN-BK', 'Cartucho compatible con HP 662 negro', 30000, 25, 24, 6, '2025-05-06 05:00:00', 45000, ''),
-(31, 'Cartucho genérico HP 662 Tricolor', 'HP-662GEN-C', 'Cartucho compatible con HP 662 tricolor', 32000, 25, 24, 6, '2025-05-12 05:00:00', 47000, ''),
-(33, 'Gafass 3d', 'Cambio al crud', 'dasdasdas', 321312321, 23, 13, 3, '2025-07-04 02:40:35', 200000, ''),
-(37, 'impresora nueva', 'hp ink 755', 'imprime', 1500000, 5, 28, 5, '2025-08-11 20:58:56', 1500000, '/static/img/productos/1754954797.327559_images.jpg'),
-(38, 'impresora nueva xd', 'hp ink 7550', 'imprime', 750000, 3, 12, 10, '2025-08-11 21:01:48', 750000, '/static/img/productos/1754954808.611883_foto-ecotank-L8180-5-690x480.jpg'),
-(39, 'kinston', 'patriot', 'ubs 32 gb', 12000, 12, 10, 2, '2025-08-12 00:43:44', 25000, '/static/img/productos/1754959424.27827_memoria_usb.jpg');
-
+INSERT INTO `producto` (`id_producto`, `nombre_producto`, `modelo`, `descripcion`, `precio`, `stock`, `id_proveedor`, `meses_garantia`, `fecha_compra`, `precio_venta`) VALUES
+(1, 'Teclado USB', 'KB-100', 'Teclado básico alámbrico USB', 30000, 25, 1, 12, '2025-01-10 05:00:00', 45000),
+(2, 'Cable HDMI 2m', 'HDMI-2M', 'Cable HDMI de 2 metros', 15000, 2, 2, 6, '2025-01-17 05:00:00', 25000),
+(3, 'Adaptador HDMI a VGA', 'AD-HDVGA', 'Convertidor HDMI a VGA con audio', 18000, 30, 13, 6, '2025-02-03 05:00:00', 28000),
+(4, 'Memoria USB 32GB', 'USB-32', 'Memoria flash 32GB USB 3.0', 28000, 3, 10, 24, '2025-02-11 05:00:00', 40000),
+(5, 'Disco duro externo 1TB', 'HDD-1TB', 'Disco portátil 1TB USB 3.1', 160000, 3, 20, 12, '2025-02-26 05:00:00', 200000),
+(6, 'Teclado mecánico RGB', 'KBG-500', 'Teclado gamer mecánico con retroiluminación', 120000, 4, 14, 12, '2025-03-02 05:00:00', 165000),
+(7, 'Cable VGA 1.5m', 'VGA-1.5', 'Cable VGA estándar de 1.5 metros', 10000, 45, 17, 6, '2025-03-09 05:00:00', 17000),
+(8, 'Memoria USB 64GB', 'USB-64', 'Memoria flash USB 64GB 3.0', 40000, 34, 30, 24, '2025-03-20 05:00:00', 58000),
+(9, 'Disco SSD 256GB', 'SSD-256', 'Unidad sólida 256GB SATA3', 95000, 20, 15, 24, '2025-03-30 05:00:00', 130000),
+(10, 'Teclado inalámbrico', 'KB-WL', 'Teclado sin cables con receptor USB', 70000, 3, 25, 12, '2025-04-05 05:00:00', 95000),
+(11, 'Cable HDMI 5m', 'HDMI-5M', 'Cable HDMI largo de 5 metros', 22000, 7, 26, 6, '2025-04-12 05:00:00', 32000),
+(12, 'Adaptador VGA a HDMI', 'AD-VGAHD', 'Conversor VGA a HDMI con audio incluido', 25000, 30, 18, 6, '2025-04-23 05:00:00', 36000),
+(13, 'Memoria RAM 8GB DDR4', 'RAM-8GB', 'RAM 8GB DDR4 2666MHz', 130000, 3, 23, 36, '2025-05-02 05:00:00', 180000),
+(14, 'Disco duro 500GB', 'HDD-500', 'HDD interno 500GB SATA', 80000, 10, 22, 12, '2025-05-10 05:00:00', 110000),
+(15, 'Teclado ergonómico', 'KB-ERGO', 'Teclado ergonómico para oficina', 95000, 18, 19, 12, '2025-05-18 05:00:00', 130000),
+(16, 'Cable VGA 3m', 'VGA-3M', 'Cable VGA reforzado de 3 metros', 16000, 8, 29, 6, '2025-05-27 05:00:00', 22000),
+(17, 'Memoria USB 128GB', 'USB-128', 'Memoria flash 128GB 3.0', 68000, 18, 24, 24, '2025-06-01 05:00:00', 85000),
+(18, 'SSD 512GB', 'SSD-512', 'Unidad de estado sólido 512GB NVMe', 150000, 10, 12, 24, '2025-06-05 05:00:00', 200000),
+(19, 'Teclado multimedia', 'KB-MULTI', 'Teclado con teclas multimedia dedicadas', 48000, 18, 28, 12, '2025-06-08 05:00:00', 65000),
+(20, 'Adaptador USB a HDMI', 'AD-USBHD', 'Adaptador USB 3.0 a HDMI full HD', 33000, 20, 27, 6, '2025-06-10 05:00:00', 48000),
+(21, 'Memoria RAM 16GB DDR4', 'RAM-16GB', 'RAM 16GB DDR4 3200MHz', 250000, 18, 21, 36, '2025-06-11 05:00:00', 330000),
+(22, 'Cartucho HP 664 Negro', 'HP-664BK', 'Cartucho original HP 664 negro para impresoras DeskJet', 40000, 20, 7, 12, '2025-01-12 05:00:00', 58000),
+(23, 'Cartucho HP 664 Tricolor', 'HP-664C', 'Cartucho original HP 664 tricolor (C/M/Y)', 42000, 18, 7, 12, '2025-01-25 05:00:00', 60000),
+(24, 'Cartucho Canon PG-145 Negro', 'CN-145BK', 'Cartucho Canon PG-145 negro para PIXMA', 38000, 15, 12, 12, '2025-02-08 05:00:00', 55000),
+(25, 'Cartucho Canon CL-146 Tricolor', 'CN-146C', 'Cartucho Canon CL-146 tricolor compatible con PIXMA', 41000, 12, 12, 12, '2025-02-18 05:00:00', 59000),
+(26, 'Cartucho Epson T664 Negro', 'EP-T664BK', 'Botella de tinta Epson T664 negra para L220/L365', 35000, 30, 13, 24, '2025-03-03 05:00:00', 48000),
+(27, 'Cartucho Epson T664 Tricolor', 'EP-T664C', 'Botellas de tinta Epson T664 C/M/Y para L-series', 36000, 28, 13, 24, '2025-03-15 05:00:00', 50000),
+(28, 'Cartucho Brother LC-3011 Negro', 'BR-3011BK', 'Cartucho Brother negro LC3011 para DCP-T510W', 37000, 10, 21, 12, '2025-04-02 05:00:00', 52000),
+(29, 'Cartucho Brother LC-3011 Tricolor', 'BR-3011C', 'Cartucho Brother tricolor LC3011 para multifuncionales', 39000, 10, 21, 12, '2025-04-11 05:00:00', 54000),
+(30, 'Cartucho genérico HP 662 Negro', 'HP-662GEN-BK', 'Cartucho compatible con HP 662 negro', 30000, 25, 24, 6, '2025-05-06 05:00:00', 45000),
+(31, 'Cartucho genérico HP 662 Tricolor', 'HP-662GEN-C', 'Cartucho compatible con HP 662 tricolor', 32000, 25, 24, 6, '2025-05-12 05:00:00', 47000),
+(33, 'Gafass 3d', 'Cambio al crud', 'dasdasdas', 321312321, 23, 13, 3, '2025-07-04 02:40:35', 200000);
 
 -- --------------------------------------------------------
 
@@ -334,15 +291,11 @@ CREATE TABLE `servicio_tecnico` (
 --
 
 INSERT INTO `servicio_tecnico` (`id_servicio`, `id_cliente`, `id_usuario`, `tipo_equipo`, `modelo_equipo`, `descripcion_problema`, `fecha_recepcion`, `fecha_entrega`, `estado_servicio`, `meses_garantia`, `tipo_servicio`, `precio_servicio`, `descripcion_trabajo`) VALUES
-(52, 3, 1, 'Computador de mesa', 'Iceberg White', 'Fallo en los componentes de refrigeracion 5', '2025-08-09 21:29:33', NULL, 'En Progreso', 0, 'Mantenimiento', 100000, ''),
-(54, 2, 1, 'Computador de mesa', 'Iceberg Black', 'Va lento', '2025-08-11 00:24:25', NULL, 'En Progreso', 0, 'Mantenimiento', 90000, 'cadasdas'),
-(57, 3, 1, 'Computador de mesa', 'weqweqw', 'sadasdas', '2025-08-11 00:51:53', NULL, 'Finalizado', 11, 'Reparación', 200000, 'Campo no vacio'),
-(62, 1, 1, 'Computador portatil', 'Asus Rog Strix', 'Se encuentra sucio el teclado y fallan al presionar las teclas ', '2025-08-11 22:45:19', NULL, 'Finalizado', 7, 'Mantenimiento', 4000000, 'Se realizo una limpieza a profundida del teclado'),
-(63, 3, 1, 'Computador de mesa', 'lenovo', 'no enciende', '2025-08-24 23:25:55', NULL, 'Finalizado', 0, 'Mantenimiento', 60000, 'limpiar\r\n'),
-(64, 1, 1, 'Computador portatil', 'lenovo', 'no da imagen', '2025-08-24 23:27:10', NULL, 'Finalizado', 0, 'Diagnóstico', 20000, 'se le arreglo el boton'),
-(65, 31, 1, 'Computador portatil', 'asus', 'suena muy duro', '2025-08-25 01:21:43', NULL, 'Finalizado', 0, 'Reparación', 80000, 'ya');
-(57, 3, 1, 'Computador de mesa', 'weqweqw', 'sadasdas', '2025-08-11 00:51:53', NULL, 'En Revisión', 11, 'Reparación', 200000, 'Campo no vacio'),
-(62, 1, 1, 'Computador portatil', 'Asus Rog Strix', 'Se encuentra sucio el teclado y fallan al presionar las teclas ', '2025-08-11 22:45:19', NULL, 'En Revisión', 7, 'Mantenimiento', 4000000, 'Se realizo una limpieza a profundida del teclado');
+(3, 3, 1, 'Computador de mesa', 'Origami White', 'Ventilador se queda quieto', '2025-06-27 23:41:39', NULL, 'En Progreso', 0, 'Reparación', 90000, NULL),
+(4, 4, 1, 'Computador portatil', 'Reddragon kurama', 'Le fallan las teclas', '2025-06-28 00:32:34', NULL, 'Finalizado', 3, 'Mantenimiento', 150000, 'Lo desarme y limpie cada parte del teclado -- que mas? '),
+(31, 1, 1, 'Impresora laser', 'asdasda', 'dadsadas', '2025-07-03 05:40:45', NULL, 'Rechazado', 11, 'Reparación', 250000, 'dsadasdadsa'),
+(33, 3, 1, 'Computador de mesa', '321312wdasda', 'dsadas123', '2025-07-03 05:51:53', NULL, 'En Revisión', 11, 'Diagnóstico', 50000, 'asdasdas'),
+(34, 3, 1, 'Computador de mesa', 'dasdasdas', 'dasdasdas', '2025-07-04 02:37:23', NULL, 'En Progreso', 0, 'Diagnóstico', 50000, NULL);
 
 -- --------------------------------------------------------
 
@@ -462,13 +415,6 @@ ALTER TABLE `garantia_servicio`
   ADD KEY `id_servicio` (`id_servicio`);
 
 --
--- Indices de la tabla `imagen_servicio`
---
-ALTER TABLE `imagen_servicio`
-  ADD PRIMARY KEY (`id_imagen`),
-  ADD KEY `id_servicio` (`id_servicio`);
-
---
 -- Indices de la tabla `producto`
 --
 ALTER TABLE `producto`
@@ -513,13 +459,13 @@ ALTER TABLE `venta`
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_servicio`
 --
 ALTER TABLE `detalle_servicio`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_venta`
@@ -540,17 +486,10 @@ ALTER TABLE `garantia_servicio`
   MODIFY `id_garantia` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `imagen_servicio`
---
-ALTER TABLE `imagen_servicio`
-  MODIFY `id_imagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
-  MODIFY `id_imagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
-
---
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT de la tabla `proveedor`
@@ -562,8 +501,7 @@ ALTER TABLE `proveedor`
 -- AUTO_INCREMENT de la tabla `servicio_tecnico`
 --
 ALTER TABLE `servicio_tecnico`
-  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
-  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
@@ -606,12 +544,6 @@ ALTER TABLE `garantia_producto`
 --
 ALTER TABLE `garantia_servicio`
   ADD CONSTRAINT `Garantia_Servicio_ibfk_1` FOREIGN KEY (`id_servicio`) REFERENCES `servicio_tecnico` (`id_servicio`);
-
---
--- Filtros para la tabla `imagen_servicio`
---
-ALTER TABLE `imagen_servicio`
-  ADD CONSTRAINT `imagen_servicio_ibfk_1` FOREIGN KEY (`id_servicio`) REFERENCES `servicio_tecnico` (`id_servicio`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `producto`
