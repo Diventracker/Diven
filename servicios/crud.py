@@ -155,6 +155,10 @@ class ServicioCRUD:
     def obtener_conteo_por_equipo(self):
         return self.repo.contar_por_tipo_equipo()
     
+    #Para consultar los datos en los totales del servicio
+    def obtener_datos_para_totales(self, id_servicio: int):
+        return self.repo.obtener_datos_base(id_servicio)
+    
     #Funcion para imagenes de un servicio
     def obtener_imagenes_por_servicio(self, id_servicio: int):
         return self.repo.listar_imagenes_por_servicio(id_servicio)

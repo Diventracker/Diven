@@ -72,3 +72,18 @@ class ServicioRepositorio:
     #Obtener la imagen por id
     def buscar_imagen_por_id(self, id_imagen: int):
         return self.db.query(ImagenServicio).filter(ImagenServicio.id_imagen == id_imagen).first()
+    
+    #Obtener los totales del servicio
+    def obtener_datos_base(self, id_servicio: int):
+        servicio = self.obtener_por_id(id_servicio)
+        if not servicio:
+            return None
+
+        # Usamos obtener_detalles en lugar de repetir el query
+        detalles = self.obtener_detalles(id_servicio)
+        adicionales = sum(d.valor_adicional for d in detalles) if detalles else 0
+
+        return {
+            "precio_base": servicio.precio_servicio,
+            "adicionales": adicionales
+        }

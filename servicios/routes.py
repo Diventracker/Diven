@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, Depends, File, Request, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile
 from fastapi.responses import JSONResponse 
 from sqlalchemy.orm import Session
 from database.database import get_db
@@ -91,6 +91,17 @@ def servicios_en_revision(db: Session = Depends(get_db)):
 def ver_comprobante(id_servicio: int, request: Request, db: Session = Depends(get_db)):
     controlador = ServicioControlador(db)
     return controlador.ver_comprobante(id_servicio, request)
+
+#Para obtener los totales y mostrarlos en el comprobante 
+@router.get("/servicios/{id_servicio}/totales")
+def obtener_totales(id_servicio: int, db: Session = Depends(get_db)):
+    controlador = ServicioControlador(db)
+    totales = controlador.calcular_totales(id_servicio)
+
+    if not totales:
+        raise HTTPException(status_code=404, detail="Servicio no encontrado")
+
+    return {"success": True, "data": totales}
 
 
 #Ruta para obtener los detalles del servicio

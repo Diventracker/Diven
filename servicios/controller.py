@@ -164,6 +164,26 @@ class ServicioControlador:
             })
         except ValueError:
             return HTMLResponse(content="Servicio no encontrado", status_code=404)
+    
+    #Consulta y calcula los datos de
+    def calcular_totales(self, id_servicio: int):
+        datos = self.crud.obtener_datos_para_totales(id_servicio)
+        if not datos:
+            return None
+
+        precio_base = datos["precio_base"] or 0
+        adicionales = datos["adicionales"] or 0
+        subtotal = precio_base + adicionales
+        iva = int(subtotal * 0.19)
+        total = subtotal + iva
+
+        return {
+            "precio_base": precio_base,
+            "adicionales": adicionales,
+            "subtotal": subtotal,
+            "iva": iva,
+            "total": total
+        }
         
     #Detalles para modal editar
     def obtener_detalles(self, id_servicio: int):
