@@ -9,3 +9,4 @@ passlib[bcrypt]
 bcrypt
 reportlab
 python-dateutil
+requests
