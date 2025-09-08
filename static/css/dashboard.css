@@ -192,6 +192,14 @@ body {
 }
 #page-content-wrapper{
     margin-top: 5px;
+    margin-left: 80px;
+}
+
+/* Para el margen en moviles */
+@media (max-width: 768px) {
+  #page-content-wrapper{
+    margin-left: 0;
+  }
 }
 
 /* Notficaciones de los servicios pendientes */
