@@ -1,25 +1,33 @@
-from email.message import EmailMessage
-import smtplib
+import os
+import requests
 from jinja2 import Environment, FileSystemLoader
 
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
+SENDGRID_URL = "https://api.sendgrid.com/v3/mail/send"
+
+# Configurar Jinja2 para cargar plantillas
 env = Environment(loader=FileSystemLoader("utils/email"))
 
-# Puedes usar Jinja2 directamente sin Request si es un correo
 def enviar_correo(destinatario: str, asunto: str, template_name: str, **kwargs):
-    remitente = "rimuru.work@gmail.com"
-    clave_email = "zqvp dthg fgck gvxd" # Nota: No es recomendable almacenar contraseñas de esta manera
-
-    # Renderizar el template con datos
+    # Renderizar plantilla con datos dinámicos
     template = env.get_template(template_name)
     html_content = template.render(**kwargs)
 
-    mensaje = EmailMessage()
-    mensaje["Subject"] = asunto
-    mensaje["From"] = remitente
-    mensaje["To"] = destinatario
-    mensaje.add_alternative(html_content, subtype="html")
+    # Estructura del correo para SendGrid
+    data = {
+        "personalizations": [{"to": [{"email": destinatario}]}],
+        "from": {"email": "diventracker@hotmail.com"},  # El que verificaste en SendGrid
+        "subject": asunto,
+        "content": [{"type": "text/html", "value": html_content}],
+    }
 
-    # Enviar el correo
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-        smtp.login(remitente, clave_email)
-        smtp.send_message(mensaje)
+    headers = {
+        "Authorization": f"Bearer {SENDGRID_API_KEY}",
+        "Content-Type": "application/json",
+    }
+
+    response = requests.post(SENDGRID_URL, headers=headers, json=data)
+    if response.status_code != 202:
+        print("Error al enviar correo:", response.text)
+    else:
+        print("Correo enviado con éxito ✅")
