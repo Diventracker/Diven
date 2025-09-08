@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost
--- Tiempo de generación: 06-07-2025 a las 19:55:40
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Host: 127.0.0.1
+-- Generation Time: Sep 08, 2025 at 02:11 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `tienda_tecnologia`
+-- Database: `tienda_tecnologia`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `cliente`
+-- Table structure for table `cliente`
 --
 
 CREATE TABLE `cliente` (
@@ -39,7 +39,7 @@ CREATE TABLE `cliente` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `cliente`
+-- Dumping data for table `cliente`
 --
 
 INSERT INTO `cliente` (`id_cliente`, `nombre_cliente`, `numero_documento`, `direccion_cliente`, `telefono_cliente`, `email_cliente`, `tipo_documento`, `fecha_registro`) VALUES
@@ -72,12 +72,14 @@ INSERT INTO `cliente` (`id_cliente`, `nombre_cliente`, `numero_documento`, `dire
 (30, 'Daniela Suárez', '1212345670', 'Avenida 5 #30-70', '3111234567', 'danielas@example.com', 'Pasaporte', '2025-09-10'),
 (31, 'Joaquin Cañon', '1012443507', 'tv 77 i # 65 j 16 sur ', '3053970242', 'Danielcf97@hotmail.com', 'CC', '2025-06-12'),
 (32, 'Tamaluipas xd', '2312312312', 'Avenida siempre viva 100', '3124816449', 'monserratff@gmail.com', 'CC', '2025-06-30'),
-(43, 'Franky Style', '232321323123123', 'dasdasd1231231', '3123123131', 'asdasdasd@gmail.com', 'CC', '2025-07-05');
+(43, 'Franky Style', '232321323123123', 'dasdasd1231231', '3123123131', 'FrankyS@gmail.com', 'CC', '2025-07-05'),
+(45, 'Gustavo Paredes', '33218005', 'cra 76 hy 76 ju9', '3131231231', 'gustavop@gmail.com', 'CC', '2025-07-13'),
+(46, 'Sergio', '1007140954', 'Carrera 56 #6716', '3222366693', 'sergiomora@gmail.com', 'CC', '2025-08-11');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalle_servicio`
+-- Table structure for table `detalle_servicio`
 --
 
 CREATE TABLE `detalle_servicio` (
@@ -89,19 +91,18 @@ CREATE TABLE `detalle_servicio` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `detalle_servicio`
+-- Dumping data for table `detalle_servicio`
 --
 
 INSERT INTO `detalle_servicio` (`id_detalle`, `id_servicio`, `id_usuario`, `valor_adicional`, `motivo`) VALUES
-(10, 4, 1, 10000, 'keycaps nuevas'),
-(11, 4, 1, 20000, 'Cepillo'),
-(12, 4, 1, 30000, 'Pasta Termica'),
-(39, 33, 1, 165656, 'dfgdf');
+(45, 52, 1, 150000, 'camion'),
+(46, 52, 1, 60000, 'precio vacio'),
+(47, 52, 1, 70000, 'Precio nuevo');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalle_venta`
+-- Table structure for table `detalle_venta`
 --
 
 CREATE TABLE `detalle_venta` (
@@ -113,7 +114,7 @@ CREATE TABLE `detalle_venta` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `detalle_venta`
+-- Dumping data for table `detalle_venta`
 --
 
 INSERT INTO `detalle_venta` (`id_detalle`, `id_venta`, `id_producto`, `cantidad`, `precio_unitario`) VALUES
@@ -132,39 +133,101 @@ INSERT INTO `detalle_venta` (`id_detalle`, `id_venta`, `id_producto`, `cantidad`
 (13, 11, 11, 18, 32000),
 (14, 12, 10, 12, 95000),
 (15, 13, 13, 9, 180000),
-(16, 14, 16, 12, 22000);
+(16, 14, 16, 12, 22000),
+(17, 15, 1, 1, 45000),
+(18, 15, 2, 1, 25000),
+(19, 15, 3, 1, 28000),
+(20, 16, 1, 1, 45000),
+(21, 16, 2, 1, 25000),
+(22, 16, 3, 1, 28000),
+(23, 17, 4, 1, 40000),
+(24, 17, 5, 1, 200000),
+(25, 17, 6, 1, 165000),
+(26, 18, 15, 1, 130000),
+(27, 19, 1, 2, 45000),
+(28, 19, 3, 1, 28000),
+(29, 20, 37, 4, 20),
+(30, 21, 5, 1, 200000);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `garantia_producto`
+-- Table structure for table `garantia_producto`
 --
 
 CREATE TABLE `garantia_producto` (
   `id_garantia` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
+  `id_venta` int(11) DEFAULT NULL,
+  `id_cliente` int(11) DEFAULT NULL,
+  `id_garantia_origen` int(11) DEFAULT NULL,
   `fecha_inicio` date NOT NULL,
   `fecha_fin` date NOT NULL,
-  `origen_garantia` enum('compra_proveedor','venta_cliente') NOT NULL
+  `origen_garantia` enum('compra_proveedor','venta_cliente') NOT NULL,
+  `estado` enum('activa','vencida','anulada','renovada') NOT NULL DEFAULT 'activa'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `garantia_producto`
+--
+
+INSERT INTO `garantia_producto` (`id_garantia`, `id_producto`, `id_venta`, `id_cliente`, `id_garantia_origen`, `fecha_inicio`, `fecha_fin`, `origen_garantia`, `estado`) VALUES
+(1, 1, NULL, NULL, NULL, '2025-08-11', '2025-09-11', 'venta_cliente', 'renovada'),
+(2, 2, NULL, NULL, NULL, '2025-08-11', '2025-09-11', 'venta_cliente', 'renovada'),
+(3, 3, NULL, NULL, NULL, '2025-08-11', '2025-09-11', 'venta_cliente', 'vencida'),
+(4, 4, 17, 46, NULL, '2025-08-24', '2025-09-24', 'venta_cliente', 'activa'),
+(5, 5, 17, 46, NULL, '2025-08-24', '2025-09-24', 'venta_cliente', 'activa'),
+(6, 6, 17, 46, NULL, '2025-08-24', '2025-09-24', 'venta_cliente', 'activa'),
+(7, 2, NULL, NULL, 2, '2025-08-25', '2025-09-25', '', 'activa'),
+(8, 1, NULL, NULL, 1, '2025-08-25', '2025-09-25', '', 'activa'),
+(9, 15, 18, 46, NULL, '2025-08-24', '2025-09-24', 'venta_cliente', 'renovada'),
+(10, 15, 18, 46, 9, '2025-08-25', '2025-10-25', '', 'anulada'),
+(11, 1, 19, 46, NULL, '2025-09-07', '2025-10-07', 'venta_cliente', 'activa'),
+(12, 1, 19, 46, NULL, '2025-09-07', '2025-10-07', 'venta_cliente', 'activa'),
+(13, 3, 19, 46, NULL, '2025-09-07', '2025-10-07', 'venta_cliente', 'activa'),
+(14, 37, 20, 46, NULL, '2025-09-07', '2025-10-07', 'venta_cliente', 'activa'),
+(15, 37, 20, 46, NULL, '2025-09-07', '2025-10-07', 'venta_cliente', 'activa'),
+(16, 37, 20, 46, NULL, '2025-09-07', '2025-10-07', 'venta_cliente', 'activa'),
+(17, 37, 20, 46, NULL, '2025-09-07', '2025-10-07', 'venta_cliente', 'activa'),
+(18, 5, 21, 46, NULL, '2025-09-07', '2025-10-07', 'venta_cliente', 'activa');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `garantia_servicio`
+-- Table structure for table `garantia_servicio`
 --
 
 CREATE TABLE `garantia_servicio` (
   `id_garantia` int(11) NOT NULL,
   `id_servicio` int(11) NOT NULL,
   `fecha_inicio` date NOT NULL,
-  `fecha_fin` date NOT NULL
+  `fecha_fin` date NOT NULL,
+  `estado` enum('activa','vencida','anulada') NOT NULL DEFAULT 'activa'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `producto`
+-- Table structure for table `imagen_servicio`
+--
+
+CREATE TABLE `imagen_servicio` (
+  `id_imagen` int(11) NOT NULL,
+  `id_servicio` int(11) NOT NULL,
+  `ruta_archivo` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `imagen_servicio`
+--
+
+INSERT INTO `imagen_servicio` (`id_imagen`, `id_servicio`, `ruta_archivo`) VALUES
+(11, 52, '/static/img/servicios/52/1b4fd2f368ca463faafe736808d6fa19.jpg');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `producto`
 --
 
 CREATE TABLE `producto` (
@@ -177,51 +240,53 @@ CREATE TABLE `producto` (
   `id_proveedor` int(11) NOT NULL,
   `meses_garantia` int(11) DEFAULT NULL,
   `fecha_compra` timestamp NOT NULL DEFAULT current_timestamp(),
+  `imagen` varchar(255) DEFAULT NULL,
   `precio_venta` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `producto`
+-- Dumping data for table `producto`
 --
 
-INSERT INTO `producto` (`id_producto`, `nombre_producto`, `modelo`, `descripcion`, `precio`, `stock`, `id_proveedor`, `meses_garantia`, `fecha_compra`, `precio_venta`) VALUES
-(1, 'Teclado USB', 'KB-100', 'Teclado básico alámbrico USB', 30000, 25, 1, 12, '2025-01-10 05:00:00', 45000),
-(2, 'Cable HDMI 2m', 'HDMI-2M', 'Cable HDMI de 2 metros', 15000, 2, 2, 6, '2025-01-17 05:00:00', 25000),
-(3, 'Adaptador HDMI a VGA', 'AD-HDVGA', 'Convertidor HDMI a VGA con audio', 18000, 30, 13, 6, '2025-02-03 05:00:00', 28000),
-(4, 'Memoria USB 32GB', 'USB-32', 'Memoria flash 32GB USB 3.0', 28000, 3, 10, 24, '2025-02-11 05:00:00', 40000),
-(5, 'Disco duro externo 1TB', 'HDD-1TB', 'Disco portátil 1TB USB 3.1', 160000, 3, 20, 12, '2025-02-26 05:00:00', 200000),
-(6, 'Teclado mecánico RGB', 'KBG-500', 'Teclado gamer mecánico con retroiluminación', 120000, 4, 14, 12, '2025-03-02 05:00:00', 165000),
-(7, 'Cable VGA 1.5m', 'VGA-1.5', 'Cable VGA estándar de 1.5 metros', 10000, 45, 17, 6, '2025-03-09 05:00:00', 17000),
-(8, 'Memoria USB 64GB', 'USB-64', 'Memoria flash USB 64GB 3.0', 40000, 34, 30, 24, '2025-03-20 05:00:00', 58000),
-(9, 'Disco SSD 256GB', 'SSD-256', 'Unidad sólida 256GB SATA3', 95000, 20, 15, 24, '2025-03-30 05:00:00', 130000),
-(10, 'Teclado inalámbrico', 'KB-WL', 'Teclado sin cables con receptor USB', 70000, 3, 25, 12, '2025-04-05 05:00:00', 95000),
-(11, 'Cable HDMI 5m', 'HDMI-5M', 'Cable HDMI largo de 5 metros', 22000, 7, 26, 6, '2025-04-12 05:00:00', 32000),
-(12, 'Adaptador VGA a HDMI', 'AD-VGAHD', 'Conversor VGA a HDMI con audio incluido', 25000, 30, 18, 6, '2025-04-23 05:00:00', 36000),
-(13, 'Memoria RAM 8GB DDR4', 'RAM-8GB', 'RAM 8GB DDR4 2666MHz', 130000, 3, 23, 36, '2025-05-02 05:00:00', 180000),
-(14, 'Disco duro 500GB', 'HDD-500', 'HDD interno 500GB SATA', 80000, 10, 22, 12, '2025-05-10 05:00:00', 110000),
-(15, 'Teclado ergonómico', 'KB-ERGO', 'Teclado ergonómico para oficina', 95000, 18, 19, 12, '2025-05-18 05:00:00', 130000),
-(16, 'Cable VGA 3m', 'VGA-3M', 'Cable VGA reforzado de 3 metros', 16000, 8, 29, 6, '2025-05-27 05:00:00', 22000),
-(17, 'Memoria USB 128GB', 'USB-128', 'Memoria flash 128GB 3.0', 68000, 18, 24, 24, '2025-06-01 05:00:00', 85000),
-(18, 'SSD 512GB', 'SSD-512', 'Unidad de estado sólido 512GB NVMe', 150000, 10, 12, 24, '2025-06-05 05:00:00', 200000),
-(19, 'Teclado multimedia', 'KB-MULTI', 'Teclado con teclas multimedia dedicadas', 48000, 18, 28, 12, '2025-06-08 05:00:00', 65000),
-(20, 'Adaptador USB a HDMI', 'AD-USBHD', 'Adaptador USB 3.0 a HDMI full HD', 33000, 20, 27, 6, '2025-06-10 05:00:00', 48000),
-(21, 'Memoria RAM 16GB DDR4', 'RAM-16GB', 'RAM 16GB DDR4 3200MHz', 250000, 18, 21, 36, '2025-06-11 05:00:00', 330000),
-(22, 'Cartucho HP 664 Negro', 'HP-664BK', 'Cartucho original HP 664 negro para impresoras DeskJet', 40000, 20, 7, 12, '2025-01-12 05:00:00', 58000),
-(23, 'Cartucho HP 664 Tricolor', 'HP-664C', 'Cartucho original HP 664 tricolor (C/M/Y)', 42000, 18, 7, 12, '2025-01-25 05:00:00', 60000),
-(24, 'Cartucho Canon PG-145 Negro', 'CN-145BK', 'Cartucho Canon PG-145 negro para PIXMA', 38000, 15, 12, 12, '2025-02-08 05:00:00', 55000),
-(25, 'Cartucho Canon CL-146 Tricolor', 'CN-146C', 'Cartucho Canon CL-146 tricolor compatible con PIXMA', 41000, 12, 12, 12, '2025-02-18 05:00:00', 59000),
-(26, 'Cartucho Epson T664 Negro', 'EP-T664BK', 'Botella de tinta Epson T664 negra para L220/L365', 35000, 30, 13, 24, '2025-03-03 05:00:00', 48000),
-(27, 'Cartucho Epson T664 Tricolor', 'EP-T664C', 'Botellas de tinta Epson T664 C/M/Y para L-series', 36000, 28, 13, 24, '2025-03-15 05:00:00', 50000),
-(28, 'Cartucho Brother LC-3011 Negro', 'BR-3011BK', 'Cartucho Brother negro LC3011 para DCP-T510W', 37000, 10, 21, 12, '2025-04-02 05:00:00', 52000),
-(29, 'Cartucho Brother LC-3011 Tricolor', 'BR-3011C', 'Cartucho Brother tricolor LC3011 para multifuncionales', 39000, 10, 21, 12, '2025-04-11 05:00:00', 54000),
-(30, 'Cartucho genérico HP 662 Negro', 'HP-662GEN-BK', 'Cartucho compatible con HP 662 negro', 30000, 25, 24, 6, '2025-05-06 05:00:00', 45000),
-(31, 'Cartucho genérico HP 662 Tricolor', 'HP-662GEN-C', 'Cartucho compatible con HP 662 tricolor', 32000, 25, 24, 6, '2025-05-12 05:00:00', 47000),
-(33, 'Gafass 3d', 'Cambio al crud', 'dasdasdas', 321312321, 23, 13, 3, '2025-07-04 02:40:35', 200000);
+INSERT INTO `producto` (`id_producto`, `nombre_producto`, `modelo`, `descripcion`, `precio`, `stock`, `id_proveedor`, `meses_garantia`, `fecha_compra`, `imagen`, `precio_venta`) VALUES
+(1, 'Teclado USB', 'KB-100', 'Teclado básico alámbrico USB', 30000, 21, 1, 12, '2025-01-10 05:00:00', NULL, 45000),
+(2, 'Cable HDMI 2m', 'HDMI-2M', 'Cable HDMI de 2 metros', 15000, 0, 2, 6, '2025-01-17 05:00:00', NULL, 25000),
+(3, 'Adaptador HDMI a VGA', 'AD-HDVGA', 'Convertidor HDMI a VGA con audio', 18000, 27, 13, 6, '2025-02-03 05:00:00', NULL, 28000),
+(4, 'Memoria USB 32GB', 'USB-32', 'Memoria flash 32GB USB 3.0', 28000, 2, 10, 24, '2025-02-11 05:00:00', NULL, 40000),
+(5, 'Disco duro externo 1TB', 'HDD-1TB', 'Disco portátil 1TB USB 3.1', 160000, 1, 20, 12, '2025-02-26 05:00:00', NULL, 200000),
+(6, 'Teclado mecánico RGB', 'KBG-500', 'Teclado gamer mecánico con retroiluminación', 120000, 3, 14, 12, '2025-03-02 05:00:00', NULL, 165000),
+(7, 'Cable VGA 1.5m', 'VGA-1.5', 'Cable VGA estándar de 1.5 metros', 10000, 45, 17, 6, '2025-03-09 05:00:00', NULL, 17000),
+(8, 'Memoria USB 64GB', 'USB-64', 'Memoria flash USB 64GB 3.0', 40000, 34, 30, 24, '2025-03-20 05:00:00', NULL, 58000),
+(9, 'Disco SSD 256GB', 'SSD-256', 'Unidad sólida 256GB SATA3', 95000, 20, 15, 24, '2025-03-30 05:00:00', NULL, 130000),
+(10, 'Teclado inalámbrico', 'KB-WL', 'Teclado sin cables con receptor USB', 70000, 3, 25, 12, '2025-04-05 05:00:00', NULL, 95000),
+(11, 'Cable HDMI 5m', 'HDMI-5M', 'Cable HDMI largo de 5 metros', 22000, 7, 26, 6, '2025-04-12 05:00:00', NULL, 32000),
+(12, 'Adaptador VGA a HDMI', 'AD-VGAHD', 'Conversor VGA a HDMI con audio incluido', 25000, 30, 18, 6, '2025-04-23 05:00:00', NULL, 36000),
+(13, 'Memoria RAM 8GB DDR4', 'RAM-8GB', 'RAM 8GB DDR4 2666MHz', 130000, 3, 23, 36, '2025-05-02 05:00:00', NULL, 180000),
+(14, 'Disco duro 500GB', 'HDD-500', 'HDD interno 500GB SATA', 80000, 10, 22, 12, '2025-05-10 05:00:00', NULL, 110000),
+(15, 'Teclado ergonómico', 'KB-ERGO', 'Teclado ergonómico para oficina', 95000, 17, 19, 12, '2025-05-18 05:00:00', NULL, 130000),
+(16, 'Cable VGA 3m', 'VGA-3M', 'Cable VGA reforzado de 3 metros', 16000, 8, 29, 6, '2025-05-27 05:00:00', NULL, 22000),
+(17, 'Memoria USB 128GB', 'USB-128', 'Memoria flash 128GB 3.0', 68000, 18, 24, 24, '2025-06-01 05:00:00', NULL, 85000),
+(18, 'SSD 512GB', 'SSD-512', 'Unidad de estado sólido 512GB NVMe', 150000, 10, 12, 24, '2025-06-05 05:00:00', NULL, 200000),
+(19, 'Teclado multimedia', 'KB-MULTI', 'Teclado con teclas multimedia dedicadas', 48000, 18, 28, 12, '2025-06-08 05:00:00', NULL, 65000),
+(20, 'Adaptador USB a HDMI', 'AD-USBHD', 'Adaptador USB 3.0 a HDMI full HD', 33000, 20, 27, 6, '2025-06-10 05:00:00', NULL, 48000),
+(21, 'Memoria RAM 16GB DDR4', 'RAM-16GB', 'RAM 16GB DDR4 3200MHz', 250000, 18, 21, 36, '2025-06-11 05:00:00', NULL, 330000),
+(22, 'Cartucho HP 664 Negro', 'HP-664BK', 'Cartucho original HP 664 negro para impresoras DeskJet', 40000, 20, 7, 12, '2025-01-12 05:00:00', NULL, 58000),
+(23, 'Cartucho HP 664 Tricolor', 'HP-664C', 'Cartucho original HP 664 tricolor (C/M/Y)', 42000, 18, 7, 12, '2025-01-25 05:00:00', NULL, 60000),
+(24, 'Cartucho Canon PG-145 Negro', 'CN-145BK', 'Cartucho Canon PG-145 negro para PIXMA', 38000, 15, 12, 12, '2025-02-08 05:00:00', NULL, 55000),
+(25, 'Cartucho Canon CL-146 Tricolor', 'CN-146C', 'Cartucho Canon CL-146 tricolor compatible con PIXMA', 41000, 12, 12, 12, '2025-02-18 05:00:00', NULL, 59000),
+(26, 'Cartucho Epson T664 Negro', 'EP-T664BK', 'Botella de tinta Epson T664 negra para L220/L365', 35000, 30, 13, 24, '2025-03-03 05:00:00', NULL, 48000),
+(27, 'Cartucho Epson T664 Tricolor', 'EP-T664C', 'Botellas de tinta Epson T664 C/M/Y para L-series', 36000, 28, 13, 24, '2025-03-15 05:00:00', NULL, 50000),
+(28, 'Cartucho Brother LC-3011 Negro', 'BR-3011BK', 'Cartucho Brother negro LC3011 para DCP-T510W', 37000, 10, 21, 12, '2025-04-02 05:00:00', NULL, 52000),
+(29, 'Cartucho Brother LC-3011 Tricolor', 'BR-3011C', 'Cartucho Brother tricolor LC3011 para multifuncionales', 39000, 10, 21, 12, '2025-04-11 05:00:00', NULL, 54000),
+(30, 'Cartucho genérico HP 662 Negro', 'HP-662GEN-BK', 'Cartucho compatible con HP 662 negro', 30000, 25, 24, 6, '2025-05-06 05:00:00', NULL, 45000),
+(31, 'Cartucho genérico HP 662 Tricolor', 'HP-662GEN-C', 'Cartucho compatible con HP 662 tricolor', 32000, 25, 24, 6, '2025-05-12 05:00:00', NULL, 47000),
+(33, 'Gafass 3d', 'Cambio al crud', 'dasdasdas', 200000, 23, 13, 3, '2025-07-04 02:40:35', NULL, 250000),
+(37, 'tinta', '2022', 'sisas', 10, 1, 1, 3, '2025-09-08 00:06:41', '/static/img/productos/1757290001.545727_Captura de pantalla 2025-09-07 111451.png', 20);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `proveedor`
+-- Table structure for table `proveedor`
 --
 
 CREATE TABLE `proveedor` (
@@ -235,7 +300,7 @@ CREATE TABLE `proveedor` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `proveedor`
+-- Dumping data for table `proveedor`
 --
 
 INSERT INTO `proveedor` (`id_proveedor`, `nit`, `nombre_proveedor`, `representante_ventas`, `telefono_representante_ventas`, `direccion_proveedor`, `fecha_registro`) VALUES
@@ -267,7 +332,7 @@ INSERT INTO `proveedor` (`id_proveedor`, `nit`, `nombre_proveedor`, `representan
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `servicio_tecnico`
+-- Table structure for table `servicio_tecnico`
 --
 
 CREATE TABLE `servicio_tecnico` (
@@ -287,20 +352,16 @@ CREATE TABLE `servicio_tecnico` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `servicio_tecnico`
+-- Dumping data for table `servicio_tecnico`
 --
 
 INSERT INTO `servicio_tecnico` (`id_servicio`, `id_cliente`, `id_usuario`, `tipo_equipo`, `modelo_equipo`, `descripcion_problema`, `fecha_recepcion`, `fecha_entrega`, `estado_servicio`, `meses_garantia`, `tipo_servicio`, `precio_servicio`, `descripcion_trabajo`) VALUES
-(3, 3, 1, 'Computador de mesa', 'Origami White', 'Ventilador se queda quieto', '2025-06-27 23:41:39', NULL, 'En Progreso', 0, 'Reparación', 90000, NULL),
-(4, 4, 1, 'Computador portatil', 'Reddragon kurama', 'Le fallan las teclas', '2025-06-28 00:32:34', NULL, 'Finalizado', 3, 'Mantenimiento', 150000, 'Lo desarme y limpie cada parte del teclado -- que mas? '),
-(31, 1, 1, 'Impresora laser', 'asdasda', 'dadsadas', '2025-07-03 05:40:45', NULL, 'Rechazado', 11, 'Reparación', 250000, 'dsadasdadsa'),
-(33, 3, 1, 'Computador de mesa', '321312wdasda', 'dsadas123', '2025-07-03 05:51:53', NULL, 'En Revisión', 11, 'Diagnóstico', 50000, 'asdasdas'),
-(34, 3, 1, 'Computador de mesa', 'dasdasdas', 'dasdasdas', '2025-07-04 02:37:23', NULL, 'En Progreso', 0, 'Diagnóstico', 50000, NULL);
+(52, 3, 1, 'Computador de mesa', 'Iceberg White', 'Fallo en los componentes de refrigeracion 5', '2025-08-09 21:29:33', NULL, 'En Progreso', 0, 'Mantenimiento', 100000, 'Campos no vacios');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuario`
+-- Table structure for table `usuario`
 --
 
 CREATE TABLE `usuario` (
@@ -315,7 +376,7 @@ CREATE TABLE `usuario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `usuario`
+-- Dumping data for table `usuario`
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nombre_usuario`, `correo`, `telefono_usuario`, `clave`, `rol`, `token_recuperacion`, `token_expiracion`) VALUES
@@ -345,7 +406,7 @@ INSERT INTO `usuario` (`id_usuario`, `nombre_usuario`, `correo`, `telefono_usuar
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `venta`
+-- Table structure for table `venta`
 --
 
 CREATE TABLE `venta` (
@@ -357,7 +418,7 @@ CREATE TABLE `venta` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `venta`
+-- Dumping data for table `venta`
 --
 
 INSERT INTO `venta` (`id_venta`, `id_cliente`, `id_usuario`, `fecha_venta`, `total_venta`) VALUES
@@ -370,14 +431,21 @@ INSERT INTO `venta` (`id_venta`, `id_cliente`, `id_usuario`, `fecha_venta`, `tot
 (11, 32, 1, '2025-07-06 04:00:46', 576000),
 (12, 31, 1, '2025-07-06 04:45:04', 1140000),
 (13, 31, 1, '2025-07-06 04:45:26', 1620000),
-(14, 31, 1, '2025-07-06 04:45:40', 264000);
+(14, 31, 1, '2025-07-06 04:45:40', 264000),
+(15, 46, 1, '2025-08-11 20:55:08', 98000),
+(16, 46, 1, '2025-08-11 21:06:58', 98000),
+(17, 46, 1, '2025-08-24 22:17:07', 405000),
+(18, 46, 1, '2025-08-25 00:31:06', 130000),
+(19, 46, 1, '2025-09-08 00:00:45', 118000),
+(20, 46, 1, '2025-09-08 00:07:27', 80),
+(21, 46, 1, '2025-09-08 00:08:17', 200000);
 
 --
--- Índices para tablas volcadas
+-- Indexes for dumped tables
 --
 
 --
--- Indices de la tabla `cliente`
+-- Indexes for table `cliente`
 --
 ALTER TABLE `cliente`
   ADD PRIMARY KEY (`id_cliente`),
@@ -385,7 +453,7 @@ ALTER TABLE `cliente`
   ADD UNIQUE KEY `email_cliente` (`email_cliente`);
 
 --
--- Indices de la tabla `detalle_servicio`
+-- Indexes for table `detalle_servicio`
 --
 ALTER TABLE `detalle_servicio`
   ADD PRIMARY KEY (`id_detalle`),
@@ -393,7 +461,7 @@ ALTER TABLE `detalle_servicio`
   ADD KEY `id_usuario` (`id_usuario`);
 
 --
--- Indices de la tabla `detalle_venta`
+-- Indexes for table `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
   ADD PRIMARY KEY (`id_detalle`),
@@ -401,35 +469,46 @@ ALTER TABLE `detalle_venta`
   ADD KEY `id_producto` (`id_producto`);
 
 --
--- Indices de la tabla `garantia_producto`
+-- Indexes for table `garantia_producto`
 --
 ALTER TABLE `garantia_producto`
   ADD PRIMARY KEY (`id_garantia`),
-  ADD KEY `id_producto` (`id_producto`);
+  ADD KEY `id_producto` (`id_producto`),
+  ADD KEY `fk_gp_origen` (`id_garantia_origen`),
+  ADD KEY `idx_garantia_prod_cliente` (`id_cliente`),
+  ADD KEY `idx_garantia_prod_venta` (`id_venta`),
+  ADD KEY `idx_garantia_prod_estado` (`estado`);
 
 --
--- Indices de la tabla `garantia_servicio`
+-- Indexes for table `garantia_servicio`
 --
 ALTER TABLE `garantia_servicio`
   ADD PRIMARY KEY (`id_garantia`),
   ADD KEY `id_servicio` (`id_servicio`);
 
 --
--- Indices de la tabla `producto`
+-- Indexes for table `imagen_servicio`
+--
+ALTER TABLE `imagen_servicio`
+  ADD PRIMARY KEY (`id_imagen`),
+  ADD KEY `id_servicio` (`id_servicio`);
+
+--
+-- Indexes for table `producto`
 --
 ALTER TABLE `producto`
   ADD PRIMARY KEY (`id_producto`),
   ADD KEY `id_proveedor` (`id_proveedor`);
 
 --
--- Indices de la tabla `proveedor`
+-- Indexes for table `proveedor`
 --
 ALTER TABLE `proveedor`
   ADD PRIMARY KEY (`id_proveedor`),
   ADD UNIQUE KEY `nit` (`nit`);
 
 --
--- Indices de la tabla `servicio_tecnico`
+-- Indexes for table `servicio_tecnico`
 --
 ALTER TABLE `servicio_tecnico`
   ADD PRIMARY KEY (`id_servicio`),
@@ -437,14 +516,14 @@ ALTER TABLE `servicio_tecnico`
   ADD KEY `id_usuario` (`id_usuario`);
 
 --
--- Indices de la tabla `usuario`
+-- Indexes for table `usuario`
 --
 ALTER TABLE `usuario`
   ADD PRIMARY KEY (`id_usuario`),
   ADD UNIQUE KEY `correo` (`correo`);
 
 --
--- Indices de la tabla `venta`
+-- Indexes for table `venta`
 --
 ALTER TABLE `venta`
   ADD PRIMARY KEY (`id_venta`),
@@ -452,114 +531,129 @@ ALTER TABLE `venta`
   ADD KEY `id_usuario` (`id_usuario`);
 
 --
--- AUTO_INCREMENT de las tablas volcadas
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT de la tabla `cliente`
+-- AUTO_INCREMENT for table `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
--- AUTO_INCREMENT de la tabla `detalle_servicio`
+-- AUTO_INCREMENT for table `detalle_servicio`
 --
 ALTER TABLE `detalle_servicio`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
--- AUTO_INCREMENT de la tabla `detalle_venta`
+-- AUTO_INCREMENT for table `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
--- AUTO_INCREMENT de la tabla `garantia_producto`
+-- AUTO_INCREMENT for table `garantia_producto`
 --
 ALTER TABLE `garantia_producto`
-  MODIFY `id_garantia` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_garantia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
--- AUTO_INCREMENT de la tabla `garantia_servicio`
+-- AUTO_INCREMENT for table `garantia_servicio`
 --
 ALTER TABLE `garantia_servicio`
   MODIFY `id_garantia` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `producto`
+-- AUTO_INCREMENT for table `imagen_servicio`
 --
-ALTER TABLE `producto`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+ALTER TABLE `imagen_servicio`
+  MODIFY `id_imagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
--- AUTO_INCREMENT de la tabla `proveedor`
+-- AUTO_INCREMENT for table `producto`
+--
+ALTER TABLE `producto`
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+
+--
+-- AUTO_INCREMENT for table `proveedor`
 --
 ALTER TABLE `proveedor`
   MODIFY `id_proveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
--- AUTO_INCREMENT de la tabla `servicio_tecnico`
+-- AUTO_INCREMENT for table `servicio_tecnico`
 --
 ALTER TABLE `servicio_tecnico`
-  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
--- AUTO_INCREMENT de la tabla `usuario`
+-- AUTO_INCREMENT for table `usuario`
 --
 ALTER TABLE `usuario`
   MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
--- AUTO_INCREMENT de la tabla `venta`
+-- AUTO_INCREMENT for table `venta`
 --
 ALTER TABLE `venta`
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
--- Restricciones para tablas volcadas
+-- Constraints for dumped tables
 --
 
 --
--- Filtros para la tabla `detalle_servicio`
+-- Constraints for table `detalle_servicio`
 --
 ALTER TABLE `detalle_servicio`
   ADD CONSTRAINT `detalle_servicio_ibfk_1` FOREIGN KEY (`id_servicio`) REFERENCES `servicio_tecnico` (`id_servicio`) ON DELETE CASCADE,
   ADD CONSTRAINT `detalle_servicio_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE SET NULL;
 
 --
--- Filtros para la tabla `detalle_venta`
+-- Constraints for table `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
   ADD CONSTRAINT `Detalle_Venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `venta` (`id_venta`),
   ADD CONSTRAINT `Detalle_Venta_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`);
 
 --
--- Filtros para la tabla `garantia_producto`
+-- Constraints for table `garantia_producto`
 --
 ALTER TABLE `garantia_producto`
-  ADD CONSTRAINT `Garantia_Producto_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`);
+  ADD CONSTRAINT `Garantia_Producto_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`),
+  ADD CONSTRAINT `fk_gp_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`),
+  ADD CONSTRAINT `fk_gp_origen` FOREIGN KEY (`id_garantia_origen`) REFERENCES `garantia_producto` (`id_garantia`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_gp_venta` FOREIGN KEY (`id_venta`) REFERENCES `venta` (`id_venta`);
 
 --
--- Filtros para la tabla `garantia_servicio`
+-- Constraints for table `garantia_servicio`
 --
 ALTER TABLE `garantia_servicio`
   ADD CONSTRAINT `Garantia_Servicio_ibfk_1` FOREIGN KEY (`id_servicio`) REFERENCES `servicio_tecnico` (`id_servicio`);
 
 --
--- Filtros para la tabla `producto`
+-- Constraints for table `imagen_servicio`
+--
+ALTER TABLE `imagen_servicio`
+  ADD CONSTRAINT `imagen_servicio_ibfk_1` FOREIGN KEY (`id_servicio`) REFERENCES `servicio_tecnico` (`id_servicio`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `producto`
 --
 ALTER TABLE `producto`
   ADD CONSTRAINT `Producto_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id_proveedor`);
 
 --
--- Filtros para la tabla `servicio_tecnico`
+-- Constraints for table `servicio_tecnico`
 --
 ALTER TABLE `servicio_tecnico`
   ADD CONSTRAINT `Servicio_Tecnico_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`),
   ADD CONSTRAINT `Servicio_Tecnico_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
 
 --
--- Filtros para la tabla `venta`
+-- Constraints for table `venta`
 --
 ALTER TABLE `venta`
   ADD CONSTRAINT `Venta_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`),
