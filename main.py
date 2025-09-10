@@ -16,7 +16,16 @@ from informes import routes as informes_router
 from fastapi import Request
 from fastapi.responses import JSONResponse
 import traceback
-app = FastAPI()
+
+from utils.pasarImg import setup_static_from_volume
+async def lifespan(app: FastAPI):
+    setup_static_from_volume()
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
+
+
 @app.exception_handler(Exception)
 async def _debug_ex_handler(request: Request, exc: Exception):
     print("=== EXCEPTION on", request.method, request.url.path, "===")

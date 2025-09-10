@@ -1,16 +1,11 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from database.database import get_db
 from productos.controller import ProductoControlador
-#importaciones nuevas 
-from productos.schema import ProductoCreate, ProductoOut, ProductoUpdate, StockUpdate
+from productos.schema import ProductoCreate, ProductoUpdate, StockUpdate
 from productos.model import Producto
 from fastapi import UploadFile, File
-from fastapi.responses import JSONResponse
-from fastapi.staticfiles import StaticFiles
-from datetime import datetime
-import os
 from productos.schema import ProductoCreate, ProductoUpdate, StockUpdate
 
 
