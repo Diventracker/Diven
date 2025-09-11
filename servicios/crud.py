@@ -185,3 +185,5 @@ class ServicioCRUD:
         return True, "Imagen eliminada correctamente"
 
 
+def obtener_totales_por_mes(self):
+        return self.repo.obtener_totales_servicios_por_mes()

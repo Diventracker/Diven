@@ -242,3 +242,20 @@ class ServicioControlador:
             return JSONResponse(content={"success": False, "error": mensaje}, status_code=404)
 
         return JSONResponse(content={"success": True, "message": mensaje})
+    
+    #Grafico de ventas Mensuales
+    def obtener_datos_grafico_mensual(self):
+        resultados = self.crud.obtener_totales_servicios_por_mes()
+
+        meses_nombres = [
+            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        ]
+
+        datos_por_mes = {mes: float(total) for mes, total in resultados}
+
+        return {
+            "labels": meses_nombres,
+            "data": [datos_por_mes.get(i + 1, 0) for i in range(12)]
+        }
+    

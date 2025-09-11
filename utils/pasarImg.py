@@ -1,19 +1,28 @@
+# utils/pasarImg.py
+from pathlib import Path
 import os
 import shutil
 
-def setup_static_from_volume():
-    # Productos
-    src_prod = "/data/img/productos"
-    dst_prod = "static/img/productos"
-    if os.path.exists(src_prod):
-        os.makedirs(dst_prod, exist_ok=True)
-        for f in os.listdir(src_prod):
-            shutil.copy2(os.path.join(src_prod, f), os.path.join(dst_prod, f))
+BASE_MEDIA = Path(os.getenv("MEDIA_DIR", "data"))  # p.ej. "data" o "C:/Users/USUARIO/Diven/data"
 
-    # Servicios
-    src_serv = "/data/img/servicios"
-    dst_serv = "static/img/servicios"
-    if os.path.exists(src_serv):
-        os.makedirs(dst_serv, exist_ok=True)
-        for f in os.listdir(src_serv):
-            shutil.copy2(os.path.join(src_serv, f), os.path.join(dst_serv, f))
+SRC_PROD = BASE_MEDIA / "img" / "productos"
+SRC_SERV = BASE_MEDIA / "img" / "servicios"
+
+DST_PROD = Path("static") / "img" / "productos"
+DST_SERV = Path("static") / "img" / "servicios"
+
+def _sync_dir(src: Path, dst: Path) -> None:
+    if not src.exists():
+        return
+    dst.mkdir(parents=True, exist_ok=True)
+    # Copia recursiva preservando estructura (solo archivos)
+    for p in src.rglob("*"):
+        if p.is_file():
+            rel = p.relative_to(src)
+            target = dst / rel
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(p, target)
+
+def setup_static_from_volume() -> None:
+    _sync_dir(SRC_PROD, DST_PROD)
+    _sync_dir(SRC_SERV, DST_SERV)

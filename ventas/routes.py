@@ -46,7 +46,6 @@ def obtener_detalle(id_venta: int, db: Session = Depends(get_db)):
     controlador = VentaControlador(db)
     return controlador.detalle_venta(id_venta)
 
-
 #Mostar la venta Cuando ya este finalizada
 @router.get("/ventas/comprobante/{id_venta}", tags=["Ventas"])
 def ver_comprobante_endpoint(id_venta: int, request: Request, db: Session = Depends(get_db)):

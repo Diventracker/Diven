@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,53 +13,53 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 </head>
-    <body>
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-            <div class="container-fluid">
-                <!-- Filtros de fecha -->
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <div class="card shadow-sm" style="z-index: 1050;">
-                            <div class="card-body py-3">
-                                <div class="date-filter">
-                                    <div>
-                                        <label class="fw-bold me-2">Período:</label>
-                                        <span class="text-teal-dark" id="mesActual"></span>
-                                    </div>
-                                    <div class="btn-group" role="group">
-                                        <button class="btn btn-outline-teal" data-periodo="hoy">Hoy</button>
-                                        <button class="btn btn-outline-teal" data-periodo="semana">Semana</button>
-                                        <button class="btn btn-outline-teal" data-periodo="mes">Mes</button>
-                                        <button class="btn btn-outline-teal" data-periodo="anio">Año</button>
-                                        <button type="button" class="btn btn-outline-teal" data-periodo="personalizado"
-                                            data-bs-toggle="modal" data-bs-target="#modalFechaPersonalizada">
-                                            <i class="bi bi-calendar3"></i> Personalizado
-                                        </button>
-                                        <button class="btn btn-outline-secondary" data-bs-toggle="modal"
-                                            data-bs-target="#modalInformeCliente">
-                                            <i class="bi bi-person-lines-fill"></i> Informe por Cliente
-                                        </button>
-                                    </div>
-                                    <!-- Boton Generar Informe -->
-                                    <div class="text-end mt-2 mt-lg-0">
-                                        <button class="btn btn-outline-primary" data-bs-toggle="modal"
-                                            data-bs-target="#modalGenerarInforme">
-                                            <i class="bi bi-file-earmark-text"></i> Generar Informe
-                                        </button>
-                                    </div>
-                                    <!-- Servicios Pendientes -->
-                                    <div class="dropdown">
-                                        <button class="btn btn-warning notification-badge" data-bs-toggle="dropdown">
-                                            <i class="bi bi-tools"></i> Servicios en revisión
-                                            <span class="notification-count" id="notificationCount">5</span>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-end notification-dropdown"
-                                            style="width: 350px;">
-                                            <div class="dropdown-header">
-                                                <h6 class="mb-0"><i class="bi bi-bell me-2"></i>Servicios Pendientes
-                                                </h6>
-                                            </div>
+
+<body>
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <!-- Filtros de fecha -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow-sm" style="z-index: 1050;">
+                        <div class="card-body py-3">
+                            <div class="date-filter">
+                                <div>
+                                    <label class="fw-bold me-2">Período:</label>
+                                    <span class="text-teal-dark" id="mesActual"></span>
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-outline-teal" data-periodo="hoy">Hoy</button>
+                                    <button class="btn btn-outline-teal" data-periodo="semana">Semana</button>
+                                    <button class="btn btn-outline-teal" data-periodo="mes">Mes</button>
+                                    <button class="btn btn-outline-teal" data-periodo="anio">Año</button>
+                                    <button type="button" class="btn btn-outline-teal" data-periodo="personalizado"
+                                        data-bs-toggle="modal" data-bs-target="#modalFechaPersonalizada">
+                                        <i class="bi bi-calendar3"></i> Personalizado
+                                    </button>
+                                    <button class="btn btn-outline-secondary" data-bs-toggle="modal"
+                                        data-bs-target="#modalInformeCliente">
+                                        <i class="bi bi-person-lines-fill"></i> Informe por Cliente
+                                    </button>
+                                </div>
+                                <!-- Boton Generar Informe -->
+                                <div class="text-end mt-2 mt-lg-0">
+                                    <button class="btn btn-outline-primary" data-bs-toggle="modal"
+                                        data-bs-target="#modalGenerarInforme">
+                                        <i class="bi bi-file-earmark-text"></i> Generar Informe
+                                    </button>
+                                </div>
+                                <!-- Servicios Pendientes -->
+                                <div class="dropdown">
+                                    <button class="btn btn-warning notification-badge" data-bs-toggle="dropdown">
+                                        <i class="bi bi-tools"></i> Servicios en revisión
+                                        <span class="notification-count" id="notificationCount">5</span>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end notification-dropdown"
+                                        style="width: 350px;">
+                                        <div class="dropdown-header">
+                                            <h6 class="mb-0"><i class="bi bi-bell me-2"></i>Servicios Pendientes
+                                            </h6>
                                         </div>
                                     </div>
                                 </div>
@@ -66,316 +67,389 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Tarjetas de estadísticas -->
-                <div class="row mb-4">
-                    <!-- Card del total en ventas -->
-                    <div class="col-md-4">
-                        <div class="card stat-card shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <div class="stat-label">Ventas Totales</div>
-                                        <div class="stat-value" id="ventasTotales">$0</div>
-                                        <div class="stat-change positive" id="varVentasTotales">
-                                            <i class="bi bi-arrow-up"></i> 12.5% vs mes anterior
-                                        </div>
-                                    </div>
-                                    <div class="stat-icon">
-                                        <i class="bi bi-cash"></i>
+            <!-- Tarjetas de estadísticas -->
+            <div class="row mb-4">
+                <!-- Card del total en ventas -->
+                <div class="col-md-4">
+                    <div class="card stat-card shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="stat-label">Ventas Totales</div>
+                                    <div class="stat-value" id="ventasTotales">$0</div>
+                                    <div class="stat-change positive" id="varVentasTotales">
+                                        <i class="bi bi-arrow-up"></i> 12.5% vs mes anterior
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Card numero de Ventas -->
-                    <div class="col-md-4">
-                        <div class="card stat-card shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <div class="stat-label">Número de Ventas</div>
-                                        <div class="stat-value" id="numeroVentas">0</div>
-                                        <div class="stat-change positive" id="varNumeroVentas">
-                                            <i class="bi bi-arrow-up"></i> 8.3% vs mes anterior
-                                        </div>
-                                    </div>
-                                    <div class="stat-icon">
-                                        <i class="bi bi-receipt"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Card Nuevos Clientes -->
-                    <div class="col-md-4">
-                        <div class="card stat-card shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <div class="stat-label">Nuevos Clientes</div>
-                                        <div class="stat-value" id="nuevosClientes">0</div>
-                                        <div class="stat-change positive" id="varNuevosClientes">
-                                            <i class="bi bi-arrow-up"></i> 5.2% vs mes anterior
-                                        </div>
-                                    </div>
-                                    <div class="stat-icon">
-                                        <i class="bi bi-people"></i>
-                                    </div>
+                                <div class="stat-icon">
+                                    <i class="bi bi-cash"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Fila 2 -->
-                <div class="row mb-4">
-                    <!-- Gráfico Periodo de Ventas -->
-                    <div class="col-md-7">
-                        <div class="card shadow-sm">
-                            <div class="card-header">
-                                <h6 class="mb-0"><i class="bi bi-graph-up me-2"></i>Ventas del periodo</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="chart-container">
-                                    <canvas id="salesChart"></canvas>
+                <!-- Card numero de Ventas -->
+                <div class="col-md-4">
+                    <div class="card stat-card shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="stat-label">Número de Ventas</div>
+                                    <div class="stat-value" id="numeroVentas">0</div>
+                                    <div class="stat-change positive" id="varNumeroVentas">
+                                        <i class="bi bi-arrow-up"></i> 8.3% vs mes anterior
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Productos más vendidos -->
-                    <div class="col-md-5">
-                        <div class="card shadow-sm">
-                            <div class="card-header">
-                                <h6 class="mb-0"><i class="bi bi-star me-2"></i>Productos Más Vendidos</h6>
-                            </div>
-                            <div class="card-body" id="productosMasVendidos">
-                                <div class="text-center text-muted">Cargando productos...</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Fila 3 -->
-                <div class="row mb-4">
-                    <!-- Gráfico de Servicio Por Equipo -->
-                    <div class="col-md-4">
-                        <div class="card shadow-sm">
-                            <div class="card-header">
-                                <h6 class="mb-0"><i class="bi bi-pie-chart-fill me-2"></i>Servicios por Tipo de Equipo
-                                </h6>
-                            </div>
-                            <div class="card-body">
-                                <div style="max-height: 400px;">
-                                    <canvas id="graficoTipoEquipo"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Ventas por vendedor -->
-                    <div class="col-md-5">
-                        <div class="card shadow-sm">
-                            <div class="card-header">
-                                <h6 class="mb-0"><i class="bi bi-bar-chart me-2"></i>Ventas por Vendedor</h6>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="graficoVentasVendedor" height="125"></canvas>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Alertas de producto -->
-                    <div class="col-md-3">
-                        <div class="card shadow-sm">
-                            <div class="card-header">
-                                <h6 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Alertas de
-                                    Productos
-                                </h6>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="list-group list-group-flush" id="productosBajoStock">
-                                    <!-- Aca se colocan los productos con js -->
+                                <div class="stat-icon">
+                                    <i class="bi bi-receipt"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Ultimos Servicios -->
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <div class="card shadow-sm">
-                            <div class="card-header">
-                                <h6 class="mb-0"><i class="bi bi-clock-history me-2"></i>Últimos Servicios</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover" id="tablaServicios">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Tipo de equipo</th>
-                                                <th>Modelo</th>
-                                                <th>Descripcion</th>
-                                                <th>Fecha recepción</th>
-                                                <th>Fecha entrega</th>
-                                                <th>Estado</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <!-- DataTables Inserta Aca -->
-                                        </tbody>
-                                    </table>
+                <!-- Card Nuevos Clientes -->
+                <div class="col-md-4">
+                    <div class="card stat-card shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="stat-label">Nuevos Clientes</div>
+                                    <div class="stat-value" id="nuevosClientes">0</div>
+                                    <div class="stat-change positive" id="varNuevosClientes">
+                                        <i class="bi bi-arrow-up"></i> 5.2% vs mes anterior
+                                    </div>
                                 </div>
-                                <div class="text-center">
-                                    <a class="btn btn-outline-teal" href="/servicios">ver todos los servicios</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Últimas ventas -->
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <div class="card shadow-sm">
-                            <div class="card-header">
-                                <h6 class="mb-2"><i class="bi bi-clock-history me-2"></i>Últimas Ventas</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover" id="tablaVentas">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Cliente</th>
-                                                <th>Fecha</th>
-                                                <th>Productos</th>
-                                                <th>Total</th>
-                                                <th>Vendedor</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <!-- DataTables lo coloca aca -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="text-center">
-                                    <a class="btn btn-outline-teal" href="/ventas">ver todas las ventas</a>
+                                <div class="stat-icon">
+                                    <i class="bi bi-people"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <!-- Fila 2 -->
+            <div class="row mb-4">
+                <!-- Gráfico Periodo de Ventas -->
+                <div class="col-md-7">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="bi bi-graph-up me-2"></i>Ventas del periodo</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="salesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Productos más vendidos -->
+                <div class="col-md-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="bi bi-star me-2"></i>Productos Más Vendidos</h6>
+                        </div>
+                        <div class="card-body" id="productosMasVendidos">
+                            <div class="text-center text-muted">Cargando productos...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Fila 3 -->
+            <div class="row mb-4">
+                <!-- Gráfico de Servicio Por Equipo -->
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="bi bi-pie-chart-fill me-2"></i>Servicios por Tipo de Equipo
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div style="max-height: 400px;">
+                                <canvas id="graficoTipoEquipo"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- Modal para generar informe -->
-        <div class="modal fade" id="modalGenerarInforme" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form id="form-informe">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalLabel">Generar Informe</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Cerrar"></button>
+                <!-- Ventas por vendedor -->
+                <div class="col-md-5">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="bi bi-bar-chart me-2"></i>Ventas por Vendedor</h6>
                         </div>
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label class="form-label">Tipo de Informe</label>
-                                <select class="form-select" name="tipo" required>
-                                    <option value="producto">Productos</option>
-                                    <option value="clientes">Clientes</option>
-                                    <option value="usuarios">Usuarios</option>
-                                    <option value="proveedores">Proveedores</option>
-                                    <option value="servicios">Servicios Técnicos</option>
-                                    <option value="garantias">Garantías</option>
-                                    <option value="ventas">Ventas</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label>Rango de Fechas</label>
-                                <input type="date" name="fecha_inicio" class="form-control" required>
-                                <input type="date" name="fecha_fin" class="form-control mt-2" required>
+                        <div class="card-body">
+                            <canvas id="graficoVentasVendedor" height="125"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alertas de producto -->
+                <div class="col-md-3">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Alertas de
+                                Productos
+                            </h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="list-group list-group-flush" id="productosBajoStock">
+                                <!-- Aca se colocan los productos con js -->
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-teal">Generar PDF</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Ultimos Servicios -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="bi bi-clock-history me-2"></i>Últimos Servicios</h6>
                         </div>
-                    </form>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="tablaServicios">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Tipo de equipo</th>
+                                            <th>Modelo</th>
+                                            <th>Descripcion</th>
+                                            <th>Fecha recepción</th>
+                                            <th>Fecha entrega</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- DataTables Inserta Aca -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center">
+                                <a class="btn btn-outline-teal" href="/servicios">ver todos los servicios</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Últimas ventas -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h6 class="mb-2"><i class="bi bi-clock-history me-2"></i>Últimas Ventas</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="tablaVentas">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Cliente</th>
+                                            <th>Fecha</th>
+                                            <th>Productos</th>
+                                            <th>Total</th>
+                                            <th>Vendedor</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- DataTables lo coloca aca -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center">
+                                <a class="btn btn-outline-teal" href="/ventas">ver todas las ventas</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Modal para fechas personalizadas -->
-        <div class="modal fade" id="modalFechaPersonalizada" tabindex="-1" aria-labelledby="modalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form id="form-control-fecha">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalLabel">Personalizar fecha</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Cerrar"></button>
+    <!-- Modal para generar informe -->
+    <div class="modal fade" id="modalGenerarInforme" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="form-informe">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Generar Informe</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Informe</label>
+                            <select class="form-select" name="tipo" required>
+                                <option value="producto">Productos</option>
+                                <option value="clientes">Clientes</option>
+                                <option value="usuarios">Usuarios</option>
+                                <option value="proveedores">Proveedores</option>
+                                <option value="servicios">Servicios Técnicos</option>
+                                <option value="garantias">Garantías</option>
+                                <option value="ventas">Ventas</option>
+                            </select>
                         </div>
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label>Fecha de inicio</label>
-                                <input type="date" name="fecha_inicio" class="form-control" required>
-                                <br>
-                                <label>Fecha final</label>
-                                <input type="date" name="fecha_fin" class="form-control mt-2" required>
-                            </div>
+                        <div class="mb-3">
+                            <label>Rango de Fechas</label>
+                            <input type="date" name="fecha_inicio" class="form-control" required>
+                            <input type="date" name="fecha_fin" class="form-control mt-2" required>
                         </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-teal">Aplicar Fecha</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-teal">Generar PDF</button>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
 
-        <!-- Modal para Informe por Cliente -->
-        <div class="modal fade" id="modalInformeCliente" tabindex="-1" aria-labelledby="modalClienteLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form id="form-informe-cliente">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalClienteLabel">Informe por Cliente</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Cerrar"></button>
+    <!-- Modal para fechas personalizadas -->
+    <div class="modal fade" id="modalFechaPersonalizada" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="form-control-fecha">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Personalizar fecha</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label>Fecha de inicio</label>
+                            <input type="date" name="fecha_inicio" class="form-control" required>
+                            <br>
+                            <label>Fecha final</label>
+                            <input type="date" name="fecha_fin" class="form-control mt-2" required>
                         </div>
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label class="form-label">Nombre, Cédula o ID del Cliente</label>
-                                <input type="text" name="identificador" id="inputCliente" list="clientesList"
-                                    class="form-control" autocomplete="off" required>
-                                <datalist id="clientesList"></datalist>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-teal">Generar Informe</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-teal">Aplicar Fecha</button>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
 
+    <!-- Modal para Informe por Cliente -->
+    <div class="modal fade" id="modalInformeCliente" tabindex="-1" aria-labelledby="modalClienteLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="form-informe-cliente">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalClienteLabel">Informe por Cliente</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre, Cédula o ID del Cliente</label>
+                            <input type="text" name="identificador" id="inputCliente" list="clientesList"
+                                class="form-control" autocomplete="off" required>
+                            <datalist id="clientesList"></datalist>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-teal">Generar Informe</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-        <!-- Tablas -->
-        <script src="/static/js/dashboard/tablaVentas.js"></script>
-        <script src="/static/js/dashboard/tablaServicios.js"></script>
-        <!-- Productos Bajo Stock -->
-        <script src="/static/js/dashboard/alertasProductos.js"></script>
-        <!-- Graficos -->
-        <script src="/static/js/dashboard/graficos/graficoVendedores.js"></script>
-        <script src="/static/js/dashboard/graficos/graficoCategorias.js"></script>
-        <script src="/static/js/dashboard/graficos/graficoProductos.js"></script>
-        <script src="/static/js/dashboard/graficos/graficoVentas.js"></script>
-        
-        <script src="/static/js//dashboard/informe.js"></script>
-        <script src="/static/js/dashboard/cards.js"></script>
-        <script src="/static/js/dashboard/serviciosPendientes.js"></script>
-        <script src="/static/js/dashboard/informe_cliente.js"></script>
-    </body>
+    <!-- Tablas -->
+    <script src="/static/js/dashboard/tablaVentas.js"></script>
+    <script src="/static/js/dashboard/tablaServicios.js"></script>
+    <!-- Productos Bajo Stock -->
+    <script src="/static/js/dashboard/alertasProductos.js"></script>
+    <!-- Graficos -->
+    <script src="/static/js/dashboard/graficos/graficoVendedores.js"></script>
+    <script src="/static/js/dashboard/graficos/graficoCategorias.js"></script>
+    <script src="/static/js/dashboard/graficos/graficoProductos.js"></script>
+    <script src="/static/js/dashboard/graficos/graficoVentas.js"></script>
+
+    <script src="/static/js//dashboard/informe.js"></script>
+    <script src="/static/js/dashboard/cards.js"></script>
+    <script src="/static/js/dashboard/serviciosPendientes.js"></script>
+    <script src="/static/js/dashboard/informe_cliente.js"></script>
+    <script>
+        // Utilidad: obtener índice de mes (0=Ene,...,11=Dic)
+        function monthIndexFromDate(isoDate) {
+            // isoDate: "YYYY-MM-DD" o "DD/MM/YYYY" -> ajusta según tu formato
+            if (!isoDate) return (new Date()).getMonth();
+            let d;
+            if (isoDate.includes('/')) {
+                // "dd/mm/yyyy"
+                const [dd, mm, yyyy] = isoDate.split('/');
+                d = new Date(`${yyyy}-${mm}-${dd}`);
+            } else {
+                // "yyyy-mm-dd"
+                d = new Date(isoDate);
+            }
+            return d.getMonth();
+        }
+
+        // Formateo COP
+        const fmtCOP = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
+
+        // Sumar al total mostrado
+        function actualizarTotalIngresos(delta) {
+            const el = document.getElementById('totalIngresos');
+            const texto = el.textContent.replace(/[^\d]/g, '');
+            const actual = Number(texto || 0);
+            const nuevo = actual + Math.round(delta);
+            el.textContent = fmtCOP.format(nuevo);
+        }
+
+        // Actualizar la barra/punto del mes en Chart.js
+        function actualizarGraficaPorMes(chart, monthIndex, delta) {
+            const ds = chart.data.datasets[0];
+            ds.data[monthIndex] = (Number(ds.data[monthIndex]) || 0) + Math.round(delta);
+            chart.update();
+        }
+
+        document.addEventListener('click', async (e) => {
+            const btn = e.target.closest('.js-registrar-venta');
+            if (!btn) return;
+
+            const idServicio = btn.dataset.idServicio;
+            const precio = Number(btn.dataset.precio || 0);
+            const fechaRecepcion = btn.dataset.fechaRecepcion; // para ubicar el mes
+            const mes = monthIndexFromDate(fechaRecepcion);
+
+            try {
+                // 1) Registrar en backend (persistencia e idempotencia)
+                const resp = await fetch('/api/ventas/registrar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        servicio_id: Number(idServicio),
+                        monto: Math.round(precio),
+                        fecha: fechaRecepcion || new Date().toISOString().slice(0, 10)
+                    })
+                });
+
+                if (!resp.ok) {
+                    const err = await resp.json().catch(() => ({}));
+                    throw new Error(err?.detail || 'No se pudo registrar la venta.');
+                }
+
+                // 2) Actualizar UI (total + gráfica)
+                actualizarTotalIngresos(precio);
+                actualizarGraficaPorMes(ventasChart, mes, precio);
+
+                // 3) Deshabilitar/eliminar botón para evitar doble clic
+                btn.disabled = true;
+                btn.textContent = 'Registrado';
+            } catch (err) {
+                console.error(err);
+                alert(err.message || 'Error registrando la venta');
+            }
+        });
+
+    </script>"
+</body>
+
 </html>

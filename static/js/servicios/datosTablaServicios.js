@@ -33,7 +33,7 @@ $(document).ready(function () {
         }
 
 
-];
+    ];
     columnasServicios.push({
         data: null,
         orderable: false,
@@ -45,6 +45,12 @@ $(document).ready(function () {
         <button onclick="location.href='/servicios/comprobante/${row.id_servicio}'"
                 class="btn btn-sm btn-outline-secondary me-1">
             <i class="bi bi-eye"></i>
+        </button>
+        <button onclick="location.href='/servicios/grafico/ingresos${row.id_servicio}'"
+            class="btn btn-sm btn-success js-registrar-venta"
+            data-id-servicio="{{id_servicio}}"
+            data-precio="{{precio_servicio}}"
+            data-fecha-recepcion="{{fecha_recepcion}}">Registrar venta
         </button>
         `;
             return botones;
