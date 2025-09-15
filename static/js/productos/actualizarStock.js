@@ -30,6 +30,11 @@ document.getElementById("actualizar_stock").addEventListener("submit", async fun
     document.getElementById("stockQuantity").value = data.stock_final;
     form.stockNew.value = "";
     document.getElementById("previewCard").classList.add("d-none");
+
+    // Refrescar cards de productos
+    await actualizarProductos();
+
+    // Actualizar lista de productos en bajo stock
     obtenerProductosBajoStock();
   } catch (error) {
     mostrarAlerta("alerta-warning", " " + error.message);

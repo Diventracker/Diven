@@ -258,25 +258,12 @@
 </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   <!-- Modal Registro de nuevo cliente -->
   <div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="modalRegistroLabel">Registrar Nuevo Cliente</h5>
+          <h5 class="modal-title" id="modalRegistroLabel"><i class="bi bi-person-add me-2"></i>Registrar Nuevo Cliente</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
@@ -289,13 +276,13 @@
           <!-- Formulario Modal -->
           <form id="form-cliente">
             <div class="mb-3">
-              <label for="nombre" class="form-label">Nombre:</label>
+              <label for="nombre" class="form-label"><i class="bi bi-person me-2"></i>Nombre:</label>
               <input type="text" class="form-control" id="nombre" name="nombre_cliente" required
                 pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" maxlength="50">
             </div>
             <div class="row mb-3">
               <div class="col-md-6">
-                <label for="tipo_documento" class="form-label">Tipo de Documento:</label>
+                <label for="tipo_documento" class="form-label"><i class="bi bi-person-vcard me-2"></i>Tipo de Documento:</label>
                 <select id="tipo_documento" name="tipo_documento" class="form-select" required>
                   <option value="">Seleccione tipo</option>
                   <option value="CC">Cédula de Ciudadanía (CC)</option>
@@ -305,25 +292,25 @@
                 </select>
               </div>
               <div class="col-md-6">
-                <label for="numero_documento" class="form-label">N° Documento:</label>
+                <label for="numero_documento" class="form-label"><i class="bi bi-hash me-2"></i>N° Documento:</label>
                 <input type="text" class="form-control" id="numero_documento" name="numero_documento" required
                   pattern="\d+" maxlength="15">
               </div>
             </div>
 
             <div class="mb-3">
-              <label for="direccion" class="form-label">Dirección:</label>
+              <label for="direccion" class="form-label"><i class="bi bi-geo-alt me-2"></i>Dirección:</label>
               <input type="text" class="form-control" name="direccion_cliente" id="direccion" required>
             </div>
 
             <div class="mb-3">
-              <label for="telefono" class="form-label">Teléfono:</label>
+              <label for="telefono" class="form-label"><i class="bi bi-telephone me-2"></i>Teléfono:</label>
               <input type="tel" class="form-control" id="telefono" name="telefono_cliente" required pattern="\d{10}"
                 maxlength="10">
             </div>
 
             <div class="mb-3">
-              <label for="correo" class="form-label">Correo:</label>
+              <label for="correo" class="form-label"><i class="bi bi-envelope me-2"></i>Correo:</label>
               <input type="email" class="form-control" id="correo" name="email_cliente" required>
             </div>
 
