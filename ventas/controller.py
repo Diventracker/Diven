@@ -27,7 +27,7 @@ class VentaControlador:
         return JSONResponse([
             {
                 "id_venta": v.id_venta,
-                "fecha_venta": v.fecha_venta.strftime("%Y-%m-%d"),
+                "fecha_venta": v.fecha_venta.strftime("%d-%m-%y"),
                 "nombre_cliente": v.cliente.nombre_cliente if v.cliente else "—",
                 "cantidad_productos": sum(d.cantidad for d in v.detalles),
                 "valor_venta": f"${v.total_venta:,.0f}",
