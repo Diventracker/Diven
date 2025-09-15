@@ -29,6 +29,7 @@ const columnasServicios = [
         if (data === "En Progreso") clase = "secondary";
         else if (data === "Finalizado") clase = "success";
         else if (data === "En Revisión") clase = "warning";
+        else if (data === "Rechazado") clase = "danger";
 
         return `<span class="badge bg-${clase}">${data}</span>`;
         }

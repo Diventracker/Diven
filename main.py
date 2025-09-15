@@ -1,3 +1,4 @@
+from pathlib import Path
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from homepage import routes as homepage_router
@@ -17,13 +18,8 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 import traceback
 
-from utils.pasarImg import setup_static_from_volume
-async def lifespan(app: FastAPI):
-    setup_static_from_volume()
-    yield
 
-
-app = FastAPI(lifespan=lifespan)
+app = FastAPI()
 
 
 @app.exception_handler(Exception)
@@ -35,8 +31,13 @@ async def _debug_ex_handler(request: Request, exc: Exception):
 app.middleware("http")(middleware_general)
 
 
-# Montamos la carpeta 'static'
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Montar directamente desde /data en Railway
+if Path("/data").exists():
+    app.mount("/static/img/servicios", StaticFiles(directory="/data/img/servicios"), name="servicios")
+    app.mount("/static/img/productos", StaticFiles(directory="/data/img/productos"), name="productos")
+else:
+    # En local usamos la carpeta estática normal
+    app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Cargar rutas
 app.include_router(homepage_router.router)

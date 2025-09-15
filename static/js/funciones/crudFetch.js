@@ -1,10 +1,39 @@
-//Crear Registros
+// Crear registros genéricos
 function handleFormSubmit({ formId, url, modalId, tablaVariable = null, uploaders = [] }) {
     const form = document.getElementById(formId);
 
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
-        const formData = new FormData(form);
+
+        //  Creamos FormData vacío y manualmente vamos llenando
+        const formData = new FormData();
+
+        // Recorremos los elementos del formulario
+        Array.from(form.elements).forEach(el => {
+            if (!el.name) return; // ignorar elementos sin name
+
+            // Caso especial: inputs con AutoNumeric
+            if (el.classList.contains('formato-moneda')) {
+                try {
+                    const anElement = AutoNumeric.getAutoNumericElement(el);
+                    if (anElement) {
+                        formData.append(el.name, anElement.getNumber()); // valor limpio (ej: 1500000)
+                        return;
+                    }
+                } catch (err) {
+                    console.warn("⚠️ Error al obtener AutoNumeric:", err);
+                }
+            }
+
+            // Para otros inputs (text, select, textarea, number, etc.)
+            if (el.type === 'file') {
+                if (el.files.length > 0) {
+                    Array.from(el.files).forEach(file => formData.append(el.name, file));
+                }
+            } else {
+                formData.append(el.name, el.value);
+            }
+        });
 
         // Adjuntar imágenes desde uploaders (si existen)
         if (Array.isArray(uploaders) && uploaders.length > 0) {
@@ -36,7 +65,6 @@ function handleFormSubmit({ formId, url, modalId, tablaVariable = null, uploader
                 mostrarAlerta("alerta-success", data.mensaje || "Registro exitoso");
 
                 if (tablaVariable && window[tablaVariable]) {
-                    // Es un DataTable
                     window[tablaVariable].ajax?.reload(null, false);
                 } else if (typeof actualizarProductos === "function") {
                     actualizarProductos();
@@ -54,13 +82,53 @@ function handleFormSubmit({ formId, url, modalId, tablaVariable = null, uploader
 }
 
 //Editar Registros
-function handleEditFormSubmit({ formId, urlBase, modalId, idFieldId, tablaVariable = null }) {
+function handleEditFormSubmit({ formId, urlBase, modalId, idFieldId, tablaVariable = null, uploaders = [] }) {
     const form = document.getElementById(formId);
 
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
-        const formData = new FormData(form);
+
+        const formData = new FormData();
         const entityId = document.getElementById(idFieldId).value;
+
+        // Recorremos los elementos del formulario
+        Array.from(form.elements).forEach(el => {
+            if (!el.name) return; // ignorar elementos sin name
+
+            // Caso especial: inputs con AutoNumeric
+            if (el.classList.contains('formato-moneda')) {
+                try {
+                    const anElement = AutoNumeric.getAutoNumericElement(el);
+                    if (anElement) {
+                        formData.append(el.name, anElement.getNumber()); // valor limpio
+                        return;
+                    }
+                } catch (err) {
+                    console.warn("⚠️ Error al obtener AutoNumeric:", err);
+                }
+            }
+
+            // Archivos
+            if (el.type === 'file') {
+                if (el.files.length > 0) {
+                    Array.from(el.files).forEach(file => formData.append(el.name, file));
+                }
+            } else {
+                formData.append(el.name, el.value);
+            }
+        });
+
+        // Adjuntar imágenes desde uploaders (si existen)
+        if (Array.isArray(uploaders) && uploaders.length > 0) {
+            uploaders.forEach(uploader => {
+                if (uploader && typeof uploader.getImages === "function") {
+                    uploader.getImages().forEach(file => {
+                        formData.append("imagenes", file);
+                    });
+                }
+            });
+        }
+
         try {
             const response = await fetch(`${urlBase}/${entityId}`, {
                 method: 'PUT',
@@ -80,10 +148,18 @@ function handleEditFormSubmit({ formId, urlBase, modalId, idFieldId, tablaVariab
 
                 if (tablaVariable && window[tablaVariable]) {
                     // Si hay DataTable activa
-                    window[tablaVariable].ajax.reload(null, false); // false: mantener paginación
+                    window[tablaVariable].ajax.reload(null, false);
                 } else if (typeof actualizarProductos === "function") {
-                    // Si estás en el módulo de productos con List.js
                     actualizarProductos();
+                }
+
+                // limpiar uploaders si aplica
+                if (Array.isArray(uploaders) && uploaders.length > 0) {
+                    uploaders.forEach(uploader => {
+                        if (uploader && typeof uploader.clearImages === "function") {
+                            uploader.clearImages();
+                        }
+                    });
                 }
 
             } else {

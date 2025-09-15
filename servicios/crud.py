@@ -27,7 +27,7 @@ class ServicioCRUD:
         self.repo.db.refresh(nuevo)
         return nuevo
 
-#crud para filtrar todos los estados en finalizados al repo
+    #crud para filtrar todos los estados en finalizados al repo
     def filtrar_finalizados(self):
         return self.repo.listar_finalizados()
 
