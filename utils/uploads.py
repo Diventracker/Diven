@@ -9,6 +9,7 @@ EN_HOST = Path("/data").exists()
 # Definir rutas base
 BASE_PATH = Path("/data") if EN_HOST else Path("static")
 
+
 def guardar_imagen(file: UploadFile, servicio_id: int, carpeta: str = "img/servicios") -> str:
     # Validar extensión
     ext = Path(file.filename).suffix.lower().strip(".")
@@ -27,5 +28,10 @@ def guardar_imagen(file: UploadFile, servicio_id: int, carpeta: str = "img/servi
     with open(ruta_final, "wb") as f:
         f.write(file.file.read())
 
-    # Devolver ruta accesible desde /static
-    return f"/static/{carpeta}/{servicio_id}/{nombre_archivo}"
+    # Devolver URL accesible según entorno
+    if EN_HOST:
+        # En Railway servimos desde /media
+        return f"/media/{carpeta}/{servicio_id}/{nombre_archivo}"
+    else:
+        # En local usamos /static
+        return f"/static/{carpeta}/{servicio_id}/{nombre_archivo}"

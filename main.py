@@ -31,13 +31,12 @@ async def _debug_ex_handler(request: Request, exc: Exception):
 app.middleware("http")(middleware_general)
 
 
-# Siempre montamos static para css/js y otros assets
+# Siempre montamos la carpeta static del proyecto (CSS, JS, etc.)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# En Railway, añadimos mount para imágenes persistentes
+# Si estamos en Railway, montamos también la carpeta persistente /data
 if Path("/data").exists():
-    app.mount("/static/img/servicios", StaticFiles(directory="/data/img/servicios"), name="servicios")
-    app.mount("/static/img/productos", StaticFiles(directory="/data/img/productos"), name="productos")
+    app.mount("/media", StaticFiles(directory="/data"), name="media")
 
 # Cargar rutas
 app.include_router(homepage_router.router)

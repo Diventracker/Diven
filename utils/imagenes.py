@@ -14,7 +14,7 @@ async def guardar_imagen(imagen: UploadFile, carpeta: str = "img/productos") -> 
     if not imagen:
         return None
 
-    # Crear carpeta si no existe
+    # Crear carpeta
     ruta_carpeta = BASE_PATH / carpeta
     ruta_carpeta.mkdir(parents=True, exist_ok=True)
 
@@ -27,5 +27,9 @@ async def guardar_imagen(imagen: UploadFile, carpeta: str = "img/productos") -> 
     with open(ruta_final, "wb") as f:
         f.write(contenido)
 
-    # Retornar la ruta accesible desde /static
+    # Si estamos en Railway → devolver /media
+    if EN_HOST:
+        return f"/media/{carpeta}/{nombre_unico}"
+    # Si estamos local → devolver /static
     return f"/static/{carpeta}/{nombre_unico}"
+
