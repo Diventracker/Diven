@@ -57,8 +57,8 @@
                     <form id="registrarCliente">
                         <div class="mb-3">
                             <label for="nombre" class="form-label"><i class="bi bi-person me-2"></i>Nombre:</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre_cliente" required
-                                pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" maxlength="50">
+                            <input type="text" class="form-control" id="nombre" name="nombre_cliente" required maxlength="50"
+                             oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')">
                         </div>
                         <div class="mb-3">
                             <label for="tipo_documento" class="form-label"><i class="bi bi-person-vcard me-2"></i>Tipo de documento:</label>
@@ -73,8 +73,8 @@
 
                         <div class="mb-3">
                             <label for="documento" class="form-label"><i class="bi bi-hash me-2"></i>N° Documento:</label>
-                            <input type="text" class="form-control" id="numero_Documento" name="numero_documento" required
-                                pattern="\d+" maxlength="10">
+                            <input type="text" class="form-control" id="numero_Documento" name="numero_documento" required maxlength="10"
+                            oninput="this.value = this.value.replace(/\D/g, '')">
                         </div>
                         <div class="mb-3">
                             <label for="direccion" class="form-label"><i class="bi bi-geo-alt me-2"></i>Dirección:</label>
@@ -82,8 +82,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="telefono" class="form-label"><i class="bi bi-telephone me-2"></i>Teléfono:</label>
-                            <input type="tel" class="form-control" id="telefono" name="telefono_cliente" required
-                                maxlength="10" pattern="\d{10}">
+                            <input type="tel" class="form-control" id="telefono" name="telefono_cliente" required maxlength="10"
+                            oninput="this.value = this.value.replace(/\D/g, '')">
                         </div>
                         <div class="mb-3">
                             <label for="correo" class="form-label"><i class="bi bi-envelope me-2"></i>Correo:</label>
@@ -111,8 +111,8 @@
                         <input type="hidden" id="editClienteId">
                         <div class="mb-3">
                             <label for="nombre" class="form-label"><i class="bi bi-person me-2"></i>Nombre:</label>
-                            <input type="text" class="form-control" id="editNombre" name="nombre_cliente" required
-                                pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" maxlength="50">
+                            <input type="text" class="form-control" id="editNombre" name="nombre_cliente" required maxlength="50"
+                            oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')">
                         </div>
                         <div class="mb-3">
                             <label for="tipoDocumento" class="form-label"><i class="bi bi-person-vcard me-2"></i>Tipo de documento:</label>
@@ -125,8 +125,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="numero_Documento" class="form-label"><i class="bi bi-hash me-2"></i>N° Documento:</label>
-                            <input type="text" class="form-control" id="editDocumento" name="numero_documento" required pattern="\d+"
-                                maxlength="10">
+                            <input type="text" class="form-control" id="editDocumento" name="numero_documento" required maxlength="10"
+                            oninput="this.value = this.value.replace(/\D/g, '')">
                         </div>
                         <div class="mb-3">
                             <label for="direccion" class="form-label"><i class="bi bi-geo-alt me-2"></i>Dirección:</label>
@@ -134,8 +134,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="telefono" class="form-label"><i class="bi bi-telephone me-2"></i>Teléfono:</label>
-                            <input type="tel" class="form-control" id="editTelefono" name="telefono_cliente" required
-                                pattern="\d{10}" maxlength="10">
+                            <input type="tel" class="form-control" id="editTelefono" name="telefono_cliente" required maxlength="10"
+                            oninput="this.value = this.value.replace(/\D/g, '')">
                         </div>
                         <div class="mb-3">
                             <label for="correo" class="form-label"><i class="bi bi-envelope me-2"></i>Correo:</label>

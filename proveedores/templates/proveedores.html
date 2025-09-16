@@ -54,7 +54,8 @@
                     <form id="registrarProveedor">
                         <div class="mb-3">
                             <label for="nit" class="form-label"><i class="bi bi-building-fill-check me-2"></i>NIT:</label>
-                            <input type="text" class="form-control" name="nit" required>
+                            <input type="text" class="form-control" name="nit" required
+                            oninput="this.value = this.value.replace(/\D/g, '')">
                         </div>
 
                         <div class="mb-3">
@@ -64,12 +65,14 @@
 
                         <div class="mb-3">
                             <label for="representante" class="form-label"><i class="bi bi-person-badge me-2"></i>Representante de Ventas:</label>
-                            <input type="text" class="form-control" name="representante_ventas" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" required>
+                            <input type="text" class="form-control" name="representante_ventas" required
+                            oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')">
                         </div>
 
                         <div class="mb-3">
                             <label for="telefono" class="form-label"><i class="bi bi-telephone me-2"></i>Teléfono:</label>
-                            <input type="tel" class="form-control" name="telefono_representante_ventas" required pattern="\d{10}" maxlength="10">
+                            <input type="tel" class="form-control" name="telefono_representante_ventas" required maxlength="10"
+                            oninput="this.value = this.value.replace(/\D/g, '')">
                         </div>
 
                         <div class="mb-3">
@@ -98,7 +101,8 @@
                         <input type="hidden" id="editProveedorId">
                         <div class="mb-3">
                             <label for="nit" class="form-label"><i class="bi bi-building-fill-check me-2"></i>NIT:</label>
-                            <input type="text" class="form-control" id="editNit" name="nit" required >
+                            <input type="text" class="form-control" id="editNit" name="nit" required
+                            oninput="this.value = this.value.replace(/\D/g, '')">
                         </div>
                         <div class="mb-3">
                             <label for="nombre" class="form-label"><i class="bi bi-credit-card-2-front me-2"></i>Nombre del Proveedor:</label>
@@ -106,11 +110,13 @@
                         </div>
                         <div class="mb-3">
                             <label for="reventas" class="form-label"><i class="bi bi-person-badge me-2"></i>Representante de Ventas:</label>
-                            <input type="text" class="form-control" id="editRepresentante" name="representante_ventas" required pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" maxlength="50">
+                            <input type="text" class="form-control" id="editRepresentante" name="representante_ventas" required maxlength="50"
+                            oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')">
                         </div>
                         <div class="mb-3">
                             <label for="telefono" class="form-label"><i class="bi bi-telephone me-2"></i>Telefono:</label>
-                            <input type="tel" class="form-control" id="editTelefono" name="telefono_representante_ventas" required pattern="\d{10}" maxlength="10">
+                            <input type="tel" class="form-control" id="editTelefono" name="telefono_representante_ventas" required maxlength="10"
+                            oninput="this.value = this.value.replace(/\D/g, '')">
                         </div>
                         <div class="mb-3">
                             <label for="direccion" class="form-label"><i class="bi bi-geo-alt me-2"></i>Dirección:</label>

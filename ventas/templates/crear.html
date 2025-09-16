@@ -277,8 +277,8 @@
           <form id="form-cliente">
             <div class="mb-3">
               <label for="nombre" class="form-label"><i class="bi bi-person me-2"></i>Nombre:</label>
-              <input type="text" class="form-control" id="nombre" name="nombre_cliente" required
-                pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+" maxlength="50">
+              <input type="text" class="form-control" id="nombre" name="nombre_cliente" required maxlength="50"
+              oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')">
             </div>
             <div class="row mb-3">
               <div class="col-md-6">
@@ -293,8 +293,8 @@
               </div>
               <div class="col-md-6">
                 <label for="numero_documento" class="form-label"><i class="bi bi-hash me-2"></i>N° Documento:</label>
-                <input type="text" class="form-control" id="numero_documento" name="numero_documento" required
-                  pattern="\d+" maxlength="15">
+                <input type="text" class="form-control" id="numero_documento" name="numero_documento" required maxlength="10"
+                oninput="this.value = this.value.replace(/\D/g, '')">
               </div>
             </div>
 
@@ -305,8 +305,8 @@
 
             <div class="mb-3">
               <label for="telefono" class="form-label"><i class="bi bi-telephone me-2"></i>Teléfono:</label>
-              <input type="tel" class="form-control" id="telefono" name="telefono_cliente" required pattern="\d{10}"
-                maxlength="10">
+              <input type="tel" class="form-control" id="telefono" name="telefono_cliente" required maxlength="10"
+              oninput="this.value = this.value.replace(/\D/g, '')">
             </div>
 
             <div class="mb-3">

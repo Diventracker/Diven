@@ -19,7 +19,7 @@ class LoginControlador:
         try:
             usuario = self.crud.autenticar(correo, clave)
 
-            if usuario.rol not in ["Administrador", "Técnico"]:
+            if usuario.rol not in ["Administrador", "Vendedor"]:
                 return JSONResponse(status_code=403, content={"success": False, "error": "Rol no autorizado"})
 
             session_id = session_manager.crear_sesion({
@@ -35,7 +35,7 @@ class LoginControlador:
         except ValueError:
             return JSONResponse(status_code=401, content={"success": False, "error": "Correo o contraseña incorrectos"})
 
-        # 👇 PARCHE: imprime el error real y lo relanza para que salga en consola
+        # imprime el error real y lo relanza para que salga en consola
         except Exception as e:
             import traceback
             print("=== LOGIN EXCEPTION ===")
