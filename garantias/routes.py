@@ -40,3 +40,8 @@ def renovar_garantia_producto(id_garantia: int, dto: RenovarDTO, db: Session = D
         meses=dto.meses,
         fecha_inicio=dto.fecha_inicio
     )
+
+@router.get("/garantias/data/servicios", tags=["Garantias"])
+def garantias_servicios_data(q: str | None = None, db: Session = Depends(get_db)):
+    controlador = GarantiaControlador(db)
+    return controlador.listar_garantias_servicios(q)

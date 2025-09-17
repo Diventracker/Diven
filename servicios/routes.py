@@ -138,3 +138,9 @@ def obtener_imagenes_servicio(id_servicio: int, db: Session = Depends(get_db)):
 def eliminar_imagen_servicio(id_imagen: int, db: Session = Depends(get_db)):
     controlador = ServicioControlador(db)
     return controlador.eliminar_imagen(id_imagen)
+
+
+@router.get("/servicios/{id_servicio}/garantia", tags=["servicio_tecnico"])
+def obtener_garantia_servicio(id_servicio: int, db: Session = Depends(get_db)):
+    controlador = ServicioControlador(db)
+    return controlador.obtener_garantia_servicio(id_servicio)

@@ -1,15 +1,17 @@
 from sqlalchemy import Column, Integer, String, Date, ForeignKey
 from database.database import Base
-from sqlalchemy.orm import relationship  # <-- añade esto
+from sqlalchemy.orm import relationship 
+from datetime import date
 
 class GarantiaServicio(Base):
     __tablename__ = "garantia_servicio"
-    id_garantia = Column(Integer, primary_key=True, index=True)
-    id_servicio = Column(Integer, ForeignKey("servicio_tecnico.id_servicio"))
-    fecha_inicio = Column(Date, nullable=False)
-    fecha_fin = Column(Date, nullable=False)
 
-    # RESTAURA ESTA LÍNEA:
+    id_garantia = Column(Integer, primary_key=True, autoincrement=True)
+    id_servicio = Column(Integer, ForeignKey("servicio_tecnico.id_servicio", ondelete="CASCADE"), nullable=False)
+    fecha_inicio = Column(Date, nullable=False, default=date.today)
+    fecha_fin = Column(Date, nullable=False)
+    estado = Column(String(20), nullable=False, default="activa")
+
     servicio = relationship("ServicioTecnico", back_populates="garantias")
 
 class GarantiaProducto(Base):
