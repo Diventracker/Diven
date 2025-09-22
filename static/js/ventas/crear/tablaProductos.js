@@ -71,13 +71,11 @@ function agregarFilaProducto(producto) {
           <td>${producto.codigo}</td>
           <td>${producto.nombre}</td>
           <td>${precioUnitario.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
-          <td>
-            <input type="number" value="1" min="1" class="form-control cantidad-input mx-auto" style="width: 70px;">
-          </td>
+            <td> <input type="number"  value="1" min="1"  step="1"  inputmode="numeric"  pattern="[1-9]*"  class="form-control cantidad-input mx-auto" style="width: 70px;" data-precio="${precioUnitario}    readonly     ">
+            </td>
           <td class="subtotal">${precioUnitario.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
-          <td>
-            <button class="btn btn-sm btn-outline-danger" onclick="this.closest('tr').remove(); actualizarTotal();"><i class="bi bi-trash"></i></button>
-          </td>
+         <td> <button class="btn btn-sm btn-outline-danger btn-eliminar" title="Eliminar"> <i class="bi bi-trash"></i> </button>
+        </td>
         `;
 
         const filaTotal = tabla.querySelector("tr.table-active");
@@ -136,3 +134,4 @@ document.getElementById("buscador-producto")?.addEventListener("keydown", functi
         buscarProducto();
     }
 });
+
