@@ -183,7 +183,17 @@ class ServicioCRUD:
         self.repo.db.commit()
 
         return True, "Imagen eliminada correctamente"
+    
+    #guardar total en la base de datos
+    def guardar_total(self, id_servicio: int, total: int):
+            servicio = self.repo.obtener_por_id(id_servicio)
+            if not servicio:
+                raise ValueError("Servicio no encontrado")
 
+            nuevo_estado = "facturado"
 
-def obtener_totales_por_mes(self):
-        return self.repo.obtener_totales_servicios_por_mes()
+            servicio.estado_servicio = nuevo_estado
+            servicio.total_servicio = total
+            self.repo.db.commit()
+
+            return servicio

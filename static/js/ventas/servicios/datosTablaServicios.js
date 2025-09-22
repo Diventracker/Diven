@@ -38,7 +38,7 @@ $(document).ready(function () {
         data: null,
         orderable: false,
         searchable: false,
-        render: function (data, type, row) {
+        render: function (row) {
             let botones = '';
             // Botón para ver comprobante (todos los roles)
             botones += `
@@ -46,11 +46,11 @@ $(document).ready(function () {
                 class="btn btn-sm btn-outline-secondary me-1">
             <i class="bi bi-eye"></i>
         </button>
-        <button onclick="location.href='/servicios/grafico/ingresos${row.id_servicio}'"
-            class="btn btn-sm btn-success js-registrar-venta"
-            data-id-servicio="{{id_servicio}}"
-            data-precio="{{precio_servicio}}"
-            data-fecha-recepcion="{{fecha_recepcion}}">Registrar venta
+        <button class="btn btn-sm btn-enviar btn-facturar" 
+            data-bs-toggle="modal"
+            data-bs-target="#modalServicio"
+            data-id="${row.id_servicio}">
+            <i class="bi bi-cash"></i>
         </button>
         `;
             return botones;
@@ -59,3 +59,4 @@ $(document).ready(function () {
 
     window.tablaServicios = inicializarDataTable('tablaServicios', '/servicios/finalizado', columnasServicios);
 });
+

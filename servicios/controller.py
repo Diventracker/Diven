@@ -202,11 +202,26 @@ class ServicioControlador:
     #Aprobar/ rechazar el servicio
     def actualizar_estado(self, id_servicio: int, datos: EstadoServicioInput):
         try:
-            servicio = self.crud.cambiar_estado(
-                id_servicio=id_servicio,
-                nuevo_estado=datos.nuevo_estado,
-                motivo=datos.motivo
-            )
+            if datos.nuevo_estado == "facturado":
+                datos = self.crud.obtener_datos_para_totales(id_servicio)
+                if not datos:
+                    return None
+
+                precio_base = datos["precio_base"] or 0
+                adicionales = datos["adicionales"] or 0
+                subtotal = precio_base + adicionales
+                iva = int(subtotal * 0.19)
+                total = subtotal + iva
+                servicio = self.crud.guardar_total(
+                    id_servicio=id_servicio,
+                    total=total
+                )
+            else:
+                servicio = self.crud.cambiar_estado(
+                    id_servicio=id_servicio,
+                    nuevo_estado=datos.nuevo_estado,
+                    motivo=datos.motivo
+                )
             return JSONResponse(content={"success": True, "message": f"Servicio marcado como {servicio.estado_servicio}"})
         
         except ValueError as e:

@@ -21,7 +21,8 @@ class ServicioTecnico(Base):
     estado_servicio = Column(String(50), nullable=False, default="En Progreso")
     meses_garantia = Column(Integer, nullable=True, default=0)
     tipo_servicio = Column(String(50), nullable=False)
-    precio_servicio = Column(INTEGER(unsigned=True), nullable=False) 
+    precio_servicio = Column(INTEGER(unsigned=True), nullable=False)
+    total_servicio = Column(INTEGER(unsigned=True), nullable=False)
 
     # Relaciones opcionales si las necesitas
     cliente = relationship("Cliente")

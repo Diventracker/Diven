@@ -7,22 +7,22 @@ $(document).ready(function () {
     { data: 'fecha_venta' },
     { data: 'nombre_cliente' },
     {
-    data: 'cantidad_productos',
-        render: function(data, type, row) {
-            return data + ' Productos';
-        }
+      data: 'cantidad_productos',
+      render: function (data, type, row) {
+        return data + ' Productos';
+      }
     },
     { data: 'valor_venta' },
     { data: 'nombre_usuario' }
   ];
 
   // Agregar acciones solo si es administrador
-    columnasVentas.push({
-      data: null,
-      orderable: false,
-      searchable: false,
-      render: function (data, type, row) {
-        return `
+  columnasVentas.push({
+    data: null,
+    orderable: false,
+    searchable: false,
+    render: function (data, type, row) {
+      return `
           <button class="btn btn-sm btn-outline-secondary "
             onclick="verDetalles(${row.id_venta})" data-bs-toggle="modal"
             data-bs-target="#modalDetalles">
@@ -33,8 +33,8 @@ $(document).ready(function () {
               <i class="bi bi-receipt"></i>
           </button>
         `;
-      }
-    });
+    }
+  });
 
   window.tablaVentas = inicializarDataTable('tablaVentas', '/ventas/data', columnasVentas);
 });

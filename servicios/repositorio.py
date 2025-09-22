@@ -94,4 +94,3 @@ class ServicioRepositorio:
             extract('month', ServicioTecnico.fecha_servicio).label("mes"),
             func.sum(ServicioTecnico.precio_servicio).label("total")
         ).group_by("mes").order_by("mes").all()
-        
