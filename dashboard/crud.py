@@ -27,5 +27,5 @@ class DashboardCRUD:
         ventas = self.db.query(func.count()).filter(filtro).scalar()
         clientes = self.db.query(func.count(distinct(Venta.id_cliente))).filter(filtro).scalar()
         
-        total_final = float(total) + float(servicios_total)
-        return float(total_final), servicios_total , total, ventas, clientes 
+        total_final = total + servicios_total
+        return total_final, servicios_total , total, ventas, clientes

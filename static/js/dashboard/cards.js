@@ -16,7 +16,7 @@ function mostrarPorcentaje(idElemento, valor) {
 
 function actualizarDashboard(data) {
     document.getElementById("ventasTotales").innerText =
-        data.ventas_totales.toLocaleString("es-CO", {
+        data.total_final.toLocaleString("es-CO", {
             style: "currency",
             currency: "COP",
             minimumFractionDigits: 0

@@ -93,14 +93,16 @@ class DashboardControlador:
 
         # filtros por rango (funciona para DATE o DATETIME)
         filtro_actual = and_(Venta.fecha_venta >= inicio, Venta.fecha_venta < fin)
-
-        total_final, total_actual, servicios_actual, ventas_actual, clientes_actual = self.crud.obtener_estadisticas(filtro_actual)
         
+        total_final, total_actual, servicios_actual, ventas_actual, clientes_actual = self.crud.obtener_estadisticas(filtro_actual)
+
         if prev_inicio and prev_fin:
             filtro_anterior = and_(Venta.fecha_venta >= prev_inicio, Venta.fecha_venta < prev_fin)
-            total_final, servicios_anterior, total_anterior, ventas_anterior, clientes_anterior = self.crud.obtener_estadisticas(filtro_anterior)
-            var_ventas_totales = self.crud.calcular_variacion(float(total_actual), float(total_anterior))
+            # Obtener totales
+            total_final_anterior, servicios_anterior, total_anterior, ventas_anterior, clientes_anterior = self.crud.obtener_estadisticas(filtro_anterior)
+            # calcular variación porcentajes
             var_servicio_total = self.crud.calcular_variacion(float(servicios_actual), float(servicios_anterior))
+            var_ventas_totales = self.crud.calcular_variacion(float(total_actual), float(total_anterior))
             var_numero_ventas = self.crud.calcular_variacion(ventas_actual, ventas_anterior)
             var_nuevos_clientes = self.crud.calcular_variacion(clientes_actual, clientes_anterior)
         else:
@@ -111,10 +113,10 @@ class DashboardControlador:
 
         return {
             "periodo": periodo,
-            "total_final": float(total_final),
-            "ventas_totales": float(total_actual),
-            "numero_ventas": int(ventas_actual),
-            "nuevos_clientes": int(clientes_actual),
+            "total_final": total_final,
+            "ventas_totales": total_actual,
+            "numero_ventas": ventas_actual,
+            "nuevos_clientes": clientes_actual,
             "var_servicio_total": var_servicio_total,
             "var_ventas_totales": var_ventas_totales,
             "var_numero_ventas": var_numero_ventas,
