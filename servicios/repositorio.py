@@ -86,11 +86,3 @@ class ServicioRepositorio:
             "precio_base": servicio.precio_servicio,
             "adicionales": adicionales
         }
-
-
-#Total de ventas por mes
-    def obtener_totales_servicios_por_mes(self):
-        return self.db.query(
-            extract('month', ServicioTecnico.fecha_servicio).label("mes"),
-            func.sum(ServicioTecnico.precio_servicio).label("total")
-        ).group_by("mes").order_by("mes").all()
