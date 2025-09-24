@@ -11,7 +11,6 @@ from ventas.repositorio import VentaRepositorio
 class DashboardControlador:
     def __init__(self, db: Session):
         venta_repo = VentaRepositorio(db)
-      
         self.crud = DashboardCRUD(venta_repo)
 
 

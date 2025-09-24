@@ -1,9 +1,9 @@
- //No Borrar-- Sirve en el sidebar
- window.parent.postMessage({
+//No Borrar-- Sirve en el sidebar
+window.parent.postMessage({
     tipo: "moduloActivo",
     url: window.location.pathname
-  }, "*");
-  
+}, "*");
+
 //Manda el fetch para crear el registro
 handleFormSubmit({
     formId: 'registrarServicio',
@@ -19,7 +19,7 @@ setupEditButtons({
     modalFields: {
         id: 'serviceId',
         tipoEquipo: 'editTipoEquipo',
-        tipoServicio: 'editTipoServicio',      
+        tipoServicio: 'editTipoServicio',
         modelo: 'editModeloEquipo',
         tecnico: 'editTecnico',
         descripcion: 'editDescripcion',
@@ -45,7 +45,7 @@ handleDeleteConfirm({
     hiddenInputId: 'servicioIdToDelete',
     deleteUrlBase: '/servicio/eliminar',
     modalActive: 'modalEliminar',
-    tablaVariable: 'tablaServicios' // 👈 nombre de la DataTable global
+    tablaVariable: 'tablaServicios' // nombre de la DataTable global
 });
 
 

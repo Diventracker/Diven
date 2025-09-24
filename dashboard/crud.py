@@ -12,8 +12,6 @@ class DashboardCRUD:
         self.venta_repo = venta_repo
         self.db: Session = venta_repo.db
         
-   
-
     def calcular_variacion(self, actual, anterior):
         if anterior == 0:
             return 100 if actual > 0 else 0

@@ -12,7 +12,6 @@ from garantias.model import GarantiaServicio  # <- aquí está la clase correcta
 from servicios.schema import ServicioRevisionSchema, ServicioUpdate
 
 
-
 class ServicioCRUD:
     def __init__(self, repo):
         self.repo = repo

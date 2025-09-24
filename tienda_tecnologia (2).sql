@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-09-2025 a las 02:23:19
+-- Tiempo de generación: 24-09-2025 a las 08:34:00
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -227,7 +227,8 @@ INSERT INTO `garantia_producto` (`id_garantia`, `id_producto`, `id_venta`, `id_c
 (40, 9, 30, 46, NULL, '2025-09-22', '2025-10-22', 'venta_cliente', 'activa'),
 (41, 3, 31, 47, NULL, '2025-09-23', '2025-10-23', 'venta_cliente', 'activa'),
 (42, 1, 32, 47, NULL, '2025-09-23', '2025-10-23', 'venta_cliente', 'activa'),
-(43, 9, 33, 47, NULL, '2025-09-23', '2025-10-23', 'venta_cliente', 'activa');
+(43, 9, 33, 47, NULL, '2025-09-23', '2025-10-23', 'venta_cliente', 'renovada'),
+(44, 9, 33, 47, 43, '2025-09-24', '2025-10-24', '', 'activa');
 
 -- --------------------------------------------------------
 
@@ -273,7 +274,8 @@ INSERT INTO `imagen_servicio` (`id_imagen`, `id_servicio`, `ruta_archivo`) VALUE
 (21, 57, '/static/img/servicios/57/fc0169ca2532421b9088a40a7def6151.png'),
 (22, 57, '/static/img/servicios/57/ddfd1ca34a4643aa9677c25e58c41b26.png'),
 (23, 58, '/static/img/servicios/58/d2ba59cf62ac4f47a4d67786c0960b0c.png'),
-(24, 58, '/static/img/servicios/58/257fff28dde648c6abf93804efd64530.png');
+(24, 58, '/static/img/servicios/58/257fff28dde648c6abf93804efd64530.png'),
+(25, 59, '/media/img/servicios/59/03b0fbecd58845faaa1c1dc7db79a209.png');
 
 -- --------------------------------------------------------
 
@@ -414,7 +416,8 @@ INSERT INTO `servicio_tecnico` (`id_servicio`, `id_cliente`, `id_usuario`, `tipo
 (55, 21, 1, 'Impresora de tinta', 'lenovo', 'aja', '2025-09-23 22:45:09', NULL, 'facturado', 4, 'Instalación', 250000, 'aja si funciona', 297500),
 (56, 43, 1, 'Impresora termica', 'asus', 'no impreme', '2025-09-23 23:13:36', NULL, 'facturado', 0, 'Instalación', 500000, 'se prendio', 595000),
 (57, 2, 1, 'Computador portatil', 'hp', 'aja', '2025-09-23 23:45:35', NULL, 'facturado', 0, 'Reparación', 150000, 'asssa', 178500),
-(58, 3, 1, 'Computador portatil', 'hp', 'ad', '2025-09-24 00:13:26', NULL, 'facturado', 0, 'Reparación', 150000, 'as', 178500);
+(58, 3, 1, 'Computador portatil', 'hp', 'ad', '2025-09-24 00:13:26', NULL, 'facturado', 0, 'Reparación', 150000, 'as', 178500),
+(59, 25, 1, 'Impresora laser', 'hp', 'afaf', '2025-09-24 06:01:15', NULL, 'En Progreso', 0, 'Diagnóstico', 255555, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -626,7 +629,7 @@ ALTER TABLE `detalle_venta`
 -- AUTO_INCREMENT de la tabla `garantia_producto`
 --
 ALTER TABLE `garantia_producto`
-  MODIFY `id_garantia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id_garantia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT de la tabla `garantia_servicio`
@@ -638,7 +641,7 @@ ALTER TABLE `garantia_servicio`
 -- AUTO_INCREMENT de la tabla `imagen_servicio`
 --
 ALTER TABLE `imagen_servicio`
-  MODIFY `id_imagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id_imagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
@@ -656,7 +659,7 @@ ALTER TABLE `proveedor`
 -- AUTO_INCREMENT de la tabla `servicio_tecnico`
 --
 ALTER TABLE `servicio_tecnico`
-  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
