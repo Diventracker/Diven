@@ -47,14 +47,14 @@ function cargarProductosDesdeUI() {
 
 // ======= Filtro + render =======
 function aplicarFiltrosYRender() {
-  // Ajustar catálogo con lo que ya está en la tabla (reservas)
+  // sincroniza reservas antes de filtrar para mostrar "Disponible" real
   reconstruirReservasDesdeTabla();
 
   const termino = document.getElementById("input-busqueda-modal")?.value.trim().toLowerCase() || "";
   const conStock = document.getElementById("filtro-stock")?.value === "true";
 
   filtrados = productosData.filter(p => {
-    if (conStock && p.stock <= 0) return false; // si p.stock==0 ni siquiera se considera
+    if (conStock && p.stock <= 0) return false;
     if (!termino) return true;
     const hay = (p.nombre || "").toLowerCase().includes(termino)
              || (p.modelo || "").toLowerCase().includes(termino)
@@ -132,7 +132,6 @@ function abrirModalCantidad(prod) {
   document.getElementById("qtyProductoNombre").textContent =
     `${prod.nombre}${prod.modelo ? " ("+prod.modelo+")" : ""}`;
 
-  // contexto visible
   document.getElementById("qtyProductoStock").textContent =
     `Stock total: ${prod.stock}  |  Ya en venta: ${reservado}`;
   document.getElementById("qtyMax").textContent = disponible;
@@ -147,10 +146,10 @@ function abrirModalCantidad(prod) {
   setTimeout(()=>qtyInput.focus(), 100);
 }
 
+//  Para el caso 3 //
 function confirmarCantidadYAgregar() {
   if (!productoActual) return;
 
-  // tope por disponible (stock - reservado)
   const reservado = reservas[String(productoActual.codigo)] || 0;
   const disponible = Math.max(0, Number(productoActual.stock || 0) - reservado);
 
@@ -169,14 +168,19 @@ function confirmarCantidadYAgregar() {
 
   agregarProductoConCantidad(productoActual, cantidad);
 
+  // Notificación + log (sistema del proyecto)
+  mostrarAlerta("alerta-exito", `Producto agregado: ${productoActual.nombre} (x${cantidad})`);
+  console.log("✅ Producto agregado:", productoActual.nombre, "Cantidad:", cantidad);
+
   const m = bootstrap.Modal.getInstance(document.getElementById("qtyModal"));
   m?.hide();
   productoActual = null;
 }
 
-// Agrega N unidades a la tabla de venta usando tu flujo existente
+
+//  Para el caso 3 //
 function agregarProductoConCantidad(producto, cantidad) {
-  // 1) Buscar fila existente
+  // Buscar si la fila ya existe
   const filas = document.querySelectorAll("#tabla-productos tbody tr:not(.table-active)");
   let fila = null;
   filas.forEach(f => {
@@ -184,7 +188,7 @@ function agregarProductoConCantidad(producto, cantidad) {
     if (cod === String(producto.codigo)) fila = f;
   });
 
-  // 2) Si no existe, crea la fila con 1 y localízala
+  // Si no existe, crearla con tu helper y volver a buscar
   if (!fila) {
     agregarFilaProducto({
       codigo: producto.codigo,
@@ -200,30 +204,29 @@ function agregarProductoConCantidad(producto, cantidad) {
   }
   if (!fila) return;
 
-  // 3) Disponible actual = stock - reservadoAntes
+  // Disponible actual
   const reservadoAntes = reservas[String(producto.codigo)] || 0;
   const disponible = Math.max(0, Number(producto.stock || 0) - reservadoAntes);
 
-  // 4) Ajustar la cantidad final en la fila
+  // Ajustar cantidad final
   const input = fila.querySelector(".cantidad-input");
   let actual = parseInt(input.value || "1", 10);
   if (isNaN(actual) || actual < 1) actual = 1;
 
-  // Si la fila es nueva (acabamos de crearla con 1), ponemos exactamente 'cantidad';
-  // si ya existía, sumamos, pero nunca superando actual + disponible.
   let nueva;
   if (actual === 1 && reservadoAntes + 1 <= producto.stock) {
-    nueva = Math.min(cantidad, disponible);    // recién creada → cantidad exacta hasta el tope
+    // fila recién creada → llevar a la cantidad pedida (hasta tope)
+    nueva = Math.min(cantidad, disponible);
     if (nueva < 1) nueva = 1;
   } else {
-    nueva = Math.min(actual + cantidad, actual + disponible); // fila ya existente
+    // fila existente → sumar hasta tope
+    nueva = Math.min(actual + cantidad, actual + disponible);
   }
 
   input.value = nueva;
-  // dispara tu cálculo de subtotal/total (ya manejado en tu app)
   input.dispatchEvent(new Event("input", { bubbles: true }));
 
-  // 5) Refrescar reservas y catálogo (para que el badge "Disponible" cambie en vivo)
+  // Refrescar reservas + catálogo
   reconstruirReservasDesdeTabla();
   aplicarFiltrosYRender();
 }
@@ -231,7 +234,7 @@ function agregarProductoConCantidad(producto, cantidad) {
 /* ======= Wiring ======= */
 document.getElementById("productosModal")?.addEventListener("shown.bs.modal", () => {
   recalcPageSize();
-  reconstruirReservasDesdeTabla();   // asegura reservas vigentes
+  reconstruirReservasDesdeTabla();
   cargarProductosDesdeUI();
 });
 
@@ -275,26 +278,27 @@ window.addEventListener("resize", () => {
   }
 });
 
-// Mantener reservas sincronizadas si cambian cantidades o se elimina una fila en la tabla de venta
-const tbodyVenta = document.querySelector("#tabla-productos tbody");
-if (tbodyVenta) {
-  // Cambio de cantidades
-  tbodyVenta.addEventListener("input", (ev) => {
-    if (ev.target && ev.target.classList.contains("cantidad-input")) {
-      setTimeout(() => {
-        reconstruirReservasDesdeTabla();
-        aplicarFiltrosYRender();
-      }, 0);
-    }
-  });
+// ——— Tabla de venta: eventos ———
+document.addEventListener("click", (ev) => {
+  // Escuchar clicks en botones de eliminar dentro de la tabla (delegado global)
+  const btn = ev.target.closest("#tabla-productos .btn-eliminar, #tabla-productos [data-action='eliminar']");
+  if (!btn) return;
 
-  // Eliminaciones / clicks en acciones
-  tbodyVenta.addEventListener("click", () => {
-    setTimeout(() => {
-      reconstruirReservasDesdeTabla();
-      aplicarFiltrosYRender();
-    }, 0);
-  });
-}
+  ev.preventDefault();
+
+  const fila = btn.closest("tr");
+  const nombre = fila?.cells?.[1]?.textContent || "Producto";
+  const cantidad = fila?.querySelector(".cantidad-input")?.value || "1";
+
+  // Notificación + eliminación + recalcular
+  mostrarAlerta("alerta-warning", `Producto eliminado: ${nombre} (x${cantidad})`);
+  fila.remove();
+
+  if (typeof actualizarTotal === "function") actualizarTotal();
+  if (typeof reconstruirReservasDesdeTabla === "function") reconstruirReservasDesdeTabla();
+  if (typeof aplicarFiltrosYRender === "function") aplicarFiltrosYRender();
+
+  console.log("❌ Producto eliminado:", nombre, "Cantidad:", cantidad);
+});
 
 document.addEventListener('DOMContentLoaded', () => { recalcPageSize(); });
