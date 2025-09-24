@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-09-2025 a las 05:33:10
+-- Tiempo de generación: 24-09-2025 a las 02:23:19
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -150,7 +150,17 @@ INSERT INTO `detalle_venta` (`id_detalle`, `id_venta`, `id_producto`, `cantidad`
 (29, 20, 37, 4, 20),
 (30, 21, 5, 1, 200000),
 (31, 22, 1, 12, 45000),
-(32, 23, 3, 1, 28000);
+(32, 23, 3, 1, 28000),
+(33, 24, 3, 1, 28000),
+(34, 25, 6, 3, 165000),
+(35, 26, 1, 1, 45000),
+(36, 27, 4, 1, 40000),
+(37, 28, 3, 1, 28000),
+(38, 29, 4, 1, 40000),
+(39, 30, 9, 1, 130000),
+(40, 31, 3, 1, 28000),
+(41, 32, 1, 1, 45000),
+(42, 33, 9, 1, 130000);
 
 -- --------------------------------------------------------
 
@@ -205,7 +215,19 @@ INSERT INTO `garantia_producto` (`id_garantia`, `id_producto`, `id_venta`, `id_c
 (28, 1, 22, 47, NULL, '2025-09-21', '2025-10-21', 'venta_cliente', 'activa'),
 (29, 1, 22, 47, NULL, '2025-09-21', '2025-10-21', 'venta_cliente', 'activa'),
 (30, 1, 22, 47, NULL, '2025-09-21', '2025-10-21', 'venta_cliente', 'activa'),
-(31, 3, 23, 47, NULL, '2025-09-21', '2025-10-21', 'venta_cliente', 'activa');
+(31, 3, 23, 47, NULL, '2025-09-21', '2025-10-21', 'venta_cliente', 'activa'),
+(32, 3, 24, 47, NULL, '2025-09-22', '2025-10-22', 'venta_cliente', 'activa'),
+(33, 6, 25, 47, NULL, '2025-09-22', '2025-10-22', 'venta_cliente', 'activa'),
+(34, 6, 25, 47, NULL, '2025-09-22', '2025-10-22', 'venta_cliente', 'activa'),
+(35, 6, 25, 47, NULL, '2025-09-22', '2025-10-22', 'venta_cliente', 'activa'),
+(36, 1, 26, 47, NULL, '2025-09-22', '2025-10-22', 'venta_cliente', 'activa'),
+(37, 4, 27, 47, NULL, '2025-09-22', '2025-10-22', 'venta_cliente', 'activa'),
+(38, 3, 28, 47, NULL, '2025-09-22', '2025-10-22', 'venta_cliente', 'activa'),
+(39, 4, 29, 47, NULL, '2025-09-22', '2025-10-22', 'venta_cliente', 'activa'),
+(40, 9, 30, 46, NULL, '2025-09-22', '2025-10-22', 'venta_cliente', 'activa'),
+(41, 3, 31, 47, NULL, '2025-09-23', '2025-10-23', 'venta_cliente', 'activa'),
+(42, 1, 32, 47, NULL, '2025-09-23', '2025-10-23', 'venta_cliente', 'activa'),
+(43, 9, 33, 47, NULL, '2025-09-23', '2025-10-23', 'venta_cliente', 'activa');
 
 -- --------------------------------------------------------
 
@@ -239,7 +261,19 @@ CREATE TABLE `imagen_servicio` (
 
 INSERT INTO `imagen_servicio` (`id_imagen`, `id_servicio`, `ruta_archivo`) VALUES
 (11, 52, '/static/img/servicios/52/1b4fd2f368ca463faafe736808d6fa19.jpg'),
-(12, 52, '/static/img/servicios/52/467e122c75cd4a66a199be9d1543edb9.jpg');
+(12, 52, '/static/img/servicios/52/467e122c75cd4a66a199be9d1543edb9.jpg'),
+(13, 53, '/static/img/servicios/53/8c78d5b51209478097eb921d9654c2c5.jpg'),
+(14, 53, '/static/img/servicios/53/22095f8718cc4c079c55db44c5b9a7cb.jpg'),
+(15, 54, '/static/img/servicios/54/bbb4d7711bc6423a8ef44bb46cec56db.png'),
+(16, 54, '/static/img/servicios/54/ec7d48abcdff467585709cc6f8876647.png'),
+(17, 55, '/static/img/servicios/55/a99afe2bc3d54c9ea86732a7a2810106.png'),
+(18, 55, '/static/img/servicios/55/a82c08fe4df24c628509736810c9844e.png'),
+(19, 56, '/static/img/servicios/56/e0aa9e79b0254768b6878f06643dedac.png'),
+(20, 56, '/static/img/servicios/56/3bcdc1ef43c54f77b7e91037911c3032.png'),
+(21, 57, '/static/img/servicios/57/fc0169ca2532421b9088a40a7def6151.png'),
+(22, 57, '/static/img/servicios/57/ddfd1ca34a4643aa9677c25e58c41b26.png'),
+(23, 58, '/static/img/servicios/58/d2ba59cf62ac4f47a4d67786c0960b0c.png'),
+(24, 58, '/static/img/servicios/58/257fff28dde648c6abf93804efd64530.png');
 
 -- --------------------------------------------------------
 
@@ -266,15 +300,15 @@ CREATE TABLE `producto` (
 --
 
 INSERT INTO `producto` (`id_producto`, `nombre_producto`, `modelo`, `descripcion`, `precio`, `stock`, `id_proveedor`, `meses_garantia`, `fecha_compra`, `imagen`, `precio_venta`) VALUES
-(1, 'Teclado USB', 'KB-100', 'Teclado básico alámbrico USB', 30000, 9, 1, 12, '2025-01-10 05:00:00', NULL, 45000),
+(1, 'Teclado USB', 'KB-100', 'Teclado básico alámbrico USB', 30000, 7, 1, 12, '2025-01-10 05:00:00', NULL, 45000),
 (2, 'Cable HDMI 2m', 'HDMI-2M', 'Cable HDMI de 2 metros', 15000, 0, 2, 6, '2025-01-17 05:00:00', NULL, 25000),
-(3, 'Adaptador HDMI a VGA', 'AD-HDVGA', 'Convertidor HDMI a VGA con audio', 18000, 26, 13, 6, '2025-02-03 05:00:00', NULL, 28000),
-(4, 'Memoria USB 32GB', 'USB-32', 'Memoria flash 32GB USB 3.0', 28000, 2, 10, 24, '2025-02-11 05:00:00', NULL, 40000),
+(3, 'Adaptador HDMI a VGA', 'AD-HDVGA', 'Convertidor HDMI a VGA con audio', 18000, 23, 13, 6, '2025-02-03 05:00:00', NULL, 28000),
+(4, 'Memoria USB 32GB', 'USB-32', 'Memoria flash 32GB USB 3.0', 28000, 0, 10, 24, '2025-02-11 05:00:00', NULL, 40000),
 (5, 'Disco duro externo 1TB', 'HDD-1TB', 'Disco portátil 1TB USB 3.1', 160000, 1, 20, 12, '2025-02-26 05:00:00', NULL, 200000),
-(6, 'Teclado mecánico RGB', 'KBG-500', 'Teclado gamer mecánico con retroiluminación', 120000, 3, 14, 12, '2025-03-02 05:00:00', NULL, 165000),
+(6, 'Teclado mecánico RGB', 'KBG-500', 'Teclado gamer mecánico con retroiluminación', 120000, 0, 14, 12, '2025-03-02 05:00:00', NULL, 165000),
 (7, 'Cable VGA 1.5m', 'VGA-1.5', 'Cable VGA estándar de 1.5 metros', 10000, 45, 17, 6, '2025-03-09 05:00:00', NULL, 17000),
 (8, 'Memoria USB 64GB', 'USB-64', 'Memoria flash USB 64GB 3.0', 40000, 34, 30, 24, '2025-03-20 05:00:00', NULL, 58000),
-(9, 'Disco SSD 256GB', 'SSD-256', 'Unidad sólida 256GB SATA3', 95000, 20, 15, 24, '2025-03-30 05:00:00', NULL, 130000),
+(9, 'Disco SSD 256GB', 'SSD-256', 'Unidad sólida 256GB SATA3', 95000, 18, 15, 24, '2025-03-30 05:00:00', NULL, 130000),
 (10, 'Teclado inalámbrico', 'KB-WL', 'Teclado sin cables con receptor USB', 70000, 3, 25, 12, '2025-04-05 05:00:00', NULL, 95000),
 (11, 'Cable HDMI 5m', 'HDMI-5M', 'Cable HDMI largo de 5 metros', 22000, 7, 26, 6, '2025-04-12 05:00:00', NULL, 32000),
 (12, 'Adaptador VGA a HDMI', 'AD-VGAHD', 'Conversor VGA a HDMI con audio incluido', 25000, 30, 18, 6, '2025-04-23 05:00:00', NULL, 36000),
@@ -374,7 +408,13 @@ CREATE TABLE `servicio_tecnico` (
 --
 
 INSERT INTO `servicio_tecnico` (`id_servicio`, `id_cliente`, `id_usuario`, `tipo_equipo`, `modelo_equipo`, `descripcion_problema`, `fecha_recepcion`, `fecha_entrega`, `estado_servicio`, `meses_garantia`, `tipo_servicio`, `precio_servicio`, `descripcion_trabajo`, `total_servicio`) VALUES
-(52, 3, 1, 'Computador de mesa', 'Iceberg White', 'Fallo en los componentes de refrigeracion 5', '2025-08-09 21:29:33', NULL, 'facturado', 0, 'Mantenimiento', 100000, 'awo\r\n', 452200);
+(52, 3, 1, 'Computador de mesa', 'Iceberg White', 'Fallo en los componentes de refrigeracion 5', '2025-08-09 21:29:33', NULL, 'facturado', 0, 'Mantenimiento', 100000, 'awo\r\n', 452200),
+(53, 6, 1, 'Impresora de tinta', 'lenovo', 'no prende', '2025-09-22 17:22:36', NULL, 'facturado', 3, 'Reparación', 50000, 'fuente de poder', 59500),
+(54, 31, 1, 'Impresora termica', 'asus', 'no imprime', '2025-09-22 22:06:28', NULL, 'facturado', 2, 'Diagnóstico', 200000, 'se prendio', 238000),
+(55, 21, 1, 'Impresora de tinta', 'lenovo', 'aja', '2025-09-23 22:45:09', NULL, 'facturado', 4, 'Instalación', 250000, 'aja si funciona', 297500),
+(56, 43, 1, 'Impresora termica', 'asus', 'no impreme', '2025-09-23 23:13:36', NULL, 'facturado', 0, 'Instalación', 500000, 'se prendio', 595000),
+(57, 2, 1, 'Computador portatil', 'hp', 'aja', '2025-09-23 23:45:35', NULL, 'facturado', 0, 'Reparación', 150000, 'asssa', 178500),
+(58, 3, 1, 'Computador portatil', 'hp', 'ad', '2025-09-24 00:13:26', NULL, 'facturado', 0, 'Reparación', 150000, 'as', 178500);
 
 -- --------------------------------------------------------
 
@@ -458,7 +498,17 @@ INSERT INTO `venta` (`id_venta`, `id_cliente`, `id_usuario`, `fecha_venta`, `tot
 (20, 46, 1, '2025-09-08 00:07:27', 80),
 (21, 46, 1, '2025-09-08 00:08:17', 200000),
 (22, 47, 1, '2025-09-22 01:59:55', 540000),
-(23, 47, 1, '2025-09-22 03:32:05', 28000);
+(23, 47, 1, '2025-09-22 03:32:05', 28000),
+(24, 47, 1, '2025-09-22 17:22:00', 28000),
+(25, 47, 1, '2025-09-22 17:34:44', 495000),
+(26, 47, 1, '2025-09-22 18:50:29', 45000),
+(27, 47, 1, '2025-09-22 18:50:51', 40000),
+(28, 47, 1, '2025-09-22 18:56:05', 28000),
+(29, 47, 1, '2025-09-22 19:00:53', 40000),
+(30, 46, 1, '2025-09-22 22:09:16', 130000),
+(31, 47, 1, '2025-09-23 22:42:42', 28000),
+(32, 47, 1, '2025-09-23 22:49:11', 45000),
+(33, 47, 1, '2025-09-23 23:04:28', 130000);
 
 --
 -- Índices para tablas volcadas
@@ -570,13 +620,13 @@ ALTER TABLE `detalle_servicio`
 -- AUTO_INCREMENT de la tabla `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT de la tabla `garantia_producto`
 --
 ALTER TABLE `garantia_producto`
-  MODIFY `id_garantia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id_garantia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT de la tabla `garantia_servicio`
@@ -588,7 +638,7 @@ ALTER TABLE `garantia_servicio`
 -- AUTO_INCREMENT de la tabla `imagen_servicio`
 --
 ALTER TABLE `imagen_servicio`
-  MODIFY `id_imagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_imagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
@@ -606,7 +656,7 @@ ALTER TABLE `proveedor`
 -- AUTO_INCREMENT de la tabla `servicio_tecnico`
 --
 ALTER TABLE `servicio_tecnico`
-  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id_servicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
@@ -618,7 +668,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `venta`
 --
 ALTER TABLE `venta`
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- Restricciones para tablas volcadas
