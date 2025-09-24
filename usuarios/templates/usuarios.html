@@ -45,30 +45,30 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalRegistroLabel">Registrar Nuevo Usuario</h5>
+                    <h5 class="modal-title" id="modalRegistroLabel"><i class="bi bi-person-add me-2"></i>Registrar Nuevo Usuario</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="registrarUsuario">
                         <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre del usuario:</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre_usuario" required
-                                pattern="[A-Za-z\s]+" maxlength="50">
+                            <label for="nombre" class="form-label"><i class="bi bi-person me-2"></i>Nombre del usuario:</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre_usuario" required maxlength="50"
+                            oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')">
                         </div>
                         <div class="mb-3">
-                            <label for="email" class="form-label">Correo:</label>
+                            <label for="email" class="form-label"><i class="bi bi-envelope me-2"></i>Correo:</label>
                             <input type="email" class="form-control" id="email" name="correo" required>
                         </div>
                         <div class="mb-3">
-                            <label for="telefono" class="form-label">Teléfono:</label>
-                            <input type="telefono" class="form-control" id="telefono" name="telefono_usuario" required pattern="\d{10}" maxlength="10">
+                            <label for="telefono" class="form-label"><i class="bi bi-telephone me-2"></i>Teléfono:</label>
+                            <input type="telefono" class="form-control" id="telefono" name="telefono_usuario" required maxlength="10"
+                            oninput="this.value = this.value.replace(/\D/g, '')">
                         </div>
                         <div class="mb-3">
-                            <label for="rol" class="form-label">Rol del usuario:</label>
+                            <label for="rol" class="form-label"><i class="bi bi-person-vcard me-2"></i>Rol del usuario:</label>
                             <select name="rol" class="form-control" required>
                                 <option value="" selected disabled>Seleccione un rol...</option>
                                 <option value="Administrador">Administrador</option>
-                                <option value="Técnico">Técnico</option>
                                 <option value="Vendedor">Vendedor</option>
                             </select>
                         </div>
@@ -83,7 +83,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalEditarLabel">Actualizar Usuario</h5>
+                    <h5 class="modal-title" id="modalEditarLabel"><i class="bi bi-pencil me-2"></i>Actualizar Usuario</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -91,24 +91,24 @@
                     <form id="editUsuarioForm">
                         <input type="hidden" id="editUsuarioId" name="id_usuario">
                         <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre de usuario:</label>
-                            <input type="text" class="form-control" id="editNombre" name="nombre_usuario" required
-                                pattern="[A-Za-z\s]+" maxlength="50">
+                            <label for="nombre" class="form-label"><i class="bi bi-person me-2"></i>Nombre de usuario:</label>
+                            <input type="text" class="form-control" id="editNombre" name="nombre_usuario" required maxlength="50"
+                            oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')">
                         </div>
                         <div class="mb-3">
-                            <label for="correo" class="form-label">Correo:</label>
+                            <label for="correo" class="form-label"><i class="bi bi-envelope me-2"></i>Correo:</label>
                             <input type="email" class="form-control" id="editCorreo" name="correo" required>
                         </div>
                         <div class="mb-3">
-                            <label for="telefono" class="form-label">Télefono:</label>
-                            <input type="telefono" class="form-control" id="editTelefono" name="telefono_usuario" required pattern="\d{10}" maxlength="10">
+                            <label for="telefono" class="form-label"><i class="bi bi-telephone me-2"></i>Télefono:</label>
+                            <input type="telefono" class="form-control" id="editTelefono" name="telefono_usuario" required maxlength="10"
+                            oninput="this.value = this.value.replace(/\D/g, '')">
                         </div>
                         <div class="mb-3">
-                            <label for="rol" class="form-label">Rol del usuario:</label>
+                            <label for="rol" class="form-label"><i class="bi bi-person-vcard me-2"></i>Rol del usuario:</label>
                             <select id="editRol" name="rol" class="form-control" required>
                                 <option value="" selected disabled>Seleccione un rol...</option>
                                 <option value="Administrador">Administrador</option>
-                                <option value="Técnico">Técnico</option>
                                 <option value="Vendedor">Vendedor</option>                                                                  
                             </select>
                         </div>
@@ -124,7 +124,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalEliminarLabel">Eliminar Usuario</h5>
+                    <h5 class="modal-title" id="modalEliminarLabel"><i class="bi bi-trash me-2"></i>Eliminar Usuario</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body text-center">

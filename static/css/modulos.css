@@ -435,3 +435,11 @@ table.dataTable {
 .image-preview:hover .delete-btn {
     opacity: 1;
 }
+
+.modal-backdrop.show + .modal-backdrop {
+  z-index: 1060 !important;
+}
+
+#modalEliminarImagen, #qtyModal {
+  z-index: 1070 !important;
+}

@@ -8,6 +8,7 @@ from clientes.repositorio import ClienteRepositorio
 from clientes.model import Cliente
 from fastapi import HTTPException
 from datetime import date, timedelta
+from servicios.model import ServicioTecnico
 try:
     from dateutil.relativedelta import relativedelta
 except Exception:
@@ -126,3 +127,43 @@ class GarantiaControlador:
 
         self.db.commit()
         return JSONResponse({"ok": True, "nueva_garantia_id": g_nueva.id_garantia})
+    
+    
+    def listar_garantias_servicios(self, q: str | None = None):
+    # Join GarantiaServicio -> ServicioTecnico -> Cliente
+        query = (
+            self.db.query(
+                GarantiaServicio.id_garantia.label("id_garantia"),
+                Cliente.nombre_cliente.label("cliente"),
+                ServicioTecnico.tipo_equipo.label("equipo"),
+                GarantiaServicio.fecha_inicio.label("fecha_inicio"),
+                GarantiaServicio.fecha_fin.label("fecha_fin"),
+                (ServicioTecnico.descripcion_trabajo if ServicioTecnico.descripcion_trabajo is not None else ServicioTecnico.descripcion_problema).label("descripcion"),
+                ServicioTecnico.id_servicio.label("id_servicio"),
+            )
+            .join(ServicioTecnico, GarantiaServicio.id_servicio == ServicioTecnico.id_servicio)
+            .join(Cliente, ServicioTecnico.id_cliente == Cliente.id_cliente)
+            .order_by(GarantiaServicio.id_garantia.desc())
+        )
+
+        if q:
+            like = f"%{q}%"
+            query = query.filter(
+                (Cliente.nombre_cliente.ilike(like)) |
+                (ServicioTecnico.tipo_equipo.ilike(like)) |
+                (ServicioTecnico.descripcion_trabajo.ilike(like)) |
+                (ServicioTecnico.descripcion_problema.ilike(like))
+            )
+
+        rows = query.all()
+        data = [{
+            "id_garantia": r.id_garantia,
+            "cliente": r.cliente,
+            "equipo": r.equipo,
+            "fecha_inicio": r.fecha_inicio.strftime("%Y-%m-%d"),
+            "fecha_fin": r.fecha_fin.strftime("%Y-%m-%d"),
+            "descripcion": r.descripcion or "",
+            "id_servicio": r.id_servicio,
+        } for r in rows]
+
+        return JSONResponse(data)

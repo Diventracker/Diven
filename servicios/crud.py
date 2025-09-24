@@ -1,8 +1,17 @@
 import os
 import shutil
+from datetime import date, timedelta
 from fastapi import UploadFile
-from servicios.model import DetalleServicio, ImagenServicio, ServicioTecnico
+
+from servicios.model import (
+    DetalleServicio,
+    ImagenServicio,
+    ServicioTecnico,
+)
+from garantias.model import GarantiaServicio  # <- aquí está la clase correcta
 from servicios.schema import ServicioRevisionSchema, ServicioUpdate
+
+
 
 class ServicioCRUD:
     def __init__(self, repo):
@@ -19,17 +28,19 @@ class ServicioCRUD:
             tipo_equipo=datos.tipo_equipo,
             tipo_servicio=datos.tipo_servicio,
             precio_servicio=datos.precio_servicio,
-            descripcion_problema=datos.descripcion
+            descripcion_problema=datos.descripcion,
         )
-
         self.repo.db.add(nuevo)
         self.repo.db.commit()
         self.repo.db.refresh(nuevo)
         return nuevo
 
-#crud para filtrar todos los estados en finalizados al repo
+    # --- LISTADOS / FILTROS -------------------------------------------------
+
     def filtrar_finalizados(self):
         return self.repo.listar_finalizados()
+
+    # --- IMÁGENES -----------------------------------------------------------
 
     def guardar_imagenes(self, imagenes: list[UploadFile], servicio_id: int) -> None:
         from utils.uploads import guardar_imagen  # evitar ciclos
@@ -41,21 +52,24 @@ class ServicioCRUD:
 
         self.repo.db.commit()
 
-    #Funcion que eliminar los registros con todo y carpeta de imagenes
+    # --- ELIMINAR SERVICIO (y carpeta de imágenes) --------------------------
+
     def eliminar(self, id_servicio: int):
         servicio = self.repo.obtener_por_id(id_servicio)
         if not servicio:
             raise ValueError("Servicio no encontrado")
-        
-        # Eliminar carpeta de imágenes
+
+        # Eliminar carpeta de imágenes (si existe)
         ruta_carpeta = os.path.join("static", "img", "servicios", str(id_servicio))
         if os.path.exists(ruta_carpeta):
             shutil.rmtree(ruta_carpeta)
 
-            self.repo.db.delete(servicio)
-            self.repo.db.commit()
+        # Eliminar el registro del servicio SIEMPRE
+        self.repo.db.delete(servicio)
+        self.repo.db.commit()
 
-    #Funcion que actualiza el estado del servicio a en revision
+    # --- REVISIÓN -----------------------------------------------------------
+
     def registrar_revision(self, data: ServicioRevisionSchema, usuario_id: int):
         servicio = self.repo.obtener_por_id(data.id_servicio)
         if not servicio:
@@ -74,13 +88,14 @@ class ServicioCRUD:
                     id_servicio=data.id_servicio,
                     id_usuario=usuario_id,
                     valor_adicional=detalle.valor_adicional,
-                    motivo=detalle.motivo
+                    motivo=detalle.motivo,
                 )
                 self.repo.db.add(nuevo)
 
         self.repo.db.commit()
 
-    #Funcion que maneja la edicion de los servicios
+    # --- ACTUALIZAR ---------------------------------------------------------
+
     def actualizar(self, id_servicio: int, datos: ServicioUpdate, usuario_id: int):
         servicio = self.repo.obtener_por_id(id_servicio)
         if not servicio:
@@ -92,6 +107,7 @@ class ServicioCRUD:
         servicio.tipo_servicio = datos.tipo_servicio
         servicio.descripcion_problema = datos.descripcion
         servicio.precio_servicio = datos.precio_servicio
+
         if datos.descripcion_trabajo is not None:
             servicio.descripcion_trabajo = datos.descripcion_trabajo
         if datos.meses_garantia is not None:
@@ -105,37 +121,36 @@ class ServicioCRUD:
                     id_servicio=id_servicio,
                     id_usuario=usuario_id,
                     valor_adicional=d.valor_adicional,
-                    motivo=d.motivo
+                    motivo=d.motivo,
                 )
                 self.repo.db.add(detalle)
 
         self.repo.db.commit()
 
-    #Retorna los servicios con el estado en revision
+    # --- CONSULTAS PARA VISTAS ---------------------------------------------
+
     def obtener_servicios_en_revision(self):
         return self.repo.obtener_en_revision()
-    
-    #Obtiene la info del comprobante.html
+
     def obtener_comprobante_data(self, id_servicio: int):
         servicio = self.repo.obtener_por_id(id_servicio)
         if not servicio:
             raise ValueError("Servicio no encontrado")
-
         detalles = self.repo.obtener_detalles(id_servicio)
         return servicio, servicio.cliente, detalles
-    
-    #Para el modal actualizar
+
     def obtener_detalles_servicio(self, id_servicio: int):
         return self.repo.obtener_detalles(id_servicio)
-    
-    #Aprobar / rechazar el servicio
+
+    # --- APROBAR / RECHAZAR / FINALIZAR (CREA GARANTÍA) --------------------
+
     def cambiar_estado(self, id_servicio: int, nuevo_estado: str, motivo: str | None = None):
         servicio = self.repo.obtener_por_id(id_servicio)
         if not servicio:
             raise ValueError("Servicio no encontrado")
 
-        estado_actual = servicio.estado_servicio.lower()
-        nuevo_estado = nuevo_estado.lower()
+        estado_actual = (servicio.estado_servicio or "").lower()
+        nuevo_estado = (nuevo_estado or "").lower()
 
         if estado_actual == "finalizado":
             raise ValueError("El servicio ya está finalizado y no se puede modificar")
@@ -146,30 +161,53 @@ class ServicioCRUD:
         if nuevo_estado == "rechazado" and not motivo:
             raise ValueError("Debe proporcionar un motivo para el rechazo")
 
+        # Actualiza estado
         servicio.estado_servicio = nuevo_estado.capitalize()
-        self.repo.db.commit()
 
+        # Si finaliza: setea fecha_entrega y crea garantía (idempotente)
+        if nuevo_estado == "finalizado":
+            if not servicio.fecha_entrega:
+                servicio.fecha_entrega = date.today()
+
+            # ¿Ya existe una garantía para este servicio?
+            existente = (
+                self.repo.db.query(GarantiaServicio)
+                .filter(GarantiaServicio.id_servicio == id_servicio)
+                .first()
+            )
+
+            if not existente:
+                # Si meses_garantia viene 0/None, asumimos al menos 1 mes
+                meses = servicio.meses_garantia if servicio.meses_garantia and servicio.meses_garantia > 0 else 1
+                dias = meses * 30
+                g = GarantiaServicio(
+                    id_servicio=id_servicio,
+                    fecha_inicio=date.today(),
+                    fecha_fin=date.today() + timedelta(days=dias),
+                    estado="activa",
+                )
+                self.repo.db.add(g)
+
+        self.repo.db.commit()
+        self.repo.db.refresh(servicio)
         return servicio
-    
-    #Grafica del dashboard
+
+    # --- DASHBOARD / TOTALES / IMÁGENES ------------------------------------
+
     def obtener_conteo_por_equipo(self):
         return self.repo.contar_por_tipo_equipo()
-    
-    #Para consultar los datos en los totales del servicio
+
     def obtener_datos_para_totales(self, id_servicio: int):
         return self.repo.obtener_datos_base(id_servicio)
-    
-    #Funcion para imagenes de un servicio
+
     def obtener_imagenes_por_servicio(self, id_servicio: int):
         return self.repo.listar_imagenes_por_servicio(id_servicio)
-    
+
     def obtener_imagen_por_id(self, id_imagen: int):
         return self.repo.buscar_imagen_por_id(id_imagen)
 
-    #Eliminar imagen
     def eliminar_imagen(self, id_imagen: int):
         imagen = self.repo.buscar_imagen_por_id(id_imagen)
-
         if not imagen:
             return False, "Imagen no encontrada"
 
@@ -183,6 +221,7 @@ class ServicioCRUD:
         self.repo.db.commit()
 
         return True, "Imagen eliminada correctamente"
+<<<<<<< HEAD
     
     #guardar total en la base de datos
     def guardar_total(self, id_servicio: int, total: int):
@@ -197,3 +236,5 @@ class ServicioCRUD:
             self.repo.db.commit()
 
             return servicio
+=======
+>>>>>>> 385cbfd109f7e2ffd2eb8a6997e7dec9968bb776

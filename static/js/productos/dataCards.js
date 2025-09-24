@@ -1,5 +1,11 @@
 let lista; // para acceso global
 
+const formatoPesos = new Intl.NumberFormat("es-CO", {
+  style: "currency",
+  currency: "COP",
+  minimumFractionDigits: 0
+});
+
 async function actualizarProductos() {
   const response = await fetch("/productos/data");
   const productos = await response.json();
@@ -30,7 +36,7 @@ async function actualizarProductos() {
               data-bs-toggle="modal" data-bs-target="#modalEditar"
               data-id="${p.id}" data-nombre="${p.nombre}" data-modelo="${p.modelo}"
               data-descripcion="${p.descripcion}" data-precio="${p.precio}"
-              data-precioVenta="${p.precio}" data-idProveedor="${p.id_proveedor}"
+              data-precioVenta="${p.precio_venta}" data-idProveedor="${p.id_proveedor}"
               data-nombreProveedor="${p.proveedor}" data-garantia="${p.garantia || ''}">
             <i class="bi bi-pencil"></i>
           </button>
@@ -50,7 +56,7 @@ async function actualizarProductos() {
             <h5 class="card-title nombre">${p.nombre}</h5>
             <p class="card-text">${p.descripcion}</p>
             <p class="card-text mb-1">
-              <strong>Precio:</strong> $<span class="precio">${p.precio}</span>
+              <strong>Precio:</strong> ${formatoPesos.format(p.precio_venta)}
             </p>
           </div>
           <div class="mt-auto d-flex justify-content-between align-items-center">

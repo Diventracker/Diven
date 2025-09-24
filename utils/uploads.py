@@ -1,38 +1,37 @@
 import os
-import shutil
 from uuid import uuid4
 from pathlib import Path
 from fastapi import UploadFile
 
-VOLUMEN_SERVICIOS = "/data/img/servicios"
-STATIC_SERVICIOS = "static/img/servicios"
+# Detectar si existe el volumen en /data (Railway)
+EN_HOST = Path("/data").exists()
 
-def guardar_imagen(file: UploadFile, servicio_id: int,
-                   carpeta_volumen: str = VOLUMEN_SERVICIOS,
-                   carpeta_static: str = STATIC_SERVICIOS) -> str:
-    # Extrae extensión de forma segura
+# Definir rutas base
+BASE_PATH = Path("/data") if EN_HOST else Path("static")
+
+
+def guardar_imagen(file: UploadFile, servicio_id: int, carpeta: str = "img/servicios") -> str:
+    # Validar extensión
     ext = Path(file.filename).suffix.lower().strip(".")
     if ext not in ["jpg", "jpeg", "png", "gif", "webp"]:
         raise ValueError("Tipo de archivo no soportado")
 
-    # Genera nombre único
+    # Generar nombre único
     nombre_archivo = f"{uuid4().hex}.{ext}"
 
-    # Rutas completas
-    ruta_carpeta_volumen = Path(carpeta_volumen) / str(servicio_id)
-    ruta_carpeta_static = Path(carpeta_static) / str(servicio_id)
-    ruta_carpeta_volumen.mkdir(parents=True, exist_ok=True)
-    ruta_carpeta_static.mkdir(parents=True, exist_ok=True)
+    # Carpeta física
+    ruta_carpeta = BASE_PATH / carpeta / str(servicio_id)
+    ruta_carpeta.mkdir(parents=True, exist_ok=True)
 
-    ruta_final_volumen = ruta_carpeta_volumen / nombre_archivo
-    ruta_final_static = ruta_carpeta_static / nombre_archivo
-
-    # Guarda en volumen persistente
-    with open(ruta_final_volumen, "wb") as f:
+    # Ruta final donde se guarda
+    ruta_final = ruta_carpeta / nombre_archivo
+    with open(ruta_final, "wb") as f:
         f.write(file.file.read())
 
-    # Copia a static para que FastAPI pueda servirlo
-    shutil.copy2(ruta_final_volumen, ruta_final_static)
-
-    # Retorna ruta relativa desde /static
-    return f"/static/img/servicios/{servicio_id}/{nombre_archivo}"
+    # Devolver URL accesible según entorno
+    if EN_HOST:
+        # En Railway servimos desde /media
+        return f"/media/{carpeta}/{servicio_id}/{nombre_archivo}"
+    else:
+        # En local usamos /static
+        return f"/static/{carpeta}/{servicio_id}/{nombre_archivo}"

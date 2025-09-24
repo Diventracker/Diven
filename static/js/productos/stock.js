@@ -1,6 +1,10 @@
-document.addEventListener("DOMContentLoaded", function() {
-  obtenerProductosBajoStock();
+document.addEventListener("shown.bs.tab", function (event) {
+  const target = event.target.getAttribute("data-bs-target"); // ej: "#tab2"
+  if (target === "#tab2") {
+    obtenerProductosBajoStock();
+  }
 });
+
 
 //Este es el select2 de los productos
 initSelect2Modal({

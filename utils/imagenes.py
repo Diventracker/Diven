@@ -1,35 +1,35 @@
 import os
-import shutil
 from datetime import datetime
+from pathlib import Path
 from fastapi import UploadFile
 
-VOLUMEN_PRODUCTOS = "/data/img/productos"
-STATIC_PRODUCTOS = "static/img/productos"
+# Detectar si estamos en Railway (con /data montado) o en local
+EN_HOST = Path("/data").exists()
 
-async def guardar_imagen(imagen: UploadFile, carpeta_volumen: str = VOLUMEN_PRODUCTOS, carpeta_static: str = STATIC_PRODUCTOS) -> str:
-    """
-    Guarda una imagen en la carpeta del volumen persistente y copia a static.
-    Devuelve la ruta relativa para usar en la base de datos.
-    """
+# Base según entorno
+BASE_PATH = Path("/data") if EN_HOST else Path("static")
+
+
+async def guardar_imagen(imagen: UploadFile, carpeta: str = "img/productos") -> str:
     if not imagen:
         return None
 
-    # Asegurar que existan las carpetas
-    os.makedirs(carpeta_volumen, exist_ok=True)
-    os.makedirs(carpeta_static, exist_ok=True)
+    # Crear carpeta
+    ruta_carpeta = BASE_PATH / carpeta
+    ruta_carpeta.mkdir(parents=True, exist_ok=True)
 
-    # Nombre único para evitar colisiones
+    # Nombre único
     nombre_unico = f"{datetime.now().timestamp()}_{imagen.filename}"
-    ruta_volumen = os.path.join(carpeta_volumen, nombre_unico)
-    ruta_static = os.path.join(carpeta_static, nombre_unico)
+    ruta_final = ruta_carpeta / nombre_unico
 
-    # Guardar en volumen persistente
+    # Guardar archivo
     contenido = await imagen.read()
-    with open(ruta_volumen, "wb") as f:
+    with open(ruta_final, "wb") as f:
         f.write(contenido)
 
-    # Copiar a static para servirlo
-    shutil.copy2(ruta_volumen, ruta_static)
+    # Si estamos en Railway → devolver /media
+    if EN_HOST:
+        return f"/media/{carpeta}/{nombre_unico}"
+    # Si estamos local → devolver /static
+    return f"/static/{carpeta}/{nombre_unico}"
 
-    # Devolver ruta relativa para usar en la UI/DB
-    return f"/static/img/productos/{nombre_unico}"

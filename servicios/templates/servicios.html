@@ -267,8 +267,205 @@
                             </div>
                             <!-- campos a editar -->
                             <div class="mb-3">
+<<<<<<< HEAD
                                 <label class="form-label"><i class="bi bi-clipboard-check me-2"></i>Descripción del
                                     Trabajo Realizado</label>
+=======
+                                <label class="form-label"><i class="bi bi-person me-2"></i>Modelo del equipo</label>
+                                <input type="text" id="editModeloEquipo" class="form-control" name="modelo_equipo" required maxlength="20">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="bi bi-laptop me-2"></i>Técnico</label>
+                                <input type="text" id="editTecnico" class="form-control" disabled>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editTipoEquipo" class="form-label"><i class="bi bi-list me-2"></i>Tipo de equipo</label>
+                                <select class="form-control" id="editTipoEquipo" name="tipo_equipo" required>
+                                    <option value="" disabled selected hidden>Seleccionar tipo de equipo...</option>
+                                    <option value="Computador de mesa">Computador de mesa</option>
+                                    <option value="Computador portatil">Computador portatil</option>
+                                    <option value="Impresora laser">Impresora laser</option>
+                                    <option value="Impresora de tinta">Impresora de tinta</option>
+                                    <option value="Impresora termica">Impresora termica</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editTipoServicio" class="form-label"><i class="bi bi-wrench me-2"></i>Tipo de servicio</label>
+                                <select class="form-control" id="editTipoServicio" name="tipo_servicio" required>
+                                    <option value="" disabled selected hidden>Seleccionar tipo de servicio...</option>
+                                    <option value="Mantenimiento">Mantenimiento</option>
+                                    <option value="Reparación">Reparación</option>
+                                    <option value="Diagnóstico">Diagnóstico</option>
+                                    <option value="Instalación">Instalación</option>                                    
+                                </select>
+                            </div> 
+                            <div class="col-md-6 mb-3">
+                                <label for="precio_mostrar" class="form-label"><i class="bi bi-coin me-2"></i>Precio</label>
+                                <input class="form-control formato-moneda" type="text" id="editPrecio"> 
+                                <input type="hidden" name="precio_servicio" id="ediPrecioReal">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label"><i class="bi bi-file-text me-2"></i>Descripción del problema</label>
+                                <textarea class="form-control" id="editDescripcion" name="descripcion" placeholder="Descripción inicial del problema..." style="height: 100px" required maxlength="100"></textarea>                                
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label"><i class="bi bi-images me-2"></i>Adjuntar imágenes</label>
+
+                                <!-- Zona de carga -->
+                                <div class="drag-area" id="dragArea3">
+                                    <i class="bi bi-cloud-upload-fill mb-3 fs-1"></i>
+                                    <p class="mb-2">
+                                        Arrastra las imágenes aquí o 
+                                        <span class="text-verde fw-bold" style="cursor: pointer;" onclick="event.stopPropagation(); document.getElementById('fileInput3').click()">
+                                            selecciona archivos
+                                        </span>
+                                    </p>
+                                    <small class="text-muted">PNG, JPG, GIF hasta 10MB</small>
+                                    <input type="file" id="fileInput3" multiple accept="image/*" style="display: none;">
+                                    <div id="errorImagenes3" class="error-msg" style="color: red; display: none;">Debes seleccionar al menos una imagen.</div>
+                                </div>
+
+                                <!-- Vista previa de imágenes -->
+                                 <label class="form-label mt-3"><i class="bi bi-images me-2"></i>Imágenes Registradas</label>
+                                <div id="imagePreview3" class="row g-3" style="display: none;"></div>
+                            </div>
+                            <div class="mb-3 d-none" id="detallesTrabajo">
+                                <div class="mb-3">
+                                    <hr class="section-divider">
+                                </div>                                                                          
+                                <!-- campos a editar -->
+                                <div class="mb-3">
+                                    <label class="form-label"><i class="bi bi-clipboard-check me-2"></i>Descripción del Trabajo Realizado</label>
+                                    <div class="form-floating">
+                                        <textarea class="form-control" id="editTrabajo" style="height: 100px" placeholder="Describe detalladamente el trabajo realizado..."></textarea>
+                                        <label for="editTrabajo">
+                                            <i class="bi bi-pencil me-2"></i>
+                                            Detalla el trabajo realizado, problemas encontrados y soluciones aplicadas
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label"><i class="bi bi-shield-check me-2"></i>Meses de garantia</label>
+                                    <input type="text" class="form-control" name="meses_garantia" id="editGarantia" required min="0" value="0">
+                                </div>
+                            </div>
+                            <div class="mb-3 d-none" id="detalleCostos2">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h6 class="mb-0">
+                                                <i class="bi bi-calculator me-2"></i>
+                                                Detalle de Costos Adicionales
+                                            </h6>
+                                            <button type="button" class="btn btn-outline-enviar btn-sm" id="agregarCosto2">
+                                                <i class="bi bi-plus-circle me-1"></i> Agregar costo
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">                                    
+                                        <div id="grupoCostos2">
+                                            <!-- Aca se colocan los costos que estan en la bd -->                                            
+                                        </div>                                                                    
+                                    </div>
+                                </div> 
+                            </div>
+                            <div class="mb-3 d-none" id="totales2">
+                                <div class="card card-totales">
+                                    <div class="card-body text-center">
+                                        <div class="row text-center">
+                                            <div class="col-md-4">
+                                                <div>
+                                                    <i class="bi bi-tag me-2"></i>
+                                                    <strong>Precio Base</strong>
+                                                </div>
+                                                <div class="h5 text-primary mb-0" id="precioBase2"></div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div>
+                                                    <i class="bi bi-plus-circle me-2"></i>
+                                                    <strong>Adicionales</strong>
+                                                </div>
+                                                <div class="h5 text-warning mb-0" id="totalAdicionales2"></div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div>
+                                                    <i class="bi bi-calculator me-2"></i>
+                                                    <strong>Total</strong>
+                                                </div>
+                                                <div class="h4 text-success mb-0" id="totalFinal2"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                            
+                            </div>
+                            <button type="submit" class="btn btn-enviar w-100" id="saveChanges">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Eliminar -->
+    <div class="modal fade" id="modalEliminar" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEliminarLabel"><i class="bi bi-trash me-2"></i>Eliminar Servicio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>¿Seguro que desea eliminar este servicio?</p>
+                    <input type="hidden" id="servicioIdToDelete" />
+                    <span id="nombreServicio" class="fw-bold d-block fs-4"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Check Pendiente -->
+    <div class="modal fade" id="modalCheck" aria-labelledby="modalCheckLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCheckLabel"><i class="bi bi-clipboard-check me-2"></i>Solicitar Revisión Servicio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">                    
+                    <form id="checkServicioForm">
+                        <input type="hidden" id="serviceIdCheck">
+                        <!-- cards superiores -->
+                        <div class="row">                            
+                            <div class="col-md-6 mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body card-move text-center">
+                                        <h6 class="card-title">
+                                            <i class="bi bi-info-circle me-2"></i>
+                                            Servicio ID
+                                        </h6>
+                                        <h4 class="text-verde" id="servicioIdCheck"></h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body card-move text-center">
+                                        <h6 class="card-title"><i class="bi bi-laptop me-2"></i>Modelo del equipo</h6>
+                                        <h4 class="text-verde" id="idModeloCheck"></h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <hr class="section-divider">
+                            </div>                                                                          
+                            <!-- campos a editar -->
+                             <div class="mb-3">
+                                <h6 class="mb-3"><i class="bi bi-check2-square me-2"></i>Descripción del Trabajo Realizado</h6>
+>>>>>>> 385cbfd109f7e2ffd2eb8a6997e7dec9968bb776
                                 <div class="form-floating">
                                     <textarea class="form-control" id="editTrabajo" style="height: 100px"
                                         placeholder="Describe detalladamente el trabajo realizado..."></textarea>
@@ -607,8 +804,32 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
 </div>
 
+=======
+
+    <!-- Modal Confirmar Eliminar Imagen -->
+    <div class="modal fade" id="modalEliminarImagen" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modalEliminarLabel">
+            <i class="bi bi-trash me-2"></i>Eliminar Imagen
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body text-center">
+            <p>¿Seguro que deseas eliminar esta imagen?</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteImg">Eliminar</button>
+        </div>
+        </div>
+    </div>
+    </div>
+>>>>>>> 385cbfd109f7e2ffd2eb8a6997e7dec9968bb776
 {% endblock %}
 
 {% block scripts %}

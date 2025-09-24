@@ -4,7 +4,7 @@
     url: window.location.pathname
   }, "*");
   
-  
+// funcion para crear un producto
 handleFormSubmit({
   formId: 'registrarProducto',
   url: '/producto/crear',

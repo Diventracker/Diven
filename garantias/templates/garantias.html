@@ -8,11 +8,11 @@
   <!-- DataTables -->
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-  <!-- Tu helper (después de jQuery/DataTables) -->
+  <!-- Helper site (después de jQuery/DataTables) -->
   <script src="/static/js/funciones/dataTables.js"></script>
 {% endblock %}
 
-<!-- Encabezados / layout -->
+{# ====== Variables usadas por plantilla.html ====== #}
 {% set titulo = "Gestión de Garantías" %}
 {% set icono = "shield-check" %}
 
@@ -37,6 +37,7 @@
 {% set subtitulo3 = "Lista Garantías de Servicios" %}
 {% set tabla_id2 = "tablaServicios" %}
 
+{# ====== Encabezados de las dos tablas ====== #}
 {% block columnas_tabla %}
 <tr>
   <th>ID Garantía</th>
@@ -61,40 +62,9 @@
 </tr>
 {% endblock %}
 
+{# ====== Modales ====== #}
 {% block modales %}
-  <!-- Modal: Cambiar Estado -->
-  <div class="modal fade" id="modalEstadoGarantia" tabindex="-1" aria-labelledby="modalEstadoGarantiaLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <form id="formEstadoGarantia" class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalEstadoGarantiaLabel">Actualizar estado de garantía</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" id="estado_garantia_id">
-          <input type="hidden" id="estado_garantia_tipo" value="producto">
-          <div class="mb-3">
-            <label class="form-label">Nuevo estado</label>
-            <select id="estado_garantia_valor" class="form-select" required>
-              <option value="activa">Activa</option>
-              <option value="vencida">Vencida</option>
-              <option value="anulada">Anulada</option>
-              <option value="renovada">Renovada</option>
-            </select>
-          </div>
-          <div class="text-muted small">
-            “Vencida”: la fecha fin ya pasó. “Anulada”: devolución o corrección. “Renovada”: se emitió una nueva garantía.
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Guardar</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal: Renovar Garantía -->
+  <!-- Modal: Renovar Garantía (sólo ventas) -->
   <div class="modal fade" id="modalRenovar" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <form id="formRenovar" class="modal-content">
@@ -135,10 +105,10 @@
 
 {% block scripts %}
 <script>
-  // Limpia handlers heredados en #buscador
+  // Evita handlers heredados en #buscador
   $(document).off('keypress', '#buscador');
 
-  // Columnas tabla ventas
+  // ---------- TABLA: VENTAS ----------
   const columnasVentas = [
     { data: "id_garantia",  title: "ID Garantía" },
     { data: "cliente",      title: "Cliente" },
@@ -163,9 +133,9 @@
       orderable: false,
       render: (_, __, row) => `
         <div class="btn-group">
-          <button class="btn btn-sm btn-outline-primary"
-                  onclick="abrirModalEstado(${row.id_garantia}, 'producto', '${(row.estado || '').replace(/'/g, '\\\'')}')">
-            Cambiar estado
+          <button class="btn btn-sm btn-outline-danger"
+                  onclick="anularGarantia('producto', ${row.id_garantia})">
+            Anular
           </button>
           <button class="btn btn-sm btn-outline-success"
                   onclick="abrirModalRenovar(${row.id_garantia}, '${(row.producto || '').replace(/'/g, '\\\'')}')">
@@ -175,8 +145,20 @@
     }
   ];
 
+  // ---------- TABLA: SERVICIOS ----------
+  const columnasServicios = [
+    { data: "id_garantia",  title: "ID Garantía" },
+    { data: "cliente",      title: "Cliente" },
+    { data: "equipo",       title: "Equipo" },
+    { data: "fecha_inicio", title: "Fecha de Inicio" },
+    { data: "fecha_fin",    title: "Fecha de Finalización" },
+    { data: "descripcion",  title: "Descripción",
+      render: (d) => d ? $('<div/>').text(d).html() : '<span class="text-muted">—</span>'
+    }
+  ];
+
   document.addEventListener("DOMContentLoaded", () => {
-    // Inicializa DataTable (helper si existe, si no fallback)
+    // --- Ventas ---
     if (typeof inicializarDataTable === "function") {
       inicializarDataTable('tablaVentas', '/garantias/data/ventas', columnasVentas);
     } else {
@@ -194,46 +176,65 @@
       });
     }
 
+    // --- Servicios ---
+    const dtServicios = $('#tablaServicios').DataTable({
+      ajax: {
+        url: '/garantias/data/servicios',
+        dataSrc: '',
+        data: function (d) {
+          const input = document.getElementById('buscador2');
+          if (input && input.value.trim().length > 0) d.q = input.value.trim();
+        }
+      },
+      columns: columnasServicios,
+      destroy: true,
+      language: {
+        search: "Buscar:",
+        lengthMenu: "Mostrar _MENU_ registros",
+        info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+        paginate: { first:"Primero", last:"Último", next:"Siguiente", previous:"Anterior" },
+        zeroRecords: "No se encontraron resultados"
+      }
+    });
+
+    // Buscar en Servicios con Enter si existe #buscador2
+    $(document).on('keypress', '#buscador2', function(e) {
+      if (e.which === 13) {
+        dtServicios.ajax.reload();
+      }
+    });
+
     // Default fecha hoy en modal renovar
     const today = new Date().toISOString().slice(0,10);
     $('#renovar_fecha_inicio').val(today);
   });
 
-  // Abrir modal: Cambiar Estado
-  window.abrirModalEstado = function(idGarantia, tipo, estadoActual){
-    $('#estado_garantia_id').val(idGarantia);
-    $('#estado_garantia_tipo').val(tipo || 'producto');
-    $('#estado_garantia_valor').val(estadoActual || 'activa');
-    $('#modalEstadoGarantia').modal('show');
-  };
-
-  // Enviar: Cambiar Estado
-  $('#formEstadoGarantia').on('submit', async function(e){
-    e.preventDefault();
-    const id     = $('#estado_garantia_id').val();
-    const tipo   = $('#estado_garantia_tipo').val(); // 'producto' o 'servicio'
-    const estado = $('#estado_garantia_valor').val();
+  // ---------- ACCIONES ----------
+  async function anularGarantia(tipo, idGarantia) {
+    if (!confirm('¿Deseas anular esta garantía? Esta acción no se puede deshacer.')) return;
 
     try {
-      const resp = await fetch(`/garantias/${tipo}/${id}/estado`, {
+      const resp = await fetch(`/garantias/${encodeURIComponent(tipo)}/${idGarantia}/estado`, {
         method: 'POST',
-        headers: { 'Content-Type':'application/json' },
-        body: JSON.stringify({ estado })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ estado: 'anulada' })
       });
+
       if (!resp.ok) {
         const msg = await resp.text();
-        alert('No se pudo actualizar el estado.\n' + msg);
+        alert('No se pudo anular la garantía.\n' + msg);
         return;
       }
-      $('#modalEstadoGarantia').modal('hide');
-      $('#tablaVentas').DataTable().ajax.reload(null, false);
-    } catch (err) {
-      console.error(err);
-      alert('Error de red al actualizar el estado.');
-    }
-  });
 
-  // Abrir modal: Renovar
+      if ($.fn.DataTable.isDataTable('#tablaVentas')) $('#tablaVentas').DataTable().ajax.reload(null, false);
+      if ($.fn.DataTable.isDataTable('#tablaServicios')) $('#tablaServicios').DataTable().ajax.reload(null, false);
+    } catch (e) {
+      console.error(e);
+      alert('Error de red al anular la garantía.');
+    }
+  }
+
+  // Renovar (ventas)
   window.abrirModalRenovar = function(idGarantia, nombreProducto){
     $('#renovar_garantia_id').val(idGarantia);
     $('#renovar_producto_actual').val(nombreProducto || '');
@@ -242,7 +243,6 @@
     $('#modalRenovar').modal('show');
   };
 
-  // Enviar: Renovar
   $('#formRenovar').on('submit', async function(e){
     e.preventDefault();
     const id = $('#renovar_garantia_id').val();
@@ -264,21 +264,11 @@
         return;
       }
       $('#modalRenovar').modal('hide');
-      $('#tablaVentas').DataTable().ajax.reload(null, false);
+      if ($.fn.DataTable.isDataTable('#tablaVentas')) $('#tablaVentas').DataTable().ajax.reload(null, false);
     } catch (err) {
       console.error(err);
       alert('Error de red al renovar la garantía.');
     }
   });
-
-  /* Filtro en servidor (opcional)
-  $(document).on('keypress', '#buscador', function(e) {
-    if (e.which === 13) {
-      const v = $(this).val().trim();
-      const dt = $('#tablaVentas').DataTable();
-      dt.ajax.url('/garantias/data/ventas' + (v ? ('?cliente=' + encodeURIComponent(v)) : '')).load();
-    }
-  });
-  */
 </script>
 {% endblock %}

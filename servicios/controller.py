@@ -1,11 +1,14 @@
-from datetime import datetime
+from datetime import datetime, date
 import os
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi import Request, UploadFile
+
 from servicios.schema import EstadoServicioInput, ServicioCreate, ServicioRevisionSchema, ServicioUpdate
 from servicios.repositorio import ServicioRepositorio
 from servicios.crud import ServicioCRUD
+from garantias.model import GarantiaServicio  # <- mantener este, quitar el de servicios.model
+
 
 templates = Jinja2Templates(directory=["templates", "servicios/templates"])
 
@@ -200,8 +203,9 @@ class ServicioControlador:
         return JSONResponse(content=resultado)
     
     #Aprobar/ rechazar el servicio
-    def actualizar_estado(self, id_servicio: int, datos: EstadoServicioInput):
+    def actualizar_estado(self, id_servicio: int, datos):
         try:
+<<<<<<< HEAD
             if datos.nuevo_estado == "facturado":
                 datos = self.crud.obtener_datos_para_totales(id_servicio)
                 if not datos:
@@ -224,8 +228,31 @@ class ServicioControlador:
                 )
             return JSONResponse(content={"success": True, "message": f"Servicio marcado como {servicio.estado_servicio}"})
         
+=======
+            servicio = self.crud.cambiar_estado(id_servicio, datos.nuevo_estado, datos.motivo)
+            return JSONResponse(content={"success": True, "mensaje": "Estado actualizado", "estado": servicio.estado_servicio})
+>>>>>>> 385cbfd109f7e2ffd2eb8a6997e7dec9968bb776
         except ValueError as e:
             return JSONResponse(content={"success": False, "error": str(e)}, status_code=400)
+        except Exception as e:
+            return JSONResponse(content={"success": False, "error": "Error interno al actualizar estado"}, status_code=500)
+        
+    def obtener_garantia_servicio(self, id_servicio: int):
+        g = self.db.query(GarantiaServicio).filter(GarantiaServicio.id_servicio == id_servicio).first()
+        if not g:
+            return JSONResponse(status_code=404, content={"success": False, "error": "El servicio no tiene garantía"})
+
+        return JSONResponse(content={
+            "success": True,
+            "data": {
+                "id_servicio": id_servicio,
+                "fecha_inicio": g.fecha_inicio.isoformat(),
+                "fecha_fin": g.fecha_fin.isoformat(),
+                "estado": g.estado,
+                "vigente": g.fecha_fin >= date.today()
+            }
+        })
+
         
     #graficas del dashboard
     def servicios_por_equipo(self):
