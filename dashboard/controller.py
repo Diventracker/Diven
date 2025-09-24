@@ -1,89 +1,124 @@
-from fastapi.responses import JSONResponse
-from dashboard.crud import DashboardCRUD
-from ventas.model import Venta
-from ventas.repositorio import VentaRepositorio
-from datetime import date, datetime, timedelta
-from sqlalchemy import func, and_
+# dashboard/controlador.py
+from datetime import date, datetime, time, timedelta
+from typing import Optional
+from sqlalchemy import and_
 from sqlalchemy.orm import Session
+
+from ventas.model import Venta
+from .crud import DashboardCRUD
+from ventas.repositorio import VentaRepositorio
 
 class DashboardControlador:
     def __init__(self, db: Session):
         venta_repo = VentaRepositorio(db)
+      
         self.crud = DashboardCRUD(venta_repo)
 
-    def obtener_estadisticas(self, periodo: str, fecha_inicio: str = None, fecha_fin: str = None) -> JSONResponse:
+
+    # helpers para construir rangos [inicio, fin)
+    def _rango_dia(self, d: date):
+        inicio = datetime.combine(d, time.min)
+        fin = inicio + timedelta(days=1)
+        return inicio, fin
+
+    def _rango_semana(self, d: date):
+        # Lunes como inicio de semana
+        fecha_inicio = d - timedelta(days=d.weekday())
+        inicio = datetime.combine(fecha_inicio, time.min)
+        fin = inicio + timedelta(days=7)
+        return inicio, fin
+
+    def _rango_mes(self, d: date):
+        fecha_inicio = d.replace(day=1)
+        # primer día del mes siguiente
+        if d.month == 12:
+            siguiente_mes = date(d.year + 1, 1, 1)
+        else:
+            siguiente_mes = date(d.year, d.month + 1, 1)
+        inicio = datetime.combine(fecha_inicio, time.min)
+        fin = datetime.combine(siguiente_mes, time.min)
+        return inicio, fin
+
+    def _rango_anio(self, d: date):
+        inicio = datetime(d.year, 1, 1)
+        fin = datetime(d.year + 1, 1, 1)
+        return inicio, fin
+
+    def _rango_personalizado(self, fi_str: str, ff_str: str):
+        if not fi_str or not ff_str:
+            raise ValueError("La fecha de inicio y fin son requeridas.")
+        try:
+            fi_d = datetime.strptime(fi_str, "%Y-%m-%d").date()
+            ff_d = datetime.strptime(ff_str, "%Y-%m-%d").date()
+        except ValueError:
+            raise ValueError("Fechas inválidas. Formato esperado: YYYY-MM-DD.")
+
+        if fi_d > ff_d:
+            raise ValueError("El rango de fechas es inválido (inicio > fin).")
+
+        # rango inclusivo de días: [fi 00:00:00, ff + 1 día 00:00:00)
+        inicio = datetime.combine(fi_d, time.min)
+        fin = datetime.combine(ff_d + timedelta(days=1), time.min)
+        return inicio, fin
+
+    def obtener_estadisticas(self, periodo: str, fecha_inicio: Optional[str] = None, fecha_fin: Optional[str] = None):
         hoy = date.today()
 
-        # Definir filtros
-        filtro_actual = None
-        filtro_anterior = None
-
-        if periodo == "personalizado":
-            if not fecha_inicio:
-                raise ValueError("La fecha de inicio es requerida para el periodo personalizado")
-            if not fecha_fin:
-                raise ValueError("La fecha de fin es requerida para el periodo personalizado")
-            try:
-                fi = datetime.strptime(fecha_inicio, "%Y-%m-%d").date()
-                ff = datetime.strptime(fecha_fin, "%Y-%m-%d").date()
-            except ValueError:
-                raise ValueError("Fechas inválidas")
-
-            filtro_actual = and_(Venta.fecha_venta >= fi, Venta.fecha_venta <= ff)
-
-        elif periodo == "hoy":
-            filtro_actual = Venta.fecha_venta == hoy
-            filtro_anterior = Venta.fecha_venta == hoy - timedelta(days=1)
+        # construir rango principal [inicio, fin)
+        if periodo == "hoy":
+            inicio, fin = self._rango_dia(hoy)
+            prev_inicio, prev_fin = self._rango_dia(hoy - timedelta(days=1))
 
         elif periodo == "semana":
-            semana_actual = hoy.isocalendar()[1]
-            anio_actual = hoy.isocalendar()[0]
-            semana_pasada = (hoy - timedelta(weeks=1)).isocalendar()[1]
-            anio_pasado = (hoy - timedelta(weeks=1)).isocalendar()[0]
-
-            filtro_actual = and_(
-                func.extract("week", Venta.fecha_venta) == semana_actual,
-                func.extract("year", Venta.fecha_venta) == anio_actual
-            )
-            filtro_anterior = and_(
-                func.extract("week", Venta.fecha_venta) == semana_pasada,
-                func.extract("year", Venta.fecha_venta) == anio_pasado
-            )
+            inicio, fin = self._rango_semana(hoy)
+            prev_inicio, prev_fin = self._rango_semana(hoy - timedelta(weeks=1))
 
         elif periodo == "mes":
-            filtro_actual = and_(
-                func.extract("month", Venta.fecha_venta) == hoy.month,
-                func.extract("year", Venta.fecha_venta) == hoy.year
-            )
-            mes_anterior = hoy.replace(day=1) - timedelta(days=1)
-            filtro_anterior = and_(
-                func.extract("month", Venta.fecha_venta) == mes_anterior.month,
-                func.extract("year", Venta.fecha_venta) == mes_anterior.year
-            )
+            inicio, fin = self._rango_mes(hoy)
+            # mes anterior: un día antes del primer día del mes actual
+            ultimo_dia_mes_anterior = (hoy.replace(day=1) - timedelta(days=1))
+            prev_inicio, prev_fin = self._rango_mes(ultimo_dia_mes_anterior)
 
         elif periodo == "anio":
-            filtro_actual = func.extract("year", Venta.fecha_venta) == hoy.year
-            filtro_anterior = func.extract("year", Venta.fecha_venta) == hoy.year - 1
+            inicio, fin = self._rango_anio(hoy)
+            prev_inicio, prev_fin = self._rango_anio(date(hoy.year - 1, hoy.month, hoy.day))
+
+        elif periodo == "personalizado":
+            inicio, fin = self._rango_personalizado(fecha_inicio, fecha_fin)
+            prev_inicio = prev_fin = None  # no aplican comparaciones
 
         else:
             raise ValueError("Periodo inválido")
 
-        # Obtener datos actuales
+        # filtros por rango (funciona para DATE o DATETIME)
+        filtro_actual = and_(Venta.fecha_venta >= inicio, Venta.fecha_venta < fin)
+        
+        
         total_actual, ventas_actual, clientes_actual = self.crud.obtener_estadisticas(filtro_actual)
 
-        # Obtener datos anteriores (si aplica)
-        if filtro_anterior is not None:
+        if prev_inicio and prev_fin:
+            filtro_anterior = and_(Venta.fecha_venta >= prev_inicio, Venta.fecha_venta < prev_fin)
+            # Obtener totales
             total_anterior, ventas_anterior, clientes_anterior = self.crud.obtener_estadisticas(filtro_anterior)
-        else:
-            total_anterior = ventas_anterior = clientes_anterior = 0
+            # calcular variación porcentajes
 
+            var_ventas_totales = self.crud.calcular_variacion(float(total_actual), float(total_anterior))
+            var_numero_ventas = self.crud.calcular_variacion(ventas_actual, ventas_anterior)
+            var_nuevos_clientes = self.crud.calcular_variacion(clientes_actual, clientes_anterior)
+        else:
+            
+            var_ventas_totales = None
+            var_numero_ventas = None
+            var_nuevos_clientes = None
 
         return {
             "periodo": periodo,
-            "ventas_totales": float(total_actual),
+            
+            "ventas_totales": total_actual,
             "numero_ventas": ventas_actual,
             "nuevos_clientes": clientes_actual,
-            "var_ventas_totales": self.crud.calcular_variacion(float(total_actual), float(total_anterior)) if filtro_anterior is not None else None,
-            "var_numero_ventas": self.crud.calcular_variacion(ventas_actual, ventas_anterior) if filtro_anterior is not None else None,
-            "var_nuevos_clientes": self.crud.calcular_variacion(clientes_actual, clientes_anterior) if filtro_anterior is not None else None
+            
+            "var_ventas_totales": var_ventas_totales,
+            "var_numero_ventas": var_numero_ventas,
+            "var_nuevos_clientes": var_nuevos_clientes,
         }

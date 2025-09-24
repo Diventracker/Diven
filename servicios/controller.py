@@ -205,8 +205,33 @@ class ServicioControlador:
     #Aprobar/ rechazar el servicio
     def actualizar_estado(self, id_servicio: int, datos):
         try:
+<<<<<<< HEAD
+            if datos.nuevo_estado == "facturado":
+                datos = self.crud.obtener_datos_para_totales(id_servicio)
+                if not datos:
+                    return None
+
+                precio_base = datos["precio_base"] or 0
+                adicionales = datos["adicionales"] or 0
+                subtotal = precio_base + adicionales
+                iva = int(subtotal * 0.19)
+                total = subtotal + iva
+                servicio = self.crud.guardar_total(
+                    id_servicio=id_servicio,
+                    total=total
+                )
+            else:
+                servicio = self.crud.cambiar_estado(
+                    id_servicio=id_servicio,
+                    nuevo_estado=datos.nuevo_estado,
+                    motivo=datos.motivo
+                )
+            return JSONResponse(content={"success": True, "message": f"Servicio marcado como {servicio.estado_servicio}"})
+        
+=======
             servicio = self.crud.cambiar_estado(id_servicio, datos.nuevo_estado, datos.motivo)
             return JSONResponse(content={"success": True, "mensaje": "Estado actualizado", "estado": servicio.estado_servicio})
+>>>>>>> 385cbfd109f7e2ffd2eb8a6997e7dec9968bb776
         except ValueError as e:
             return JSONResponse(content={"success": False, "error": str(e)}, status_code=400)
         except Exception as e:
@@ -259,3 +284,20 @@ class ServicioControlador:
             return JSONResponse(content={"success": False, "error": mensaje}, status_code=404)
 
         return JSONResponse(content={"success": True, "message": mensaje})
+    
+    #Grafico de ventas Mensuales
+    def obtener_datos_grafico_mensual(self):
+        resultados = self.crud.obtener_totales_servicios_por_mes()
+
+        meses_nombres = [
+            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        ]
+
+        datos_por_mes = {mes: float(total) for mes, total in resultados}
+
+        return {
+            "labels": meses_nombres,
+            "data": [datos_por_mes.get(i + 1, 0) for i in range(12)]
+        }
+    

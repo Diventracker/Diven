@@ -1,8 +1,7 @@
 from datetime import date
-from sqlalchemy import func
+from sqlalchemy import func, extract
 from servicios.model import DetalleServicio, ImagenServicio, ServicioTecnico
 from sqlalchemy.orm import joinedload
-
 
 class ServicioRepositorio:
     def __init__(self, db):

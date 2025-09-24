@@ -92,6 +92,11 @@ def ver_comprobante(id_servicio: int, request: Request, db: Session = Depends(ge
     controlador = ServicioControlador(db)
     return controlador.ver_comprobante(id_servicio, request)
 
+@router.get("/servicios/grafico/ingresos", tags=["servicio_tecnico"])
+def grafico_ingresos(request: Request, db: Session = Depends(get_db)):
+    controlador = ServicioControlador(db)
+    return controlador.obtener_datos_grafico_mensual()
+
 #Para obtener los totales y mostrarlos en el comprobante 
 @router.get("/servicios/{id_servicio}/totales")
 def obtener_totales(id_servicio: int, db: Session = Depends(get_db)):

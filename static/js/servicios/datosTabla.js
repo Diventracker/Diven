@@ -37,8 +37,6 @@ const columnasServicios = [
 ];
     columnasServicios.push({
       data: null,
-      orderable: false,
-      searchable: false,
       render: function (data, type, row) {
         let botones = '';
 

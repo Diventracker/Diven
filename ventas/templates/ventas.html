@@ -113,6 +113,25 @@
         </div>
     </div>
     </div>
+
+    <!-- modal para aceptar la el servicio en la venta -->
+    <div class="modal" id="modalServicio" tabindex="-1" aria-labelledby="modalServicioLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-white">
+                <h5 class="modal-title" id="modalServicioLabel"><i class="bi bi-cash me-2"></i>Facturar servicio
+                    técnico</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-toggle="modal"
+                    data-bs-target="#modalAprobar">Cancelar</button>
+                <button class="btn btn-enviar" onclick="confirmarRegistroServicio()"><i
+                        class="bi bi-succes me-2"></i>Registar Venta</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -120,7 +139,8 @@
     <script src="/static/js/funciones/alertas.js"></script>
     <script src="/static/js/funciones/dataTables.js"></script>
     <script src="/static/js/ventas/datosTabla.js"></script>
-    <script src="/static/js/servicios/datosTablaServicios.js"></script>
+    <script src="/static/js/ventas/servicios/datosTablaServicios.js"></script>
+    <script src="/static/js/ventas/servicios/enviarTotalServicios.js"></script>
 
     <script src="/static/js/ventas/verDetalles.js"></script>
 

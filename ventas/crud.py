@@ -143,7 +143,7 @@ class VentaCRUD:
 
     def obtener_totales_por_mes(self):
         return self.repo.obtener_totales_por_mes()
-
+    
     def obtener_productos_mas_vendidos(self, limite: int = 8):
         return self.repo.obtener_productos_mas_vendidos(limite)
 
