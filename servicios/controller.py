@@ -205,7 +205,6 @@ class ServicioControlador:
     #Aprobar/ rechazar el servicio
     def actualizar_estado(self, id_servicio: int, datos):
         try:
-<<<<<<< HEAD
             if datos.nuevo_estado == "facturado":
                 datos = self.crud.obtener_datos_para_totales(id_servicio)
                 if not datos:
@@ -228,10 +227,8 @@ class ServicioControlador:
                 )
             return JSONResponse(content={"success": True, "message": f"Servicio marcado como {servicio.estado_servicio}"})
         
-=======
             servicio = self.crud.cambiar_estado(id_servicio, datos.nuevo_estado, datos.motivo)
             return JSONResponse(content={"success": True, "mensaje": "Estado actualizado", "estado": servicio.estado_servicio})
->>>>>>> 385cbfd109f7e2ffd2eb8a6997e7dec9968bb776
         except ValueError as e:
             return JSONResponse(content={"success": False, "error": str(e)}, status_code=400)
         except Exception as e:

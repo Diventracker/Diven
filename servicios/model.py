@@ -21,11 +21,8 @@ class ServicioTecnico(Base):
     meses_garantia = Column(Integer, nullable=True, default=0)
     tipo_servicio = Column(String(50), nullable=False)
     precio_servicio = Column(INTEGER(unsigned=True), nullable=False)
-<<<<<<< HEAD
     total_servicio = Column(INTEGER(unsigned=True), nullable=False)
-=======
->>>>>>> 385cbfd109f7e2ffd2eb8a6997e7dec9968bb776
-
+    
     cliente = relationship("Cliente")
     usuario = relationship("Usuario")
     # SQLAlchemy resolverá la clase por nombre, aunque esté en otro módulo

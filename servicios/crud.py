@@ -221,7 +221,6 @@ class ServicioCRUD:
         self.repo.db.commit()
 
         return True, "Imagen eliminada correctamente"
-<<<<<<< HEAD
     
     #guardar total en la base de datos
     def guardar_total(self, id_servicio: int, total: int):
@@ -236,5 +235,3 @@ class ServicioCRUD:
             self.repo.db.commit()
 
             return servicio
-=======
->>>>>>> 385cbfd109f7e2ffd2eb8a6997e7dec9968bb776
