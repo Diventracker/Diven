@@ -117,8 +117,8 @@ class VentaCRUD:
                 for _ in range(det["cantidad"]):
                     self.repo.db.add(GarantiaProducto(
                         id_producto=det["id_producto"],
-                        id_venta=nueva_venta.id_venta,   # <<<<<<<<<<
-                        id_cliente=id_cliente,           # <<<<<<<<<<
+                        id_venta=nueva_venta.id_venta,  
+                        id_cliente=id_cliente,           
                         fecha_inicio=fecha_inicio,
                         fecha_fin=fecha_fin,
                         origen_garantia="venta_cliente"

@@ -223,14 +223,13 @@ class ServicioCRUD:
     
     #guardar total en la base de datos
     def guardar_total(self, id_servicio: int, total: int):
-            servicio = self.repo.obtener_por_id(id_servicio)
-            if not servicio:
-                raise ValueError("Servicio no encontrado")
+        servicio = self.repo.obtener_por_id(id_servicio)
+        if not servicio:
+            raise ValueError("Servicio no encontrado")
 
-            nuevo_estado = "facturado"
-
-            servicio.estado_servicio = nuevo_estado
-            servicio.total_servicio = total
-            self.repo.db.commit()
-
-            return servicio
+        nuevo_estado = "facturado"
+        
+        servicio.estado_servicio = nuevo_estado
+        servicio.total_servicio = total
+        self.repo.db.commit()
+        return servicio

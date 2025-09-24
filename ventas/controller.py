@@ -98,13 +98,10 @@ class VentaControlador:
         }
     
     def productos_mas_vendidos(self, limite: int = 8):
-      resultados = self.crud.obtener_productos_mas_vendidos(limite)
-      return [{"producto": nombre, "cantidad": cantidad} for nombre, cantidad in resultados]
+        resultados = self.crud.obtener_productos_mas_vendidos(limite)
+        return [{"producto": nombre, "cantidad": cantidad} for nombre, cantidad in resultados]
     
     #Ventas por tecnico
     def ventas_por_vendedor(self, limite: int = 6):
         resultados = self.crud.obtener_ventas_por_vendedor(limite)
         return [{"vendedor": r.vendedor, "total": float(r.total)} for r in resultados]
-
-
-    

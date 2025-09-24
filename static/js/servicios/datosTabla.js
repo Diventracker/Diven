@@ -30,7 +30,6 @@ $(document).ready(function () {
                 else if (data === "Finalizado") clase = "success";
                 else if (data === "En Revisión") clase = "warning";
                 else if (data === "Rechazado") clase = "danger";
-
                 return `<span class="badge bg-${clase}">${data}</span>`;
             }
         }
@@ -39,10 +38,9 @@ $(document).ready(function () {
         data: null,
         render: function (data, type, row) {
             let botones = '';
-
             if (row.estado_servicio === "En Progreso") {
                 botones += `
-            <button class="btn btn-sm btn-outline-enviar me-1 check-button"
+                <button class="btn btn-sm btn-outline-enviar me-1 check-button"
                     data-bs-toggle="modal"
                     data-bs-target="#modalCheck"
                     data-id="${row.id_servicio}"
@@ -52,7 +50,6 @@ $(document).ready(function () {
             </button>
         `;
             }
-
             if (rol === "Administrador") {
                 if (row.estado_servicio === "En Revisión") {
                     botones += `
@@ -64,7 +61,6 @@ $(document).ready(function () {
             </button>
             `;
                 }
-
                 botones += `
             <button class="btn btn-sm btn-outline-secondary me-1 edit-button"
                     data-bs-toggle="modal"
@@ -93,7 +89,6 @@ $(document).ready(function () {
             </button>
         `;
             }
-
             // Botón para ver comprobante (todos los roles)
             botones += `
         <button onclick="location.href='/servicios/comprobante/${row.id_servicio}'"
@@ -101,7 +96,6 @@ $(document).ready(function () {
             <i class="bi bi-eye"></i>
         </button>
         `;
-
             return botones;
         }
     });

@@ -60,7 +60,7 @@ document.getElementById('checkServicioForm').addEventListener('submit', async fu
         }
     }
 
-    // 📌 Validar si hay imágenes
+    // Validar si hay imágenes
     if (!uploader2 || typeof uploader2.getImages !== "function" || uploader2.getImages().length === 0) {
         mostrarAlerta("alerta-warning", "Debe incluir al menos una imagen.");
         return; // Evita el envío
